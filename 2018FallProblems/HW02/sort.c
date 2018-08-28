@@ -31,18 +31,32 @@ void ssort(int * arr, int size)
     int minNum = 0;
     int minIndex = 0;
     int temp = 0;
+    int found = 0;
     
-    for(sortedIndex = 0; sortedIndex < size; sortedIndex++){
-        minNum = arr[currentIndex];
+    for(sortedIndex = 0; sortedIndex < size - 1 ; sortedIndex++){
+        minNum = arr[sortedIndex];
         for(currentIndex = sortedIndex; currentIndex < size; currentIndex++){
             if(arr[currentIndex] < minNum){
                 minNum = arr[currentIndex];
                 minIndex = currentIndex;
+                found = 1;
             }
         }
-        temp = arr[sortedIndex];
-        arr[sortedIndex] = minNum;
-        arr[minIndex] = temp;
+        if(found){
+            temp = arr[sortedIndex];
+            arr[sortedIndex] = minNum;
+            arr[minIndex] = temp;
+        }
+        found = 0;
+        
+        
+        
+        /*printf("sortedIndex at: %d\n", sortedIndex); //to be deleted
+        for(int i=0;i<size;i++){ //to be deleted
+            printf("arr[%d] =  %d\n", i, arr[i]); //to be deleted
+        } //to be deleted
+        */
+        
     }
     
   if (checkOrder(arr, size) == false)
