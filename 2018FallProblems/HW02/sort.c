@@ -26,16 +26,26 @@ static bool checkOrder(int * arr, int size)
 #ifdef TEST_SORT
 void ssort(int * arr, int size)
 {
-  // This function has two levels of for
-  // The first level specifies which element in the array
-  // The second level finds the smallest element among the unsorted
-  // elements
-
-  // After finding the smallest element among the unsorted elements,
-  // swap it with the element of the index from the first level
-  
-  // call checkOrder to see whether this function correctly sorts the
-  // elements
+    int currentIndex;
+    int sortedIndex;
+    int minNum;
+    int minIndex;
+    int temp;
+    
+    for(sortedIndex = 0; sortedIndex < size; sortedIndex++){
+        currentIndex = sortedIndex ;
+        minNum = arr[currentIndex];
+        for(currentIndex; currentIndex < size; currentIndex++){
+            if(arr[currentIndex] < minNum){
+                minNum = arr[currentIndex];
+                minIndex = currentIndex;
+            }
+        }
+        temp = arr[sortedIndex];
+        arr[sortedIndex] = minNum;
+        arr[minIndex] = temp;
+    }
+    
   if (checkOrder(arr, size) == false)
     {
       fprintf(stderr, "checkOrder returns false\n");
