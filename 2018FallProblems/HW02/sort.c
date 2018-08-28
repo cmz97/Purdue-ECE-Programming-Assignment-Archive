@@ -36,7 +36,7 @@ void ssort(int * arr, int size)
         minNum = arr[currentIndex];
         for(currentIndex = sortedIndex; currentIndex < size; currentIndex++){
             if(arr[currentIndex] < minNum){
-                minNums = arr[currentIndex];
+                minNum = arr[currentIndex];
                 minIndex = currentIndex;
             }
         }
