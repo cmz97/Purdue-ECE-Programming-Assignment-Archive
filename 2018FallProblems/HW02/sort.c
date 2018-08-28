@@ -49,14 +49,6 @@ void ssort(int * arr, int size)
         }
         found = 0;
         
-        
-        
-        /*printf("sortedIndex at: %d\n", sortedIndex); //to be deleted
-        for(int i=0;i<size;i++){ //to be deleted
-            printf("arr[%d] =  %d\n", i, arr[i]); //to be deleted
-        } //to be deleted
-        */
-        
     }
     
   if (checkOrder(arr, size) == false)

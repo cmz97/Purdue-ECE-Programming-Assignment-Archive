@@ -35,6 +35,8 @@ test2: sort
 test3: sort
 	./sort inputs/test3 > output3
 	diff output3 expected/expected3
+test4: sort
+	./sort inputs/test4 > output4
 
 clean: # remove all machine generated files
 	rm -f sort *.o output?
