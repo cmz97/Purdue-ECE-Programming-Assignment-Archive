@@ -28,16 +28,15 @@ void ssort(int * arr, int size)
 {
     int currentIndex;
     int sortedIndex;
-    int minNum;
-    int minIndex;
-    int temp;
+    int minNum = 0;
+    int minIndex = 0;
+    int temp = 0;
     
     for(sortedIndex = 0; sortedIndex < size; sortedIndex++){
-        currentIndex = sortedIndex ;
         minNum = arr[currentIndex];
-        for(currentIndex; currentIndex < size; currentIndex++){
+        for(currentIndex = sortedIndex; currentIndex < size; currentIndex++){
             if(arr[currentIndex] < minNum){
-                minNum = arr[currentIndex];
+                minNums = arr[currentIndex];
                 minIndex = currentIndex;
             }
         }
