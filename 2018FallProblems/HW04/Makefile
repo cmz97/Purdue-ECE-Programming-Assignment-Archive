@@ -39,7 +39,7 @@ test3: hw04
 	./hw04 test/test3.txt 4 output3.txt
 	diff -i -w output3.txt expected/expected3.txt
 test4: hw04
-	./hw04 test/test4.txt 4 output4.txt
+	valgrind --leak-check=yes ./hw04 test/test4.txt 4 output4.txt
 	diff -i -w output4.txt expected/expected4.txt
 
 test5: hw04
