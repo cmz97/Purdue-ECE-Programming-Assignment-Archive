@@ -66,9 +66,9 @@ distance (const DataPoint * datapoint, const Centroid * centroid)
     //printf("This is the distance Function Result\n");
     
     int size = datapoint -> dimension;
-    int difference = 0;
+    long long int difference = 0;
     for (int i=0; i<size; i++) {
-	difference = datapoint->data[i] - centroid->data[i];
+        difference = datapoint->data[i] - centroid->data[i];
         sum += difference*difference;
        
     }
