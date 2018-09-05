@@ -86,18 +86,24 @@ distance (const DataPoint * datapoint, const Centroid * centroid)
 // centroid from which the distance is smaller than previously seen,
 int closestCentroid (int kval, DataPoint * datapoint, Centroid * *centroids)
 {
-  int mindex; //index of the closest centroid
+    //printf("%d\n", kval);
+  int mindex = 0; //index of the closest centroid
     long long int minDis = distance(datapoint, centroids[0]);
-    long long int currentDis = 0;
+    long long int currentDis;
 //    printf("current distance: %lld ",currentDis);
 //    printf("current index: %d \n",0);
     for (int i=1; i<kval; i++) {
         currentDis = distance(datapoint, centroids[i]);
 //        printf("current distance: %lld ",currentDis);
 //        printf("current index: %d \n",i);
+        
         if (minDis > currentDis) {
             minDis = currentDis;
             mindex = i;
+//            if(i == 3)
+//            {
+//                printf("something\n");
+//            }
         }
 //        printf("current minDex: %d \n",mindex);
     }
@@ -124,7 +130,8 @@ void kmean (int kval, int nval, DataPoint * *datapoints, Centroid * *centroids)
 {
     bool done = false;
     int randomIndex = 0;
-    int testCounter = 0;
+    int sameCounter = 0;
+    int temp = 0;
     // int lastCentroid[nval] = {0};
     // reset all centroids
     for (int i=0; i<kval; i++) {
@@ -134,6 +141,7 @@ void kmean (int kval, int nval, DataPoint * *datapoints, Centroid * *centroids)
     // initialize each data point to a cluster between 0 and kval - 1
     for (int i=0; i<nval; i++) {
         randomIndex = rand()%kval;
+        //printf("%d\n", randomIndex);
         datapoints[i] -> cluster = randomIndex;
         //lastCentroid[i] = randomIndex;
         Centroid_addPoint(centroids[randomIndex],datapoints[i]);
@@ -143,33 +151,73 @@ void kmean (int kval, int nval, DataPoint * *datapoints, Centroid * *centroids)
     for (int i=0; i<kval; i++) {
         Centroid_findCenter(centroids[i]);
     }
-    // Now start the loop till convergence is met - (Please see README for understanding kmean algorithm convergence condition)
-   
+//     Now start the loop till convergence is met - (Please see README for understanding kmean algorithm convergence condition)
+//                for(int i = 0; i < 4;i++)
+//                {
+//                    printf("Size %d is %d\n", i, centroids[i]->size);
+//                    for(int j = 0; j< centroids[i]->dimension; j++)
+//                    {
+//                        printf("Data %d is %d\n", j, centroids[i]->data[j]);
+//                    }
+//                }
+//                printf("%d\n", sameCounter);
+    
+
+    //int trainNum = 0;
+    //printf("%d\n", centroids[3]->size);
     while (!done) {
-        
         // 1. for each data point, find the index of the centroid that is the closest
+        //sameCounter = 0;
         for (int i=0; i<nval; i++) {
             //printf("Last Centroid: %d ",datapoints[i]->cluster);
             //printf("New Centroid: %d \n",closestCentroid(kval,datapoints[i],centroids));
-            datapoints[i]->cluster = closestCentroid(kval,datapoints[i],centroids);
+            temp = closestCentroid(kval,datapoints[i],centroids);
+            if(temp == 3)
+            {
+                printf("Something\n");
+            }
+            //printf("Temp is %d\n", temp);
+            if (datapoints[i]->cluster != temp) {
+                 datapoints[i]->cluster = temp;
+                //printf("Problem %d\n", i);
+            }else{
+                sameCounter++;
+                //printf("sameCounter: %d \n",sameCounter);
+            }
         }
-        // 2. store that index in DataPoint's structure's cluster value.
-        // 3. reset all the centroids
-        for (int i=0; i<kval; i++) {
-            Centroid_reset(centroids[i]);
-        }
-        // 4. go through each datapoint again and add this datapoint to its centroid using Centroid_addPoint function
-        for (int i=0; i<nval; i++) {
-            Centroid_addPoint(centroids[datapoints[i]->cluster], datapoints[i]);
-        }
-        // 5. find the new centroid for each cluster by calling Centroid_findCenter
-        for (int i=0; i<kval; i++) {
-            Centroid_findCenter(centroids[i]);
-        }
-        if(testCounter>100000){
+        //printf("%d\n", centroids[3]->size);
+        //trainNum++;
+        if (sameCounter == nval) {
             done = true;
+        }else{
+            // 2. store that index in DataPoint's structure's cluster value.
+            // 3. reset all the centroids
+            for (int i=0; i<kval; i++) {
+                Centroid_reset(centroids[i]);
+            }
+            // 4. go through each datapoint again and add this datapoint to its centroid using Centroid_addPoint function
+            for (int i=0; i<nval; i++) {
+                Centroid_addPoint(centroids[datapoints[i]->cluster], datapoints[i]);
+            }
+            // 5. find the new centroid for each cluster by calling Centroid_findCenter
+            for (int i=0; i<kval; i++) {
+                Centroid_findCenter(centroids[i]);
+            }
+//            for(int i = 0; i < 3;i++)
+//            {
+//                printf("Size %d is %d\n", i, centroids[i]->size);
+//                for(int j = 0; j< centroids[i]->dimension; j++)
+//                {
+//                    printf("Data %d is %d\n", j, centroids[i]->data[j]);
+//                }
+//            }
+//            printf("%d\n", sameCounter);
+//            if(centroids[3]->size == 0)
+//            {
+//                printf("%d\n", trainNum);
+//            }
         }
-        testCounter++;
+       
     }
     
 }
