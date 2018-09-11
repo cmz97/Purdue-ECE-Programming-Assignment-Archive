@@ -61,7 +61,7 @@ int countFromFile(char* file_name)
     }
     
     while(!feof(fp)){
-        char c = fgetc(fp);
+        int c = fgetc(fp);
         if(c == '\n')count++;
     }
   // count the number of integers using a loop
@@ -129,7 +129,7 @@ int main(int argc, char * * argv)
   // call the printArray() function provided to you.
     printArray(arr,numOfLine);
      
-    
+    free(arr);
   return EXIT_SUCCESS;
 }
 #endif
