@@ -44,7 +44,7 @@ int numberOfElements(char* in_file_name)
     float numelem = where / sizeof(Vector);
     //use float numelem = where / sizeof(Vector); to obtain the number of elements
     fclose(fp);
-    printf("Number of ELEMENT:%f\n\n",numelem);
+    //printf("Number of ELEMENT:%f\n\n",numelem);
     return numelem;
     //return numelem; to send the number of elements back to main().
 }
@@ -57,9 +57,9 @@ void fillVector(Vector* vector, int count, char * in_file_name)
     FILE * fp;
     fp = fopen(in_file_name,"r");
     fread(vector, sizeof(Vector), count, fp);
-    for (int i=0; i<count; i++) {
-        printf("PreVector_%d ( %d, %d, %d)\n",i,vector[i].x,vector[i].y,vector[i].z);
-    }
+    //    for (int i=0; i<count; i++) {
+    //        printf("PreVector_%d ( %d, %d, %d)\n",i,vector[i].x,vector[i].y,vector[i].z);
+    //    }
     //How to read the file?
         //use fread(vector, sizeof(Vector), count, file_pointer)
     fclose(fp);
@@ -72,10 +72,9 @@ void writeFile(Vector* vector, int count, char* out_file_name)
     // open binary file to write after initializing file_pointer
     FILE * fp;
     fp = fopen(out_file_name,"w");
-    printf("\n\n");
-    for (int i=0; i<count; i++) {
-        printf("AftVector_%d ( %d, %d, %d)\n",i,vector[i].x,vector[i].y,vector[i].z);
-    }
+    //    for (int i=0; i<count; i++) {
+    //        printf("AftVector_%d ( %d, %d, %d)\n",i,vector[i].x,vector[i].y,vector[i].z);
+    //    }
     //How to write to the file?
         //use fwrite(vector, sizeof(Vector), count, file_pointer)
     fwrite(vector, sizeof(Vector), count, fp);
