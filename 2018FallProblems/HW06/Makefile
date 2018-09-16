@@ -16,7 +16,7 @@ hw06: $(OBJS)
 	$(GCC) $(TESTFALGS) $(OBJS) -o hw06
 	
 testmemory: $(TARGET)
-	$(VAL) ./hw06 inputs/test1.bin output1.bin
+	$(VAL) ./hw06 inputs/test3.bin output3.bin
 
 .c.o: 
 	$(GCC) $(TESTFALGS) -c $*.c 
@@ -32,8 +32,7 @@ test2: hw06
 	diff output2.bin expected/expected2.bin
 
 test3: hw06
-	#./hw06 inputs/test3.bin output3.bin
-	./hw06 expected/expected3.bin output3.bin
+	./hw06 inputs/test3.bin output3.bin
 	diff output3.bin expected/expected3.bin
 
 clean: # remove all machine generated files
