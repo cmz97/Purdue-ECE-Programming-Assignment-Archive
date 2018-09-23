@@ -99,6 +99,9 @@ void merge(int arr[], int l, int m, int r)
                 
             }
         }
+	
+	free(L);
+	free(R);
     }
     
     // TESTING FUNCTION
