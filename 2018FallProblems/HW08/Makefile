@@ -10,7 +10,7 @@ TESTFLAGS = -DTEST_MAIN -DTEST_SHUF -DTEST_INTER -DTEST_DIV
 SRCS =  main.c utility.c shuffle.c
 OBJS = $(SRCS:%.c=%.o)
 
-VAL = valgrind --tool=memcheck --verbose --log-file
+VAL =  valgrind --tool=memcheck --log-file=memcheck.txt --leak-check=full --verbose
 
 $(TARGET): $(OBJS)
 	$(GCC) $(TESTFLAGS) $(OBJS) -o $(TARGET)
