@@ -1,35 +1,39 @@
+# Makefile
+
 TARGET = shuf
-GCC = gcc
-CFLAGS = -g -std=c99 -Wall -Wshadow -Wvla -Werror -pedantic
-CC = $(GCC) $(CFLAGS)
+WARNING = -Wall -Wshadow --pedantic
+ERROR = -Wvla -Werror
+GCC = gcc -std=c99 -g $(WARNING) $(ERROR)
 
-SRCS = #please complete
+TESTFLAGS = -DTEST_MAIN -DTEST_SHUF -DTEST_INTER -DTEST_DIV
 
+SRCS =  main.c utility.c shuffle.c
 OBJS = $(SRCS:%.c=%.o)
-VALGRIND = valgrind --tool=memcheck --verbose --log-file
 
-TESTFALGS = #please complete
+VAL =  valgrind --tool=memcheck --log-file=memcheck.txt --leak-check=full --verbose
 
 $(TARGET): $(OBJS)
-	$(CC) $(TESTFALGS) $(OBJS) -o $(TARGET)
+	$(GCC) $(TESTFLAGS) $(OBJS) -o $(TARGET)
+	
+.c.o: 
+	$(GCC) $(TESTFLAGS) -c $*.c 
+
+testall: test1 test2 test3
 
 testmemory: $(TARGET)
-	$(VALGRIND)=./valgrind.log ./shuf
+	$(VAL) ./shuf 7 2
 
 test1: shuf
-	./shuf 2 2 | sort > output1
-	#perform diff between output1 and expected/expected1
+	./shuf 2 2 | sort > output_file1.txt
+	diff output_file1.txt expected/expected1
 
 test2: shuf
-	./shuf 4 3 | sort > output2
-	#perform diff between output2 and expected/expected2
+	./shuf 4 3| sort > output_file2.txt
+	diff output_file2.txt expected/expected2
 
-test2: shuf
-	./shuf 7 2 | sort > output3
-	#perform diff between output3 and expected/expected3	
-
-.c.o:
-	$(GCC) $(CFLAGS) -c $*.c
+test3: shuf
+	./shuf 7 2| sort > output_file3.txt
+	diff output_file3.txt expected/expected3
 
 clean:
 	rm -f $(OBJS) $(TARGET)

@@ -28,6 +28,13 @@ void divide(CardDeck orig_deck, CardDeck* upper_deck, CardDeck* lower_deck)
 			//For example: upper_deck[i].size = i+1;
 		//update size of lower deck:
 			//For example: lower_deck[i].size = orig_deck.size -i -1;
+    for (int i=0; i<orig_deck.size-1; i++) {
+        strncpy((upper_deck[i]).cards, orig_deck.cards,i+1);
+        upper_deck[i].size = i+1;
+        
+        strncpy((lower_deck[i]).cards, orig_deck.cards+i+1,orig_deck.size-i-1);
+        lower_deck[i].size = orig_deck.size -i - 1;
+    }
 }
 #endif
 
@@ -36,6 +43,8 @@ void divide(CardDeck orig_deck, CardDeck* upper_deck, CardDeck* lower_deck)
 //repeat holds the number of shuffles yet to be performed.
 //after the interleave operation has been completed, you will recursively call
 	//repeat_shuffle(...) with a decremented value of repeat.
+void interleave_Util(CardDeck*, CardDeck*, CardDeck*, int, int);
+
 void interleave(CardDeck upper_deck, CardDeck lower_deck, int repeat)
 {
     // Follow instructions in the README, to understand the working of the recursive function.
@@ -48,7 +57,60 @@ void interleave(CardDeck upper_deck, CardDeck lower_deck, int repeat)
     // Tip: To copy the elements of one array from one array to another (e.g., the array of cards in a CardDeck),
         //you could use memcpy(…).
         //The = operator will simply copy the address, not the elements themselves.
+    
+    CardDeck* handed = malloc(sizeof(CardDeck));
+    if (handed == NULL) {
+        fprintf(stderr, "maclloc fail\n");
+        _error_clean();
+    }
+    handed->size = 1;
+    interleave_Util(handed,&upper_deck,&lower_deck,0,0);
+    repeat_shuffle(*handed,repeat-1);
+    free(handed);
+}
 
+void interleave_Util(CardDeck* handed, CardDeck* upper_deck, CardDeck* lower_deck, int upper_ind, int lower_ind)
+{
+    
+    if (upper_ind >= upper_deck->size) {
+        for (int i = lower_ind; i < lower_deck->size; i++) {
+            handed->cards[handed->size -1+i-lower_ind] = lower_deck->cards[i];
+        }
+        lower_ind = lower_deck->size - 1;
+        handed->size = lower_deck->size + upper_deck->size;
+        printDeck(*handed);
+        return;
+    }
+    
+    if (lower_ind >= lower_deck->size) {
+        for (int i = upper_ind; i < upper_deck->size; i++) {
+            handed->cards[handed->size -1+i-upper_ind] = upper_deck->cards[i];
+        }
+        upper_ind = upper_deck->size - 1;
+        handed->size = lower_deck->size + upper_deck->size;
+        printDeck(*handed);
+        return;
+    }
+    
+    CardDeck* newHanded = malloc(sizeof(CardDeck));
+    if (newHanded == NULL) {
+        fprintf(stderr, "maclloc fail\n");
+        _error_clean();
+    }
+    memcpy(newHanded,handed,sizeof(CardDeck));
+    newHanded->cards[newHanded->size-1] = upper_deck->cards[upper_ind];
+    newHanded->size++;
+    upper_ind++;
+    interleave_Util(newHanded,upper_deck,lower_deck,upper_ind,lower_ind);
+    upper_ind--;
+    
+    memcpy(newHanded,handed,sizeof(CardDeck));
+    newHanded->cards[newHanded->size-1] = lower_deck->cards[lower_ind];
+    newHanded->size++;
+    lower_ind++;
+    interleave_Util(newHanded,upper_deck,lower_deck,upper_ind,lower_ind);
+    lower_ind--;
+    free(newHanded);
 }
 #endif
 
@@ -57,22 +119,39 @@ void interleave(CardDeck upper_deck, CardDeck lower_deck, int repeat)
 void shuffle(CardDeck orig_deck, int repeat)
 {
     // declare a variable to hold the number of pairs
-        // we can say that we have only size-1 possibility of pairs
-
+    // we can say that we have only size-1 possibility of pairs
+    
+    int numpairs = orig_deck.size - 1;
+    
     // if number of pairs == 0; return;
-
-	// instantiate pointers to hold both upper and lower decks (after division)
-	   // For example: CardDeck * upper_deck = NULL;
-
-	// allocate memory based on number of pairs
-	   //For example: upper_deck = malloc(numpairs*sizeof(CardDeck));
-
-	// call divideDeck to fill upper_deck and lower_deck
-
-	//run a loop through all the pairs
-		// for each pair of upper and lower deck call interleave()
-		// For example: interleave(upper_deck[i],lower_deck[i]);
-
+    if (numpairs == 0) {
+        return;
+    }
+    
+    // instantiate pointers to hold both upper and lower decks (after division)
+    // For example: CardDeck * upper_deck = NULL;
+    CardDeck * upper_deck = NULL;
+    CardDeck * lower_deck = NULL;
+    
+    // allocate memory based on number of pairs
+    //For example: upper_deck = malloc(numpairs*sizeof(CardDeck));
+    upper_deck = malloc(numpairs*sizeof(CardDeck));
+    lower_deck = malloc(numpairs*sizeof(CardDeck));
+    if (upper_deck || lower_deck == NULL) {
+        fprintf(stderr, "maclloc fail\n");
+        _error_clean();
+    }
+    // call divideDeck to fill upper_deck and lower_deck
+    divide(orig_deck, upper_deck, lower_deck);
+    //run a loop through all the pairs
+    // for each pair of upper and lower deck call interleave()
+    // For example: interleave(upper_deck[i],lower_deck[i]);
+    for (int i = 0; i<numpairs; i++) {
+        interleave(upper_deck[i],lower_deck[i],repeat);
+    }
+    
+    free(upper_deck);
+    free(lower_deck);
     // free memory allocated to upper and lower deck.
 }
 #endif
@@ -81,12 +160,18 @@ void shuffle(CardDeck orig_deck, int repeat)
 void repeat_shuffle(CardDeck orig_deck, int k)
 {
 	//orig_deck contains a deck of cards, and it's size.
-
+    
 	//If (k ≤ 0), no shuffling, print the only possible outcome.
+    if (k<=0) {
+        printDeck(orig_deck);
+        return;
+    }
+    
+    
 		//printDeck(orig_deck); and return
 		//TIP: Print only the results obtained after k rounds of shuffling
 	// call shuffle(orig_deck);
-	
+    shuffle(*orig_deck,k);
 	// TIP: In interleave(…), when the newly shuffled deck is complete, 
 		//you will perform another k-1 rounds of shuffling with the new deck.
 }
