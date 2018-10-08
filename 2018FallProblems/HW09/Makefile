@@ -5,7 +5,7 @@ WARNING = -Wall -Wshadow --pedantic
 ERROR = -Wvla -Werror
 GCC = gcc -std=c99 -g $(WARNING) $(ERROR)
 
-TESTFLAGS = -DTEST_MAIN -DTEST_SHUF -DTEST_INTER -DTEST_DIV
+TESTFLAGS = -DTEST_MAIN -DTEST_SHUF -DTEST_INTER -DTEST_DIV -DTEST_RSHUF
 
 SRCS =  main.c utility.c shuffle.c
 OBJS = $(SRCS:%.c=%.o)
@@ -28,7 +28,7 @@ test1: shuf
 	diff output_file1.txt expected/expected1
 
 test2: shuf
-	./shuf 4 3| sort > output_file2.txt
+	./shuf 4 3 | sort > output_file2.txt
 	diff output_file2.txt expected/expected2
 
 test3: shuf
