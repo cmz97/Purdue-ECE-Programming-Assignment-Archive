@@ -20,7 +20,7 @@ BMPImage * ImgToGray(BMPImage * image){
 	int height = (image->header).height;
 
 	// allocate space for the image
-    gImg = malloc(sizeof(BMP_Image));
+    BMPImage * gImg = malloc(sizeof(BMP_Image));
 	// the image has the same size
 	// therefore the header has to stay the same
 	// check for memory allocation failure 
@@ -32,11 +32,11 @@ BMPImage * ImgToGray(BMPImage * image){
 	//gray_image->header = image->header;
     gImg->header = image->header;
 	//Assign the the imagesize as height * width
-	(gImg->header).imagesize = (gray_image->header).width*(gray_image->header).height;
+	(gImg->header).imagesize = (gImg->header).width*(gImg->header).height;
 	
 	//check for data allocation failure using :
-    gImg->data = malloc(sizeof(unsigned char)*(gray_image->header).imagesize))
-    if (gray_image->data == NULL) {
+    gImg->data = malloc(sizeof(unsigned char)*(gImg->header).imagesize));
+    if (gImg->data == NULL) {
         printf("Error while malloc image->data in ImgToGray");
         return NULL;
     }
@@ -48,14 +48,14 @@ BMPImage * ImgToGray(BMPImage * image){
     for (; pixel<width*height; pixel+=3 ) {
         gray_val = RGB2Gray(image -> data[pixel+2],image -> data[pixel + 1],image -> data[pixel]);
         //assign values to all pixels of gray_image for each channel
-        gray_image->data[pixel+2] = gray_val;
-        gray_image->data[pixel+1] = gray_val;
-        gray_image->data[pixel] = gray_val;
+        gImg->data[pixel+2] = gray_val;
+        gImg->data[pixel+1] = gray_val;
+        gImg->data[pixel] = gray_val;
     }
 	
 		
 	//return the result
-    return gray_val;
+    return gImg;
 }
 
 
