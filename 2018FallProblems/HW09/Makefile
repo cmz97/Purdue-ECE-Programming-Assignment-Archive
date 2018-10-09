@@ -21,7 +21,7 @@ $(TARGET): $(OBJS)
 testall: test1 test2 test3
 
 testmemory: $(TARGET)
-	$(VAL) ./shuf 7 2
+	$(VAL) ./shuf 7 2  
 
 test1: shuf
 	./shuf 2 2 | sort > output_file1.txt

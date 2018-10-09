@@ -43,8 +43,8 @@ void divide(CardDeck orig_deck, CardDeck* upper_deck, CardDeck* lower_deck)
 //repeat holds the number of shuffles yet to be performed.
 //after the interleave operation has been completed, you will recursively call
 	//repeat_shuffle(...) with a decremented value of repeat.
-void interleave_Util(CardDeck*, CardDeck*, CardDeck*, int, int);
-CardDeck* combineDeck(CardDeck*,CardDeck*);
+void interleave_Util(CardDeck*, CardDeck*, CardDeck*, int, int, int);
+//CardDeck* combineDeck(CardDeck*,CardDeck*);
 
 void interleave(CardDeck upper_deck, CardDeck lower_deck, int repeat)
 {
@@ -58,9 +58,7 @@ void interleave(CardDeck upper_deck, CardDeck lower_deck, int repeat)
     // Tip: To copy the elements of one array from one array to another (e.g., the array of cards in a CardDeck),
         //you could use memcpy(…).
         //The = operator will simply copy the address, not the elements themselves.
-    if (repeat<=0) {
-        return;
-    }
+
     
     CardDeck* handed = malloc(sizeof(CardDeck));
     if (handed == NULL) {
@@ -68,36 +66,34 @@ void interleave(CardDeck upper_deck, CardDeck lower_deck, int repeat)
         _error_clean();
     }
     handed->size = 1;
-    interleave_Util(handed,&upper_deck,&lower_deck,0,0);
+    interleave_Util(handed,&upper_deck,&lower_deck,0,0,repeat);
     
     //printf("Here is the resulting shuffle upper and lower deck: \n");
     //printDeck(*combineDeck(&upper_deck,&lower_deck));
-    
-    shuffle(*combineDeck(&upper_deck,&lower_deck),repeat-1);
     
     free(handed);
 }
 
 
 
-CardDeck* combineDeck(CardDeck* upper,CardDeck* lower)
-{
-    int size = upper->size + lower->size;
-    CardDeck * newCardDeck = malloc(sizeof(CardDeck));
-    newCardDeck->size = size;
-    for (int i=0; i<upper->size; i++) {
-        newCardDeck->cards[i] = upper->cards[i];
-    }
-    
-    for (int i=0; i<lower->size; i++) {
-        newCardDeck->cards[i+upper->size] = lower->cards[i];
-    }
-    
-    return newCardDeck;
-    
-}
+//CardDeck* combineDeck(CardDeck* upper,CardDeck* lower)
+//{
+//    int size = upper->size + lower->size;
+//    CardDeck * newCardDeck = malloc(sizeof(CardDeck));
+//    newCardDeck->size = size;
+//    for (int i=0; i<upper->size; i++) {
+//        newCardDeck->cards[i] = upper->cards[i];
+//    }
+//
+//    for (int i=0; i<lower->size; i++) {
+//        newCardDeck->cards[i+upper->size] = lower->cards[i];
+//    }
+//
+//    return newCardDeck;
+//
+//}
 
-void interleave_Util(CardDeck* handed, CardDeck* upper_deck, CardDeck* lower_deck, int upper_ind, int lower_ind)
+void interleave_Util(CardDeck* handed, CardDeck* upper_deck, CardDeck* lower_deck, int upper_ind, int lower_ind, int repeat)
 {
     
     if (upper_ind >= upper_deck->size) {
@@ -106,7 +102,9 @@ void interleave_Util(CardDeck* handed, CardDeck* upper_deck, CardDeck* lower_dec
         }
         lower_ind = lower_deck->size - 1;
         handed->size = lower_deck->size + upper_deck->size;
-        printDeck(*handed);
+        //printDeck(*handed);
+        repeat_shuffle(*handed,repeat-1);
+        //fprintf(stderr, "call\n");
         return;
     }
     
@@ -116,7 +114,9 @@ void interleave_Util(CardDeck* handed, CardDeck* upper_deck, CardDeck* lower_dec
         }
         upper_ind = upper_deck->size - 1;
         handed->size = lower_deck->size + upper_deck->size;
-        printDeck(*handed);
+        //printDeck(*handed);
+        repeat_shuffle(*handed,repeat-1);
+        //fprintf(stderr, "call\n");
         return;
     }
     
@@ -129,14 +129,14 @@ void interleave_Util(CardDeck* handed, CardDeck* upper_deck, CardDeck* lower_dec
     newHanded->cards[newHanded->size-1] = upper_deck->cards[upper_ind];
     newHanded->size++;
     upper_ind++;
-    interleave_Util(newHanded,upper_deck,lower_deck,upper_ind,lower_ind);
+    interleave_Util(newHanded,upper_deck,lower_deck,upper_ind,lower_ind,repeat);
     upper_ind--;
     
     memcpy(newHanded,handed,sizeof(CardDeck));
     newHanded->cards[newHanded->size-1] = lower_deck->cards[lower_ind];
     newHanded->size++;
     lower_ind++;
-    interleave_Util(newHanded,upper_deck,lower_deck,upper_ind,lower_ind);
+    interleave_Util(newHanded,upper_deck,lower_deck,upper_ind,lower_ind,repeat);
     lower_ind--;
     free(newHanded);
 }
