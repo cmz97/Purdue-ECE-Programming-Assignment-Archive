@@ -14,7 +14,7 @@
 int Is_BMPHeader_Valid(BMPHeader* header, FILE *fptr) {
   // Make sure this is a BMP file
         //Check for header->type
-    if ((header->type) != 0X4D42) {
+    if ((header->type) != MAGIC_VALUE) {
         printf("ERROR: This is not the correct file type\n");
         return 0;
     }
@@ -64,11 +64,11 @@ int Is_BMPHeader_Valid(BMPHeader* header, FILE *fptr) {
 	// Make sure we are getting 24 bits per pixel
 	// or 16 bits per pixel
 	// only for this assignment
-    if (header->bits != 16 &&  header->bits != 24) {
+    if (header->bits != 16 || header->bits != 24) {
         printf("ERROR: Image is not 24 or 16 bit/pixel \n");
         return 0;
     }
-	printf("The bit/pixel is :%d\n",header->bits);
+	
 	// check for file size, image size
 	// based on bits, width, and height
 	//check for imagesize using size-offset=imagesize, each element is a part of the header structure, so use -> accordingly
@@ -80,7 +80,11 @@ int Is_BMPHeader_Valid(BMPHeader* header, FILE *fptr) {
     
 
 	//use ftell(fptr) for file position(file_pos)
-    int file_pos = ftell(fptr); 
+    int file_pos = ftell(fptr);
+    if (file_pos != 0) {
+        printf("ERROR: Image file pointer is not at the beginning \n");
+        return 0;
+    }
 	//check if input file can be read: if (fseek(fptr, 0, SEEK_END) != 0)
     if (fseek(fptr, 0, SEEK_END) != 0){
         printf("ERROR: Input file can not be read\n");
@@ -96,17 +100,14 @@ int Is_BMPHeader_Valid(BMPHeader* header, FILE *fptr) {
 	//check if file_size is not equal to header->size
     if (file_size!=header->size) {
         printf("ERROR: file size is inconsistant witht the header info\n");
-        return 0; 
+        return 0;
     }
 	
 	//number of rows= width of file * number of bits +31
-    int check_size = (header->width*header->height)*header->bits+BMP_HEADER_SIZE*8;
-    if (check_size!=header->size*8) {
+    int check_size = 4*(header->width*header->bits+31)*header->height;
+    if (check_size!=header) {
         printf("ERROR: Image size inconsistant\n");
-        printf("The number of row is :%d The number of Col is :%d\n",header->width,header->height);
-	printf("The size of the img is: %d\n",check_size);
-	printf("The real size is %d\n",header->size*8);
-	return 0;
+        return 0;
     }
     
 	//multiply total value by 4
@@ -140,7 +141,7 @@ BMPImage *BMP_Open(const char *filename) {
 
 	BMPImage *bmpImage = (BMPImage *)malloc(sizeof(BMPImage));
 	//check for memory allocation errors
-    if (bmpImage == NULL) {
+    if (*bmpImage == NULL) {
         printf("ERROR: Fail to allocate memory for bmpImage\n");
         return NULL;
     }
@@ -156,14 +157,14 @@ BMPImage *BMP_Open(const char *filename) {
 	//check for any error while reading
 	
 	//check if the header is valid
-    if (Is_BMPHeader_Valid(&(bmpImage->header),fptr) == FALSE) {
+    if (Is_BMPHeader_Valid(bmpImage->header,fptr) == FALSE) {
         return NULL;
     }
 	// Allocate memory for image data
 	//(bmpImage->data = (unsigned char *)malloc(sizeof(unsigned char)*((int)((bmpImage->header).imagesize))))
 	//check error
     
-    bmpImage->data = (unsigned char *)malloc(sizeof(unsigned char)*((int)((bmpImage->header).imagesize)));
+    bmpImage->data = (unsigned char *)malloc(sizeof(unsigned char)*((int)((bmpImage->header).imagesize)))
     
     if (bmpImage->data == NULL) {
          printf("ERROR: Fail to malloc bmp data\n");
