@@ -16,9 +16,6 @@ int RGB2Gray(unsigned char red, unsigned char green, unsigned char blue){
 #ifdef TEST_IMGTOGRAY
 
 BMPImage * ImgToGray(BMPImage * image){
-	int width = (image->header).width;
-	int height = (image->header).height;
-
 	// allocate space for the image
     BMPImage * gImg = malloc(sizeof(BMPImage));
 	// the image has the same size
@@ -32,7 +29,6 @@ BMPImage * ImgToGray(BMPImage * image){
 	//gray_image->header = image->header;
     gImg->header = image->header;
 	//Assign the the imagesize as height * width
-	(gImg->header).imagesize = (gImg->header).width*(gImg->header).height;
 	
 	//check for data allocation failure using :
     gImg->data = malloc(sizeof(unsigned char)*(gImg->header).imagesize);
@@ -40,12 +36,12 @@ BMPImage * ImgToGray(BMPImage * image){
         printf("Error while malloc image->data in ImgToGray");
         return NULL;
     }
-	
-	int pixel=0;
-    int gray_val = 0;
+    
+  int pixel = 0;
+  int gray_val = 0;
 	//Run loop for all pixels using height and width
 	//convert each pixel of all channels to gray using the given RGB2GRAY function
-    for (; pixel<width*height; pixel+=3 ) {
+   for (; pixel<(image->header).imagesize; pixel+=3 ) {
         gray_val = RGB2Gray(image -> data[pixel+2],image -> data[pixel + 1],image -> data[pixel]);
         //assign values to all pixels of gray_image for each channel
         gImg->data[pixel+2] = gray_val;

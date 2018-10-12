@@ -12,12 +12,15 @@ int main(int argc, char **argv){
     if (img == NULL) {
         return EXIT_FAILURE;
     }
+
+    
   // convert to gray scale
 	// check for error in converting to gray scale
     BMPImage * gray = ImgToGray(img);
     if (gray == NULL) {
         return EXIT_FAILURE;
     }
+
 	// write the gray image to file
     if(BMP_Write(argv[2],gray)!=TRUE){
         return EXIT_FAILURE;
@@ -25,6 +28,7 @@ int main(int argc, char **argv){
 	// free all the images
     BMP_Free(img);
     BMP_Free(gray);
+
 	return EXIT_SUCCESS;
 }
 

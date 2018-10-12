@@ -68,7 +68,6 @@ int Is_BMPHeader_Valid(BMPHeader* header, FILE *fptr) {
         printf("ERROR: Image is not 24 or 16 bit/pixel \n");
         return 0;
     }
-	printf("The bit/pixel is :%d\n",header->bits);
 	// check for file size, image size
 	// based on bits, width, and height
 	//check for imagesize using size-offset=imagesize, each element is a part of the header structure, so use -> accordingly
@@ -133,8 +132,12 @@ int Is_BMPHeader_Valid(BMPHeader* header, FILE *fptr) {
 BMPImage *BMP_Open(const char *filename) {
   //open file
   //read file
-	FILE *fptr = fopen(filename,"r");
-	
+    FILE *fptr = fopen(filename,"r");
+    
+    if (fptr == NULL) {
+	printf("ERROR: Fail to opent the file\n");	
+	return NULL;
+    }
 
 	//Allocate memory for BMPImage*;
 
@@ -162,7 +165,7 @@ BMPImage *BMP_Open(const char *filename) {
 	// Allocate memory for image data
 	//(bmpImage->data = (unsigned char *)malloc(sizeof(unsigned char)*((int)((bmpImage->header).imagesize))))
 	//check error
-    
+     
     bmpImage->data = (unsigned char *)malloc(sizeof(unsigned char)*((int)((bmpImage->header).imagesize)));
     
     if (bmpImage->data == NULL) {
@@ -170,9 +173,8 @@ BMPImage *BMP_Open(const char *filename) {
         return NULL;
     }
 
-	// read in the image data
-    
-    int data_read_size = fread(&(bmpImage->data), (bmpImage->header).imagesize, 1, fptr);
+    // read in the image data
+    int data_read_size = fread(bmpImage->data, (bmpImage->header).imagesize, 1, fptr);
     if (data_read_size != 1) {
         printf("ERROR: Fail to read image data\n");
         return NULL;
@@ -180,7 +182,7 @@ BMPImage *BMP_Open(const char *filename) {
     
 
 	//check for error while reading
-	
+    
 	fclose(fptr);
 	return bmpImage;
 }
@@ -193,22 +195,24 @@ BMPImage *BMP_Open(const char *filename) {
  */
 int BMP_Write(const char * outfile, BMPImage* image)
 {
-	FILE *fptr = fopen(outfile, "w");
+    FILE *fptr = fopen(outfile, "w");
 	//open file and check for error
     if (fptr == NULL) {
         printf("ERROR: Fail to initialize wrting file pointer\n");
         return FALSE;
     }
-	
 	//check error for writing
 	
 	// write and check for image data:(fwrite(image->data, sizeof(unsigned char), (image->header).imagesize, fptr) != (image->header).imagesize)
-    
-    if(fwrite(image->data, sizeof(unsigned char), (image->header).imagesize, fptr) != (image->header).imagesize){
+    if(fwrite(&(image->header),BMP_HEADER_SIZE,1,fptr) != 1){
+    	printf("ERROR: Fail to write header\n");
+	return FALSE;
+    }
+
+    if(fwrite(image->data,(image->header).imagesize,1, fptr) != 1){
         printf("ERROR: Fail to write image\n");
         return FALSE;
     }
-	
 	fclose(fptr);
 	return TRUE;
 }

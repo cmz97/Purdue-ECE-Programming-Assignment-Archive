@@ -20,19 +20,35 @@ $(TARGET): $(OBJS)
 
 testall: test1 test2 test3
 
-testmemory: $(TARGET)
-	$(VAL)  hw10 ./hw10 ./exampleImages/CondProb.bmp CondProb_GrayScaled.bmp
+testmemory: $(TARGET) 
+	$(VAL) ./hw10 ./exampleImages/CondProb.bmp CondProb_GrayScaled.bmp
 
 test1: hw10
 	./hw10 ./exampleImages/CondProb.bmp CondProb_GrayScaled.bmp
+	xxd CondProb_GrayScaled.bmp > xxd_files/1_My.txt	
+	xxd ./expectedImages/expectedCondProb.bmp > ./xxd_files/1_Ex.txt
+	diff ./xxd_files/1_My.txt ./xxd_files/1_Ex.txt
 
 test2: hw10
-	./shuf 4 3 | sort > output_file2.txt
-	diff output_file2.txt expected/expected2
+	./hw10 ./exampleImages/RV.bmp RV_Gray.bmp
+	xxd RV_Gray.bmp > xxd_files/2_My.txt	
+	xxd ./expectedImages/expectedRV.bmp > ./xxd_files/2_Ex.txt
+	diff ./xxd_files/2_My.txt ./xxd_files/2_Ex.txt
 
 test3: hw10
-	./shuf 7 2| sort > output_file3.txt
-	diff output_file3.txt expected/expected3
+	./hw10 ./exampleImages/RV2.bmp RV2_Gray.bmp
+	xxd RV2_Gray.bmp > xxd_files/3_My.txt	
+	xxd ./expectedImages/expectedRV2.bmp > ./xxd_files/3_Ex.txt
+	diff ./xxd_files/3_My.txt ./xxd_files/3_Ex.txt
+
+
+test4: hw10
+	./hw10 ./exampleImages/RV2Small.bmp RV2Small_Gray.bmp
+	xxd RV2Small_Gray.bmp > xxd_files/4_My.txt	
+	xxd ./expectedImages/expectedRV2Small.bmp > ./xxd_files/4_Ex.txt
+	diff ./xxd_files/4_My.txt ./xxd_files/4_Ex.txt
+
+testall: test1 test2 test3 test4
 
 clean:
 	rm -f $(OBJS) $(TARGET)
