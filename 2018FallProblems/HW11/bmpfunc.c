@@ -37,6 +37,23 @@ BMPImage * ImgToGray(BMPImage * image){
     if (gImg->data == NULL) {
         printf("Error while malloc image->data in ImgToGray");
         return NULL;
+    }
+    
+    int pixel = 0;
+    int gray_val = 0;
+    //Run loop for all pixels using height and width
+    //convert each pixel of all channels to gray using the given RGB2GRAY function
+    for (; pixel<(image->header).imagesize; pixel+=3 ) {
+        gray_val = RGB2Gray(image -> data[pixel+2],image -> data[pixel + 1],image -> data[pixel]);
+        //assign values to all pixels of gray_image for each channel
+        gImg->data[pixel+2] = gray_val;
+        gImg->data[pixel+1] = gray_val;
+        gImg->data[pixel] = gray_val;
+    }
+    
+    
+    //return the result
+    return gImg;
 
 }
 
