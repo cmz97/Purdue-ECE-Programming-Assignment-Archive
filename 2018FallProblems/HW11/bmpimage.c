@@ -102,9 +102,6 @@ int Is_BMPHeader_Valid(BMPHeader* header, FILE *fptr) {
     int check_size = (header->width*header->height)*header->bits+BMP_HEADER_SIZE*8;
     if (check_size!=header->size*8) {
         printf("ERROR: Image size inconsistant\n");
-        printf("The number of row is :%d The number of Col is :%d\n",header->width,header->height);
-        printf("The size of the img is: %d\n",check_size);
-        printf("The real size is %d\n",header->size*8);
         return 0;
     }
     

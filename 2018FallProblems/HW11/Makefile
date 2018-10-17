@@ -1,11 +1,11 @@
-# Makefile
+#Makefile
 
 TARGET = hw11
 WARNING = -Wall -Wshadow --pedantic
 ERROR = -Wvla -Werror
 GCC = gcc -std=c99 -g $(WARNING) $(ERROR)
 
-TESTFLAGS = -DTEST_MAINFUNC -DTEST_HEADERVALID -DTEST_BMPOPENFILE -DTEST_BMPWRITEFUNC -DTEST_BMPFREEFUNC -DTEST_FUNCGIVEN -DTEST_IMGTOGRAY
+TESTFLAGS = -DTEST_MAIN -DTEST_HEADERVALID -DTEST_BMPOPENFILE -DTEST_BMPWRITEFUNC -DTEST_BMPFREEFUNC -DTEST_FUNCGIVEN -DTEST_IMGTOGRAY -DTEST_ADAPTIVETHRESHOLDING
 
 SRCS =  hw11.c bmpfunc.c bmpimage.c
 OBJS = $(SRCS:%.c=%.o)
@@ -17,7 +17,6 @@ $(TARGET): $(OBJS)
 	
 .c.o: 
 	$(GCC) $(TESTFLAGS) -c $*.c 
-
 
 testmemory: $(TARGET) 
 	$(VAL) ./hw11 ./exampleImages/CondProb.bmp CondProb_GrayScaled.bmp 1 2
@@ -39,7 +38,6 @@ test3: hw11
 	xxd RV2_Gray.bmp > xxd_files/3_My.txt	
 	xxd ./expectedImages/expectedRV2.bmp > ./xxd_files/3_Ex.txt
 	diff ./xxd_files/3_My.txt ./xxd_files/3_Ex.txt
-
 
 test4: hw11
 	./hw11 ./exampleImages/RV2Small.bmp RV2Small_Gray.bmp 11 2

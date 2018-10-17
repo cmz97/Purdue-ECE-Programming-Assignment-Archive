@@ -74,38 +74,38 @@ BMPImage * AdaptiveThresholding(BMPImage * grayImage, int radius, int epsilon){
     }
     adaptive->header = grayImage->header;
     
-	// (gray_image->header).imagesize = (gray_image->header).width*(gray_image->header).height;
 	if ((adaptive->data = malloc(sizeof(unsigned char)*(adaptive->header).imagesize)) == NULL) {
 		fprintf(stderr, "Error allocating memory\n");
 		free(adaptive);
 		return NULL;
-	}
+        }
 
-	int pixel=0;
 	//Run a nested loop for all elements using height and width
         //Find the maximum of top row, bottom rpw, left column and right column using radius
     for (int row = 0; row<(adaptive->header).height; row++) {
         for (int col=0; col<(adaptive->header).width; col++) {
             int toprow = MAX(0, row-radius);
-            int bottomrow = MIN(height-1, row+radius);
+            int bottomrow = MIN((adaptive->header).height-1, row+radius);
             int leftcol = MAX(0, col-radius);
-            int rightcol = MIN(width-1, col+radius);
+            int rightcol = MIN((adaptive->header).width-1, col+radius);
             
             int sum = 0;
-            for (int i=toprow; i<bottomrow; i++) {
-                for (int j=leftcol; j<rightcol; j++) {
+            int count = 0;
+            for (int i=toprow; i<=bottomrow; i++) {
+                for (int j=leftcol; j<=rightcol; j++) {
                     sum += grayImage->data[(i*(adaptive->header).width + j)*3];
+		    count++;
                 }
             }
-            int avg = sum / ((bottomrow - toprow)*(rightcol - leftcol));
-            if (avg - epsilon > grayImage->data[(row*(adaptive->header).width + col)*3]) {
-                adaptive->data[(row*(adaptive->header).width + col)] = 255;
-                adaptive->data[(row*(adaptive->header).width + col)+1] = 255;
-                adaptive->data[(row*(adaptive->header).width + col)+2] = 255;
+            int avg = sum / count;
+	    if (avg - epsilon > grayImage->data[(row*(adaptive->header).width + col)*3]){
+		adaptive->data[(row*(adaptive->header).width + col)*3] = 0;
+                adaptive->data[(row*(adaptive->header).width + col)*3+1] = 0;
+                adaptive->data[(row*(adaptive->header).width + col)*3+2] = 0;
             }else{
-                adaptive->data[(row*(adaptive->header).width + col)] = 255;
-                adaptive->data[(row*(adaptive->header).width + col)+1] = 255;
-                adaptive->data[(row*(adaptive->header).width + col)+2] = 255;
+                adaptive->data[(row*(adaptive->header).width + col)*3] = 255;
+                adaptive->data[(row*(adaptive->header).width + col)*3+1] = 255;
+                adaptive->data[(row*(adaptive->header).width + col)*3+2] = 255;
             }
         }
     }

@@ -21,6 +21,7 @@ int main(int argc, char **argv){
     }
     
     int epsilon = strtol(argv[4],NULL,10);
+    //printf("epsilon:%d radius:%d\n",epsilon,radius);
   // open the BMP file
     BMPImage * img = BMP_Open(argv[1]);
     if (img == NULL) {
@@ -41,6 +42,10 @@ int main(int argc, char **argv){
         return EXIT_FAILURE;
     }
     
+    if(BMP_Write(argv[2],threshold)!=TRUE){
+        return EXIT_FAILURE;
+    }
+
     BMP_Free(img);
     BMP_Free(gray);
     BMP_Free(threshold);
