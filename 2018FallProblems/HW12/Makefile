@@ -1,5 +1,3 @@
-#Makefile
-
 TARGET = hw12
 WARNING = -Wall -Wshadow --pedantic
 ERROR = -Wvla -Werror
@@ -7,7 +5,7 @@ GCC = gcc -std=c99 -g $(WARNING) $(ERROR)
 
 TESTFLAGS = -DLINKEDLIST -DTEST_MAIN -DTEST_CREATENODE -DTEST_LINKEDLISTCREATE -DTEST_JOSEPHUS
 
-SRCS =  hw12.c hw12.h main.c
+SRCS =  hw12.c main.c
 OBJS = $(SRCS:%.c=%.o)
 
 VAL =  valgrind --tool=memcheck --log-file=memcheck.txt --leak-check=full --verbose

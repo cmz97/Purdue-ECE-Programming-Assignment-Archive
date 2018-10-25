@@ -15,22 +15,24 @@ int main(int argc, char **argv)
 {
 	// if argc < 4 then return EXIT_FAILURE
     if (argc<4) {
-        printf("The input parameter is incorrect!")
+        printf("The input parameter is incorrect!");
         return EXIT_FAILURE;
     }
 	// argv[1] - length of linked list
-    int length  = argv[1];
+    int length  =  strtol(argv[1],NULL,10);
 	// argv[2] - value of k as mentioned in josephus algorithm
-    int k = argv[2];
+    int k = strtol(argv[2],NULL,10);;
 	// argv[3] - value of elemDivisible
-    int elemDivisible = argv[3];
+    int elemDivisible = strtol(argv[3],NULL,10);;
 	// create head node
     Node * headNode = CreateNode(0);
+    
 	// create Linked list with length as argv[1]
     LinkedListCreate(&headNode,length);
 	// run josephus
     Josephus(&headNode,k,elemDivisible);
 	// free the head node
+    
     free(headNode);
 	return EXIT_SUCCESS;
 }

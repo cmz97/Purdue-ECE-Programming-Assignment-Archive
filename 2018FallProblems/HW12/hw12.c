@@ -63,7 +63,7 @@ void LinkedListCreate(Node * * head, int length)
     }else{
         // create linked list of length as 'length'
         Node * previousNode = CreateNode(1);
-        head->next = previousNode;
+        (*head)->next = previousNode;
         for (int i=2; i<length; i++) {
             Node * thisNode = CreateNode(i);
             previousNode->next = thisNode;
@@ -81,6 +81,7 @@ void LinkedListCreate(Node * * head, int length)
 
 Node * list_delete(Node *, int);
 void List_destroy(Node * );
+int getListLen(Node * );
 // 1. head: the head of the singly linkedlist.
 // 2. k : this variable will be used for counting if count = k, the element will be out.
 // 3. elemDivisible : this variable will be used for printing. When the number of
@@ -93,18 +94,21 @@ void Josephus(Node ** head, int k, int elemDivisible)
 {
 	// implement the algorithm here
     int length = getListLen(*head);
+    printf("THE LENGTH: %d\n",length);
+    
     int counter = 0;
     Node * currentNode = *head;
     while (length>elemDivisible) {
         if (counter == k) {
             if (currentNode->next == NULL) {
-                currentNode = *head
+                currentNode = *head;
             }
-            *head = list_delete(*head,currentNode->value)
+            *head = list_delete(*head,currentNode->value);
+            length--;
             counter = 0;
         }else{
             if (currentNode->next == NULL) {
-                currentNode = *head
+                currentNode = *head;
             }
             currentNode = currentNode->next;
             counter ++;
@@ -113,6 +117,7 @@ void Josephus(Node ** head, int k, int elemDivisible)
     }
     LinkedListPrint(*head);
     List_destroy(*head);
+    
 	// remember to free the memory of the nodes
 	// print the linked list using our function when number of nodes remaining is divisible by elemDivisible
     
@@ -148,7 +153,7 @@ void List_destroy(Node * h){
     Node * p;
     while(h!=NULL){
         p = h->next;
-        free(h);s
+        free(h);
         h = p;
     }
 }
