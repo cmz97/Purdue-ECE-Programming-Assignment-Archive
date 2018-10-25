@@ -22,22 +22,22 @@ testmemory: $(TARGET)
 	$(VAL) ./hw12 100 3 20 > expected6.txt
 
 test1: hw12
-    ./hw12 10 3 1 > expected1.txt
+	./hw12 10 3 1 > expected1.txt
 
 test2: hw12
-    ./hw12 10 4 2 > expected2.txt
+	./hw12 10 4 2 > expected2.txt
 
 test3: hw12
-    ./hw12 8 5 3 > expected3.txt
+	./hw12 8 5 3 > expected3.txt
 
 test4: hw12
-    ./hw12 8 9 1 > expected4.txt
+	./hw12 8 9 1 > expected4.txt
 
 test5: hw12
-    ./hw12 41 3 1 > expected5.txt
+	./hw12 41 3 1 > expected5.txt
 
 test6: hw12
-    ./hw12 100 3 20 > expected6.txt
+	./hw12 100 3 20 > expected6.txt
 
 testall: test1 test2 test3 test4 test5 test6
 
