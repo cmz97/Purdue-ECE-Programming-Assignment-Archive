@@ -37,6 +37,7 @@ Node * CreateNode(int value)
 {
 	// allocate memory for the new Node*
     Node * newNode = malloc(sizeof(Node));
+    
 	// check memory allocation fails
     if (newNode == NULL) {
         printf("Error in creating a node\n");
@@ -44,6 +45,7 @@ Node * CreateNode(int value)
     }
 	// create a Node* with the value as 'value'(input argument).
     newNode -> value = value;
+    newNode -> next = NULL;
     return newNode;
 }
 #endif
@@ -58,11 +60,11 @@ Node * CreateNode(int value)
 void LinkedListCreate(Node * * head, int length)
 {
 	// check if length is not negative
+    Node * previousNode = CreateNode(1);
     if (length<=1) {
         printf("Error in creating Linklist (length<0)\n");
     }else{
         // create linked list of length as 'length'
-        Node * previousNode = CreateNode(1);
         (*head)->next = previousNode;
         for (int i=2; i<length; i++) {
             Node * thisNode = CreateNode(i);
@@ -70,7 +72,7 @@ void LinkedListCreate(Node * * head, int length)
             previousNode = thisNode;
         }
     }
-    
+    //previousNode->next = NULL;
 	// do not return anything
 }
 #endif
@@ -79,7 +81,7 @@ void LinkedListCreate(Node * * head, int length)
 
 #ifdef TEST_JOSEPHUS
 
-Node * list_delete(Node *, int);
+Node * list_delete(Node *, Node **);
 void List_destroy(Node * );
 int getListLen(Node * );
 // 1. head: the head of the singly linkedlist.
@@ -92,31 +94,32 @@ int getListLen(Node * );
 
 void Josephus(Node ** head, int k, int elemDivisible)
 {
-	// implement the algorithm here
+    // implement the algorithm here
     int length = getListLen(*head);
-    printf("THE LENGTH: %d\n",length);
     
     int counter = 0;
     Node * currentNode = *head;
-    while (length>elemDivisible) {
+    while (length>1) {
         if (counter == k) {
-            if (currentNode->next == NULL) {
+            *head = list_delete(*head,&currentNode);
+            if (currentNode == NULL) {
                 currentNode = *head;
             }
-            *head = list_delete(*head,currentNode->value);
-            length--;
             counter = 0;
+            length --;
+	    if(length%elemDivisible == 0){
+	    	LinkedListPrint(*head);
+	    }
         }else{
-            if (currentNode->next == NULL) {
-                currentNode = *head;
-            }
             currentNode = currentNode->next;
-            counter ++;
+            if(currentNode == NULL)
+	    {
+		currentNode = *head;
+	    }
+	    counter ++;
         }
         
     }
-    LinkedListPrint(*head);
-    List_destroy(*head);
     
 	// remember to free the memory of the nodes
 	// print the linked list using our function when number of nodes remaining is divisible by elemDivisible
@@ -124,13 +127,15 @@ void Josephus(Node ** head, int k, int elemDivisible)
 
 }
 
-Node * list_delete(Node *h, int u){
+Node * list_delete(Node *h, Node ** current){
+    int u = (*current)->value;
     if (h==NULL) {
         return NULL;
     }
     
     if (h->value == u) {
         Node * p = h->next;
+	(*current) = p;
         free(h);
         return p;
     }
@@ -142,19 +147,20 @@ Node * list_delete(Node *h, int u){
         q = q->next;
     }
     if (r == NULL) {
+	printf("reached the end\n");
         return h;
     }
     q->next = r->next;
+    (*current) = q->next;
     free(r);
     return h;
 }
 
 void List_destroy(Node * h){
-    Node * p;
-    while(h!=NULL){
-        p = h->next;
-        free(h);
-        h = p;
+    Node * p = h->next;
+    while(p!=NULL){
+        free(p);
+    	p = p->next;
     }
 }
 
@@ -162,7 +168,7 @@ int getListLen(Node * h){
     if (h==NULL) {
         return 0;
     }
-    Node * p;
+    Node * p = NULL;
     int count = 0;
     while(h!=NULL){
         p = h->next;
