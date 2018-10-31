@@ -33,14 +33,13 @@ int main(int argc, char **argv)
     // count the number of integers using a loop
     // at the end of the loop close file_pointer
     int waste = 0;
-    while(!feof(fp)){
-        count += fscanf(fp,"%d",&waste);
-    }
+    while (fscanf(fp, "%d", &waste) == 1)count++;
 
 	// allocate memory to store the numbers
     int * arr = malloc(sizeof(int)*count);
 	// check for malloc fail, if so, return EXIT_FAILURE
     if (arr == NULL) {
+        fclose(fp);
         return EXIT_FAILURE;
     }
     fseek(fp,0,SEEK_SET);
