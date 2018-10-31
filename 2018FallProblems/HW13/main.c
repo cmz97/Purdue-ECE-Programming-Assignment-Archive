@@ -32,11 +32,10 @@ int main(int argc, char **argv)
     
     // count the number of integers using a loop
     // at the end of the loop close file_pointer
+    int waste = 0;
     while(!feof(fp)){
-        int c = fgetc(fp);
-        if(c == '\n')count++;
+        count += fscanf(fp,"%d",&waste);
     }
-    
 
 	// allocate memory to store the numbers
     int * arr = malloc(sizeof(int)*count);
@@ -49,17 +48,17 @@ int main(int argc, char **argv)
     int ind = 0;
     while (ind < count)
     {
-        if (fscanf(fptr, "%d", &arr[ind]) != 1)
+        if (fscanf(fp, "%d", &arr[ind]) != 1)
         {
             fprintf(stderr, "fscanf fail\n");
-            fclose (fptr);
+            fclose (fp);
             free (arr);
             return EXIT_FAILURE;
         }
         ind ++;
     }
 	// create head node to store the head of the linked list.
-    Node * head = NULL;
+    Node * head;
 	// call the appropriate function to create the rest of the linked list, with the values of the array.
     LinkedListCreate(&head,count,arr);
     Divide(&head);
@@ -68,7 +67,7 @@ int main(int argc, char **argv)
 		// Then the sub-lists are broken down further into smaller sub-lists.
 		// Refer to the example in the README
     fclose(fp);
-    free(arr)
+    free(arr);
 	// Tip: check for memory errors.
 
 	return EXIT_SUCCESS;

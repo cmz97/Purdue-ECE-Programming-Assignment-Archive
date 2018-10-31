@@ -1,11 +1,11 @@
-TARGET = hw12
+TARGET = hw13
 WARNING = -Wall -Wshadow --pedantic
 ERROR = -Wvla -Werror
 GCC = gcc -std=c99 -g $(WARNING) $(ERROR)
 
-TESTFLAGS = -DLINKEDLIST -DTEST_MAIN -DTEST_CREATENODE -DTEST_LINKEDLISTCREATE -DTEST_JOSEPHUS
+TESTFLAGS = -DLINKEDLIST -DTEST_MAIN -DTEST_CREATENODE -DTEST_LINKEDLISTCREATE -DTEST_SPLIT -DTEST_DIV 
 
-SRCS =  hw12.c main.c
+SRCS =  hw13.c main.c
 OBJS = $(SRCS:%.c=%.o)
 
 VAL =  valgrind --tool=memcheck --log-file=memcheck.txt --leak-check=full --verbose --track-origins=yes
@@ -17,32 +17,25 @@ $(TARGET): $(OBJS)
 	$(GCC) $(TESTFLAGS) -c $*.c 
 
 testmemory: $(TARGET) 
-	$(VAL) ./hw12 100 3 20 > expected6.txt
+	$(VAL) ./hw13 inputs/test4.txt > output4.txt
 
-test1: hw12
-	./hw12 10 3 1 > expected1.txt
-	diff expected1.txt ./expected/expected1.txt
+test1: hw13
+	./hw13 inputs/test1.txt > output1.txt
+	diff output1.txt ./expected/expected1.txt
 
-test2: hw12
-	./hw12 10 4 2 > expected2.txt
-	diff expected2.txt ./expected/expected2.txt
-test3: hw12
-	./hw12 8 5 3 > expected3.txt
-	diff expected3.txt ./expected/expected3.txt
+test2: hw13
+	./hw13 inputs/test2.txt > output2.txt
+	diff output2.txt ./expected/expected2.txt
 
-test4: hw12
-	./hw12 8 9 1 > expected4.txt
-	diff expected4.txt ./expected/expected4.txt
+test3: hw13
+	./hw13 inputs/test3.txt > output3.txt
+	diff output3.txt ./expected/expected3.txt
 
-test5: hw12
-	./hw12 41 3 1 > expected5.txt
-	diff expected5.txt ./expected/expected5.txt
+test4: hw13
+	./hw13 inputs/test4.txt > output4.txt
+	diff output4.txt ./expected/expected4.txt
 
-test6: hw12
-	./hw12 100 3 20 > expected6.txt
-	diff expected6.txt ./expected/expected6.txt
-
-testall: test1 test2 test3 test4 test5 test6
+testall: test1 test2 test3 test4
 
 clean:
 	rm -f $(OBJS) $(TARGET)

@@ -39,7 +39,6 @@ Node * CreateNode(int val)
     
     // check memory allocation fails
     if (newNode == NULL) {
-        printf("Error in creating a node\n");
         return NULL;
     }
     // create a Node* with the value as 'value'(input argument).
@@ -60,18 +59,19 @@ void LinkedListCreate(Node * * source, int len, int* arr)
 {
 	// This function is similar to the one in HW12.
 	// Tip: use CreateNode(arr[index])
-    Node * previousNode = CreateNode(arr[i]);
-    if (length<=1) {
-        printf("Error in creating Linklist (length<0)\n");
-    }else{
-        // create linked list of length as 'length'
-        (*head)->next = previousNode;
-        for (int i=1; i<length; i++) {
-            Node * thisNode = CreateNode(arr[i]);
-            previousNode->next = thisNode;
-            previousNode = thisNode;
-        }
+    if(len <=0){
+       *source = NULL;
     }
+    Node *temp;
+    Node *dummy = CreateNode(0);
+    temp = dummy;
+    *source = NULL;
+    for (int i = 0; i < len; i++) {
+        temp -> next = CreateNode(arr[i]);
+        temp = temp -> next;
+    }
+    *source = dummy -> next;
+    free(dummy);
 }
 #endif
 
@@ -90,42 +90,36 @@ void SplitList(Node* source, Node** head1, Node** head2)
 				// The list should split into 1,2 and 3,4
     int mid = 0;
     int length = getListLen(source);
-    if (length % 2 == 0) {
-        mid = floor(length/2); //even number
+    /*if (length % 2 == 0) {
+        mid = length / 2 + 1; //even number
     }else{
-        mid = length / 2;
-    }
+    	mid = length / 2 + 1;
+    }*/
+    mid = length - 1 - length/2;
 		//in case of an odd number of nodes, mid point will be <num_elements>/2
 			//Example: 1,2,3,4,5
 				// The list should split into 1,2,3 and 4,5				
     * head1 = source;
-    * head1->next = NULL;
+  //  printf("%d\n", mid);
     Node * temp = source;
-    for (int i=1; i<mid; i++) {
+    for (int i=0; i<mid; i++) {
         temp = temp->next;
-        if (temp == NULL) { //TO BE DELTE
-            printf("ERROR in SplitList\n");
-            break;
-        }
     }
-    * head2 = temp;
+    * head2 = temp -> next;
+    temp -> next = NULL;
     	// Tip: head1 will point to the source node.
 	// Tip: head2 will point to the mid-point of the list.
 	// Tip: Ensure you break the link between the sub-lists.
 }
 
 int getListLen(Node * h){
-    if (h==NULL) {
-        return 0;
-    }
-    Node * p = NULL;
-    int count = 0;
-    while(h!=NULL){
-        p = h->next;
-        h = p;
-        count ++;
-    }
-    return count;
+  Node *temp = h;
+  int count = 0;
+  while (temp!=NULL) {
+    count++;
+    temp = temp -> next;
+  }
+  return count;
 }
 
 #endif
@@ -134,20 +128,18 @@ int getListLen(Node * h){
 #ifdef TEST_DIV
 void Divide(Node** source) 
 { 
-	// Declare a node, to hold the current head of source list.
-	Node * head = * source
-	// Declare nodes, to hold the two the heads of the two sub-lists.
-    Node * head1 = NULL;
-    Node * head2 = NULL;
+	// Declare a node, to hold the current head of source list.Node * head = * source
+    Node * head1;
+    Node * head2;
 	// Check for the base case -- length 0 or 1
 		// if so, return;
     if (getListLen(*source)<2) {
-        free(source);
+        free(*source);
         return;
     }
 	  
 	// Use SpiltList(...) to partition the list into sub lists.
-    SpiltList(&head1,&head2);
+    SplitList(*source,&head1,&head2);
 	// Use LinkedListPrint(...); to print the upper sub-list.
     LinkedListPrint(&head1);
 	// Use LinkedListPrint(...); to print the lower sub-list
