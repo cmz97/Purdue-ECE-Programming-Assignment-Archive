@@ -37,7 +37,8 @@ void LinkedListPrint(Node * * source)
 int main(int argc, char **argv)
 {
 	// if argc is less than 2 then, return EXIT_FAILURE
-	// input file is specified through the Makefile.
+	
+        // input file is specified through the Makefile.
 
 	// open file to read
 

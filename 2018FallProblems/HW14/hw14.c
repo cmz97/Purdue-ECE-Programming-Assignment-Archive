@@ -59,7 +59,12 @@ void SplitList(Node* source, Node** head1, Node** head2)
 {
 	// Refer HW13
     int mid = 0;
-    int length = getListLen(source);
+    Node *waste = source;
+    int length = 0;
+    while (waste!=NULL) {
+        length++;
+        waste = waste -> next;
+    }
     mid = length - 1 - length/2;
     //in case of an odd number of nodes, mid point will be <num_elements>/2
     //Example: 1,2,3,4,5
@@ -93,10 +98,10 @@ Node* Merge(Node* upper, Node* lower)
     
     if (upper->value>=lower->value) {
         head = upper;
-        upper.next = lower;
+        upper->next = lower;
     }else{
         head = lower;
-        lower.next = upper;
+        lower->next = upper;
     }
     return head;
 	// Pick the larger between upper and lower, and recur appropriately.
@@ -126,7 +131,7 @@ void MergeSort(Node** source)
 	  
 	// Use SpiltList() to partition the list into sub lists.
 		// This will partiton the source list, into two lists (As done in the previous homework)
-    SplitList(head,upper,lower);
+    SplitList(head,&upper,&lower);
 	// Recursively sort the sub-lists by calling MergeSort() on the upper and lower sub-lists.
     MergeSort(&upper);
     MergeSort(&lower);
