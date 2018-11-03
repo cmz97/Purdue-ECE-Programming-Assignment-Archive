@@ -86,6 +86,10 @@ void SplitList(Node* source, Node** head1, Node** head2)
 #ifdef TEST_MERGE
 // upper is the upper sub-list to be merged
 // lower is the lower sub-list to be merged
+int getval(Node * head, int offset);
+int getListLen(Node * );
+void append(Node ** head, int val);
+
 Node* Merge(Node* upper, Node* lower) 
 {
     Node * head = NULL;
@@ -96,24 +100,73 @@ Node* Merge(Node* upper, Node* lower)
         return upper;
     }
     
-    if (upper->value>=lower->value) {
-        head = upper;
-        upper->next = lower;
-    }else{
-        head = lower;
-        lower->next = upper;
+    int leftind = 0;
+    int rightind = 0;
+    
+    while(leftind<getListLen(upper) && rightind <getListLen(lower)){
+        if (getval(upper,leftind)>=getval(lower,rightind)) {
+            append(&head,getval(lower,rightind));
+            rightind++;
+        }else{
+            append(&head,getval(upper,leftind));
+            leftind++;
+        }
+    }
+    //fill sup the rest of the array
+    while(leftind<getListLen(upper)){
+        append(&head,getval(upper,leftind));
+        leftind++;
+    }
+    //fill up the rest of the array
+    while(rightind <getListLen(lower)){
+        append(&head,getval(lower,rightind));
+        rightind++;
     }
     return head;
 	// Pick the larger between upper and lower, and recur appropriately.
 	// return the merged array
 }
 
+int getval(Node * head, int offset){
+    if (head == NULL) {
+        printf("Index dont exsist");
+        return -1;
+    }
+    Node * temp = head;
+    for (int i=1; i<=offset; i++) {
+        temp = temp->next;
+        if (temp == NULL) {
+            printf("Index dont exsist");
+            return -1;
+        }
+    }
+    return temp->value;
+}
 
+void append(Node ** head, int val){
+    Node *temp = *head;
+    while (temp!=NULL) {
+        temp = temp -> next;
+    }
+    Node * new = malloc(sizeof(Node));
+    new->value = val;
+    new->next = NULL;
+    temp->next = new;
+}
 
+int getListLen(Node * h){
+    Node *temp = h;
+    int count = 0;
+    while (temp!=NULL) {
+        count++;
+        temp = temp -> next;
+    }
+    return count;
+}
 #endif
 
 #ifdef TEST_SORT
-int getListLen(Node * );
+
 // source is the head of the list to for which MergeSort is to be performed.
 void MergeSort(Node** source) 
 { 
@@ -124,8 +177,13 @@ void MergeSort(Node** source)
     Node * lower = NULL;
 	// Check for the base case -- length 0 or 1
 		// if so, return;
-    
-    if (getListLen(head)) {
+    int length = 0;
+    Node * waste = *source;
+    while (waste!=NULL) {
+        length++;
+        waste = waste -> next;
+    }
+    if (length < 2) {
         return;
     }
 	  
@@ -141,14 +199,6 @@ void MergeSort(Node** source)
 	// Merge the two sorted lists together, using the Merge()
 }
 
-int getListLen(Node * h){
-    Node *temp = h;
-    int count = 0;
-    while (temp!=NULL) {
-        count++;
-        temp = temp -> next;
-    }
-    return count;
-}
+
 #endif
 
