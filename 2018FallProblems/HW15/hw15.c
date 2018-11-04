@@ -56,7 +56,7 @@ void LinkedListCreate(Node ** head, char* name)
     int len = 0;
     if (fp == NULL) {
         printf("error while attemp to open file");
-        return EXIT_FAILURE;
+        return;
     }
     
     //count the number of numbers in file
@@ -68,7 +68,7 @@ void LinkedListCreate(Node ** head, char* name)
 
     if (arr == NULL) {
         fclose(fp);
-        return EXIT_FAILURE;
+        return;
     }
     
     //reset fp
@@ -82,11 +82,10 @@ void LinkedListCreate(Node ** head, char* name)
             fprintf(stderr, "fscanf fail\n");
             fclose (fp);
             free (arr);
-            return EXIT_FAILURE;
+            return;
         }
         ind ++;
     }
-    
     
     if (len <= 0) {
         * head = NULL;
@@ -94,7 +93,7 @@ void LinkedListCreate(Node ** head, char* name)
         free(arr);
         return;
     }else{
-        * head = CreateNode(name[0]); //create the head of the node
+        * head = CreateNode(arr[0]); //create the head of the node
         Node * temp = * head;
         for (int i = 1; i < len; i++) {
             temp -> next = CreateNode(arr[i]);
@@ -109,7 +108,6 @@ void LinkedListCreate(Node ** head, char* name)
 #endif
 #ifdef TEST_REMOVED
 //This function will remove repetitions of a linked list value.
-
 void RemoveDuplicate(Node *headRef)
 {
 	/*
@@ -120,5 +118,27 @@ void RemoveDuplicate(Node *headRef)
 	To delete a node: we will map the next Node of the previous Node to the Node after the current Node.
 	Print the linked list after all repetitions have been removed. Use the function given to you for priniting.
 	*/
+	
+	Node * temp = headRef;
+	Node * temp2 = NULL;
+	Node * prev_temp2 = NULL;
+	while(temp){
+		int current = temp->value;
+		temp2 = temp->next;
+		prev_temp2 = temp;
+		while(temp2){
+			if(temp2->value == current){
+				prev_temp2 -> next = temp2 -> next;
+				free(temp2);
+				temp2 = prev_temp2->next;
+			}else{
+				prev_temp2 = temp2;
+				if(temp2)temp2 = temp2->next;		
+			}
+		}
+		temp = temp->next;
+	}
+	LinkedListPrint(headRef);
 }
+
 #endif

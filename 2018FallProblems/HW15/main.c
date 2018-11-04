@@ -9,6 +9,8 @@
 // Modify the following function
 #ifdef TEST_MAIN
 
+void List_destroy(Node * );
+
 int main(int argc, char **argv)
 {
 	// input argv[1] contains the name of the input file.
@@ -19,13 +21,20 @@ int main(int argc, char **argv)
     
     Node * head;
     LinkedListCreate(&head,argv[1]);
-    
-    LinkedListPrint(head);
-    
+    RemoveDuplicate(head);
+    List_destroy(head);     
 	//Initialize a linked list Node and use the file name from input arguments to create a linked list
 	//Remove all duplicates in the linked list created above.
 
 	// release memory
 }
 
+void List_destroy(Node * h){
+  Node * p;
+  while(h!=NULL){
+    p = h->next;
+    free(h);
+    h = p;
+  }
+}
 #endif

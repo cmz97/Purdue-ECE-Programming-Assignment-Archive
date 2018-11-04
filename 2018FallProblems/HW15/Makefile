@@ -11,7 +11,7 @@ OBJS = $(SRCS:%.c=%.o)
 VAL =  valgrind --tool=memcheck --log-file=memcheck.txt --leak-check=full --verbose --track-origins=yes
 
 $(TARGET): $(OBJS)
-    $(GCC) $(TESTFLAGS) $(OBJS) -o $(TARGET)
+	$(GCC) $(TESTFLAGS) $(OBJS) -o $(TARGET)
 	
 .c.o: 
 	$(GCC) $(TESTFLAGS) -c $*.c 
@@ -28,14 +28,14 @@ test2: hw15
 	diff output2.txt ./expected/expected2.txt
 
 test3: hw15
-    ./hw15 inputs/test3.txt > output3.txt
-    diff output3.txt ./expected/expected3.txt
+	./hw15 inputs/test3.txt > output3.txt
+	diff output3.txt ./expected/expected3.txt
 
 test4: hw15
-    ./hw15 inputs/test4.txt > output4.txt
-    diff output4.txt ./expected/expected4.txt
+	./hw15 inputs/test4.txt > output4.txt
+	diff output4.txt ./expected/expected4.txt
 
-testall: test1 test2
+testall: test1 test2 test3 test4
 
 clean:
 	rm -f $(OBJS) $(TARGET)
