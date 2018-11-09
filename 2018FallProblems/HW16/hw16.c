@@ -12,8 +12,8 @@
 void FreeBinaryTree(treeNode *root)
 {
     if(root==NULL)return;
-    FreeBinaryTree(root->left);
-    FreeBinaryTree(root->right);
+    FreeBinaryTree(root->leftChild);
+    FreeBinaryTree(root->rightChild);
 }
 
 #endif
@@ -60,9 +60,9 @@ bool isSubTree(treeNode* haystack, treeNode *needle)
     if (haystack == NULL || needle == NULL)
         return false;
     
-    return (haystack->data == needle->data   &&
-            isSubTree(haystack->left, needle->left) &&
-            isSubTree(haystack->right, needle->right) );
+    return (haystack->value == needle->value   &&
+            isSubTree(haystack->leftChild, needle->leftChild) &&
+            isSubTree(haystack->rightChild, needle->rightChild) );
 }
 #endif
 
