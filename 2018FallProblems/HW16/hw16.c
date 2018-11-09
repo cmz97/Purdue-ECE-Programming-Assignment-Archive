@@ -14,6 +14,7 @@ void FreeBinaryTree(treeNode *root)
     if(root==NULL)return;
     FreeBinaryTree(root->leftChild);
     FreeBinaryTree(root->rightChild);
+    free(root);
 }
 
 #endif
