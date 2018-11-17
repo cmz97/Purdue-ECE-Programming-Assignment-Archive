@@ -5,6 +5,14 @@
 
 //***** YOU NEED TO MODIFY main() FUNCTION BELOW *******//
 #ifdef TEST_MAIN
+
+void Tree_destroy(treeNode * n);
+void Tree_destroy(treeNode * n){
+  if(n==NULL)return;
+  Tree_destroy(n->leftChild);
+  Tree_destroy(n->rightChild);
+  free(n);
+}
 int main(int argc, char **argv)
 {
     //1. Check for number of arguments. If less than 2, do not proceed further.
@@ -41,7 +49,7 @@ int main(int argc, char **argv)
     
     int ind = 0;
     
-    while (ind < count)
+    while (ind < count - 1)
     {
         if (fscanf(fp, "%d", &arr[ind]) != 1)
         {
@@ -68,7 +76,7 @@ int main(int argc, char **argv)
         //2. the first element of the array
         //3. start index (index of first element of the array)
         //4. end index ( index of last element of the array)
-    treenode * root = CreateBST(arr,arr[0],0, count - 1);
+    treeNode * root = CreateBST(arr,arr[0],0, count - 2);
     //6. Print the created tree in Inorder fashion. Quick check if you have created the tree right: the output of
         //will be a sorted array of numbers.
     BinaryTreeInOrderPrint(root);
@@ -78,8 +86,10 @@ int main(int argc, char **argv)
     PrintDistance(distance);
     //9. Free all memory.
     free(arr);
+    Tree_destroy(root);
     fclose(fp);
 
 
 }
+
 #endif

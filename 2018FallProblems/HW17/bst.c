@@ -72,11 +72,8 @@ int FindDistance(treeNode* t, int search_query, int distance)
         return FindDistance(t->rightChild,search_query,distance+1);
     }else if(search_query < t->value) {
         return FindDistance(t->leftChild,search_query,distance+1);
-    }else(search_query == t->value){
-        return distance;
     }
-    
-
+    return distance;
 }
 #endif
 ///***** MODIFY THIS FUNCTION ******/////
@@ -103,19 +100,21 @@ treeNode* CreateBST(int* a,int root, int start, int end)
     
     treeNode * rootNode = malloc(sizeof(treeNode));
     rootNode -> value = root;
-    int i = start;
-    while (a[i]<root) {
-        i++;
-    }
     
     if(start == end){
         rootNode -> leftChild = NULL;
         rootNode -> rightChild = NULL;
-    }else{
-        rootNode -> leftChild = CreateBST(a,a[start+1],start+1,i-1);
-        rootNode -> rightChild = CreateBST(a,a[i],i,end);
+	return rootNode;
     }
-   
+
+    int i = start + 1;
+    while (a[i]<root && i <= end) {
+        i++;
+    }
     
+    rootNode -> leftChild = CreateBST(a,a[start+1],start+1,i-1);
+    rootNode -> rightChild = CreateBST(a,a[i],i,end);
+   
+    return rootNode;   
 }
 #endif
