@@ -47,9 +47,9 @@ void BinaryTreePostOrderPrint(treeNode *tn)
 treeNode * CreateTree(int *array, int index, int length)
 {
 	if(index >= length)
-  {
-    return NULL;
-  }
+      {
+        return NULL;
+      }
 	treeNode *newNode ;
 
 	newNode = malloc(sizeof(treeNode));

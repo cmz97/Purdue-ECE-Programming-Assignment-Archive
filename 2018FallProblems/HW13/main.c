@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     }
 
 	// open file to read
-    FILE * fp = fopen(argv[1], "r");
+    FILE * fp = fopen(argv[1], "r")
 	// check for fopen fail. If so, return EXIT_FAILURE
 
 	// count the number of integers in the file.
