@@ -57,6 +57,8 @@ YOU CAN EDIT BELOW THIS COMMENT
 */
 
 #ifdef TEST_MIN
+int getMag(TreeNode* x);
+
 void FindMin(ListNode* head)
 {
 	// find pair of ListNodes with least distance between them.
@@ -67,24 +69,40 @@ void FindMin(ListNode* head)
         temp = temp -> next;
         length++;
     }
-    int min = 0; //initialize
+    int min = 0; //initialize 
+    ListNode * min1 = NULL;
+    ListNode * min2 = NULL;
     if (length > 1) {
         ListNode * ptr1 = head;
         ListNode * ptr2 = head -> next;
-        min = FindDist(ptr1,ptr2);
-        
-        while (true) {
-            ptr1 = ptr1->next;
+ 	if(getMag(ptr1->treenode)>getMag(ptr2->treenode)){
+		min1 = ptr2;
+		min2 = ptr1;
+	}else{
+		min1 = ptr1;
+		min2 = ptr2;
+	}
+        min = FindDist(ptr1->treenode,ptr2->treenode);
+        while (1) {
             ptr2 = ptr1->next;
             if (ptr2 == NULL) {
                 break;
             }
             while (ptr2!=NULL) {
-                if (min > FindDist(ptr1,ptr2)) {
-                    min = FindDist(ptr1,ptr2);
-                }
+		//printf("min pair:%d\n",FindDist(ptr1->treenode,ptr2->treenode));
+                if (min > FindDist(ptr1->treenode,ptr2->treenode)) {
+                    min = FindDist(ptr1->treenode,ptr2->treenode);
+		    if(getMag(ptr1->treenode)>getMag(ptr2->treenode)){
+			min1 = ptr2;
+			min2 = ptr1;
+		    }else{
+			min1 = ptr1;
+			min2 = ptr2;
+		    }
+		}
                 ptr2 = ptr2->next;
             }
+            ptr1 = ptr1->next;
         }
     } else {
         fprintf(stderr, "Lenght of List incorrect (<2)\n");
@@ -94,8 +112,18 @@ void FindMin(ListNode* head)
 	the 3rd parameter (min2). 
 	Look at README, and expected output for more details.
 	*/
-
+    PrintAnswer(head, min1, min2);
 }
+
+int getMag(TreeNode* x)
+{
+    //int result = 0;
+    //for (int i=0; i<x->dimension; i++) {
+    //    result += x->data[i];
+    //}
+    return x->data[0];
+}
+
 #endif
 
 
@@ -107,9 +135,11 @@ int FindDist(TreeNode* x, TreeNode* y)
 	// DO NOT FIND SQUARE ROOT (we are working with int)
 	// return the distance
     int result = 0;
+    //printf("FindDist's dim:%d\n",x->dimension);
     for (int i=0; i<x->dimension; i++) {
         result += (x->data[i] - y->data[i])*(x->data[i] - y->data[i]);
     }
+    //printf("FindDist's result:%d\n",result);
     return result;
 }
 #endif
@@ -119,8 +149,8 @@ int FindDist(TreeNode* x, TreeNode* y)
 ListNode* CreateNode(int n, int dim, int* arr)
 {
 	// check for malloc error
-    TreeNode * tNode = malloc(sizeof(TNode));
-    if (tNode = NULL) {
+    TreeNode * tNode = malloc(sizeof(TreeNode));
+    if (tNode == NULL) {
          fprintf(stderr, "malloc fail in createNode func\n");
         return NULL;
     }
@@ -132,7 +162,12 @@ ListNode* CreateNode(int n, int dim, int* arr)
 	// allocate memory for data
     tNode->data = malloc(sizeof(int)*dim);
 	// return a ListNode
-    
+    //printf("newdata: ");
+    for(int i=0;i<dim;i++){
+    	tNode->data[i] = arr[n*dim+i];
+	//printf("%d  ",tNode->data[i]);
+    }
+    //printf("\n");
     ListNode * lNode = malloc(sizeof(ListNode));
     lNode->treenode = tNode;
     return lNode;
@@ -143,19 +178,19 @@ ListNode* CreateNode(int n, int dim, int* arr)
 #ifdef TEST_LINKEDLISTCREATE
 void LinkedListCreate(ListNode ** head, int n, int dim, FILE* fp)
 {
-	// create temp node using CreateNode
-	// read from file into an array, pass array to CreateNode
-    int * arr = malloc(sizeof(int)*n);
+    // create temp node using CreateNode
+    // read from file into an array, pass array to CreateNode
+    int * arr = malloc(sizeof(int)*n*dim);
     int ind = 0;
-    while (ind < n)
+    while (ind < n*dim)
     {
         if (fscanf(fp, "%d", &arr[ind]) != 1)
         {
             fprintf(stderr, "fscanf fail\n");
             fclose (fp);
             free (arr);
-            return EXIT_FAILURE;
         }
+	//printf("number read from file (n:%d,dim:%d): %d\n",n,dim,arr[ind]);
         ind ++;
     }
 	// assign temp to that node
@@ -166,6 +201,7 @@ void LinkedListCreate(ListNode ** head, int n, int dim, FILE* fp)
         temp = temp -> next;
     }
     temp->next = NULL;
+    free(arr);
 	// use a loop to create nodes for the remaining elements of the list.
 }
 #endif

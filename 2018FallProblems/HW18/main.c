@@ -7,6 +7,25 @@
 
 
 #ifdef TEST_MAIN
+void Tree_destroy(TreeNode * n);
+void List_destroy(ListNode * n);
+void Tree_destroy(TreeNode * n){
+  if(n==NULL)return;
+  Tree_destroy(n->left);
+  Tree_destroy(n->right);
+  free(n->data);
+  free(n);
+}
+
+void List_destroy(ListNode * n){
+  ListNode * temp;
+  while(n!=NULL){
+     temp = n->next;
+     Tree_destroy(n->treenode);
+     free(n);
+     n = temp;
+  }
+}
 int main(int argc, char * * argv)
 {
 	// check for input error
@@ -42,7 +61,9 @@ int main(int argc, char * * argv)
     ListNode * head = NULL;
     LinkedListCreate(&head,n,dim,fp);
 	// call FindMin
+    FindMin(head);
     fclose (fp);
+    List_destroy(head);
     
 
 }
