@@ -43,8 +43,11 @@ MODIFY BELOW THIS COMMENT
 ListNode* FindCentroid(TreeNode* x, TreeNode* y)
 {
 	// Create a new node
+    ListNode * new = malloc(sizeof(ListNode));
 	// new -> treenode.left should be x
+    new -> treenode.left = x;
 	// new -> treenode.right should be y
+    new -> treenode.right = y;
 	// x -> treenode.data should be less than y -> treenode.data (refer to README)
 	
 	// Use a loop to average the data from the two parameters (x and y).
@@ -63,7 +66,17 @@ ListNode* FindCentroid(TreeNode* x, TreeNode* y)
 #ifdef TEST_DIST
 int FindDist(TreeNode* x, TreeNode* y)
 {
-	//Same as previous HW
+    //find the eucledian distance between
+    // x->data and y->data
+    // DO NOT FIND SQUARE ROOT (we are working with int)
+    // return the distance
+    int result = 0;
+    //printf("FindDist's dim:%d\n",x->dimension);
+    for (int i=0; i<x->dimension; i++) {
+        result += (x->data[i] - y->data[i])*(x->data[i] - y->data[i]);
+    }
+    //printf("FindDist's result:%d\n",result);
+    return result;
 }
 #endif
 
@@ -84,7 +97,30 @@ ListNode* Fuse(ListNode* head, ListNode* fuse1, ListNode* fuse2)
 #ifdef TEST_CREATENODE
 ListNode* CreateNode(int n, int dim, int* arr)
 {
-	// Same as previous HW
+    // check for malloc error
+    TreeNode * tNode = malloc(sizeof(TreeNode));
+    if (tNode == NULL) {
+        fprintf(stderr, "malloc fail in createNode func\n");
+        return NULL;
+    }
+    // initialize dim
+    tNode->dimension = dim;
+    // both left and right childern will be NULL
+    tNode->left = NULL;
+    tNode->right = NULL;
+    // allocate memory for data
+    tNode->data = malloc(sizeof(int)*dim);
+    // return a ListNode
+    //printf("newdata: ");
+    for(int i=0;i<dim;i++){
+        tNode->data[i] = arr[n*dim+i];
+        //printf("%d  ",tNode->data[i]);
+    }
+    //printf("\n");
+    ListNode * lNode = malloc(sizeof(ListNode));
+    lNode->treenode = tNode;
+    return lNode;
+    
 }
 #endif
 
@@ -92,7 +128,32 @@ ListNode* CreateNode(int n, int dim, int* arr)
 #ifdef TEST_LINKEDLISTCREATE
 void LinkedListCreate(ListNode ** head, int n, int dim, FILE* fptr)
 {
-	// Same as previous HW
+    // create temp node using CreateNode
+    // read from file into an array, pass array to CreateNode
+    int * arr = malloc(sizeof(int)*n*dim);
+    int ind = 0;
+    while (ind < n*dim)
+    {
+        if (fscanf(fp, "%d", &arr[ind]) != 1)
+        {
+            fprintf(stderr, "fscanf fail\n");
+            fclose (fp);
+            free (arr);
+        }
+        //printf("number read from file (n:%d,dim:%d): %d\n",n,dim,arr[ind]);
+        ind ++;
+    }
+    // assign temp to that node
+    ListNode * temp = CreateNode(0,dim,arr);
+    * head = temp;
+    for (int i = 1; i < n; i++) {
+        temp->next = CreateNode(i,dim,arr);
+        temp = temp -> next;
+    }
+    temp->next = NULL;
+    free(arr);
+    // use a loop to create nodes for the remaining elements of the list.
+    
 }
 #endif
 
