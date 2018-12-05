@@ -27,18 +27,17 @@ TreeNode * readHeader(FILE * infptr)
 	*/
     
     int done = 0;
-    unsigned char whichbit = 8;    
+    unsigned char whichbit = 0;    
     unsigned char curbyte = 0;
     unsigned char onebit = 0;
     ListNode * head = NULL;
     
     while (done == 0) {
-        readBit(infptr, &onebit, &whichbit, &curbyte);
-        whichbit = ((whichbit) + 1) % 8;
+        readBit(infptr, &onebit, &whichbit, &curbyte);	
 	if (onebit == 1) {
             int bitcount;
             unsigned char value = 0;
-            for (bitcount = 0; bitcount < 7; bitcount ++) {
+            for (bitcount = 0; bitcount < 8; bitcount ++) {
                 value <<= 1;
                 readBit(infptr, &onebit, &whichbit, &curbyte);
                 value |= onebit;
