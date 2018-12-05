@@ -70,8 +70,10 @@ ListNode * MergeListNode(ListNode * head)
     
     free(head);
     free(second);
+    head = third;
     TreeNode * mrg;
     mrg = Tree_merge(tn2,tn1);
+    ListNode * ln = ListNode_create(mrg);
     head = List_insert(head,ln);
     return head;
 

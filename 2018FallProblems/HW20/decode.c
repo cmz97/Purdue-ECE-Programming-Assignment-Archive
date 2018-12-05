@@ -11,8 +11,6 @@ You Can Modify below, Do Not modify above this
 */
 
 #ifdef TEST_READHEADER
-int readBit(FILE * , unsigned char * , unsigned char * , unsigned char * );
-
 TreeNode * readHeader(FILE * infptr)
 {
 	/* This function should have the following logic
@@ -29,17 +27,18 @@ TreeNode * readHeader(FILE * infptr)
 	*/
     
     int done = 0;
-    unsigned char whichbit = 0;
+    unsigned char whichbit = 8;    
     unsigned char curbyte = 0;
     unsigned char onebit = 0;
     ListNode * head = NULL;
     
     while (done == 0) {
         readBit(infptr, &onebit, &whichbit, &curbyte);
-        if (onebit == 1) {
+        whichbit = ((whichbit) + 1) % 8;
+	if (onebit == 1) {
             int bitcount;
             unsigned char value = 0;
-            for (bitcoutn = 0; bitcount < 7; bitcount ++) {
+            for (bitcount = 0; bitcount < 7; bitcount ++) {
                 value <<= 1;
                 readBit(infptr, &onebit, &whichbit, &curbyte);
                 value |= onebit;
@@ -52,7 +51,7 @@ TreeNode * readHeader(FILE * infptr)
                 printf("Error, head is NULL");
             }
             if ((head->next)==NULL) {
-                done == 1;
+                done = 1;
             }else{
                 head = MergeListNode(head);
             }
@@ -60,31 +59,40 @@ TreeNode * readHeader(FILE * infptr)
     }
     TreeNode * root = head -> tnptr;
     free(head);
-    return root;
-}
-
-int readBit(FILE * fptr, unsigned char * bit, unsigned char * whichbit, unsigned char * curbyte){
-    int ret = 1;
-    if ((*whichbit) == 0) {
-        ret = fread(curbyte,sizeof(unsigned char), 1, fptr);
+/*
+    while (!feof(infptr)) {
+	if (whichbit == 8) {
+		whichbit = 0;
+        	curbyte = fgetc(infptr);
+	}
+	if (curbyte & 0x1 << (7 - whichbit++)) {	// read a 1
+		char read = 0x0;
+		if (whichbit == 8) {
+			read = fgetc(infptr);
+		} else {
+		read |= curbyte << whichbit;
+			curbyte = fgetc(infptr);
+			read |= curbyte >> (7 - whichbit);
+		}
+		TreeNode *tn = TreeNode_create(read, 0);
+		ListNode *ln = ListNode_create(tn);
+		head = List_insert(head, ln);
+	} else {
+		if (head -> next == NULL)
+			break;
+		head = MergeListNode(head);
+	}
     }
-    if (ret != 1) {
-        return -1;
-    }
-    unsigned char temp = (*curbyte)>>(7-(*whichbit));
-    temp = temp &0x01;
-    *whichbit = ((*whichbit)+1)%8;
-    *bit = temp;
-    return 1;
+    TreeNode *root = head -> tnptr;
+    free(head);
+*/
+	return root;
 }
 
 #endif
 
 
 #ifdef TEST_DECODE
-int readBit2(FILE * , unsigned char * , unsigned char * , unsigned char * );
-void Tree_destroy(TreeNode * );
-
 int decode(char * infile, char * outfile)
 {
 	// read the header from the input file  by calling readHeader function
@@ -100,61 +108,21 @@ int decode(char * infile, char * outfile)
         return 0;
     }
     TreeNode * root = readHeader(infptr);
-    Tree_print(root,0);
+    FILE * outfptr = fopen(outfile, "w");
+    Tree_print(root,outfptr);
     unsigned int numChar = 0;
     fread(& numChar, sizeof(unsigned int), 1, infptr);
-    FILE * outfptr = fopen(outfile, "w");
-    PrintNumberChar(numChar,&outfptr);
+    PrintNumberChar(numChar,outfptr);
     unsigned char newline;
     fread(& newline, sizeof(unsigned char), 1, infptr);
     if (newline != '\n') {
         printf("ERROR!\n");
     }
-    unsigned char whichbit = 0;
-    unsigned char onebit = 0;
-    unsigned char curbyte = 0;
-    
-
-    while (numChar!=0) {
-        TreeNode * tn = root;
-        while ((tn->left)!=NULL) {
-            readBit2(infptr, &onebit, &whichbit, &curbyte);
-            if (onebit == 0) {
-                tn = tn->left;
-            }else{
-                rn = tn->right;
-            }
-        }
-        printf("%c",tn->value);
-        numChar --;
-    }
     Tree_destroy(root); //TODO
     fclose(infptr);
     fclose(outfptr);
     return 1;
+   
 }
 
-void Tree_destroy(TreeNode * tn){
-    if (tn == NULL) {
-        return;
-    }
-    Tree_destroy(tn->left);
-    Tree_destroy(tn->right);
-    free(tn);
-}
-
-int readBit2(FILE * fptr, unsigned char * bit, unsigned char * whichbit, unsigned char * curbyte){
-    int ret = 1;
-    if ((*whichbit) == 0) {
-        ret = fread(curbyte,sizeof(unsigned char), 1, fptr);
-    }
-    if (ret != 1) {
-        return -1;
-    }
-    unsigned char temp = (*curbyte)>>(7-(*whichbit));
-    temp = temp &0x01;
-    *whichbit = ((*whichbit)+1)%8;
-    *bit = temp;
-    return 1;
-}
 #endif
