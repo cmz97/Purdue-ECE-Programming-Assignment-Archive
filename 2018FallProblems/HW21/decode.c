@@ -14,7 +14,39 @@ You Can Modify below, Do Not modify above this
 
 TreeNode * readHeader(FILE * infptr)
 {
-  // This is the same function from HW20
+    int done = 0;
+    unsigned char whichbit = 0;
+    unsigned char curbyte = 0;
+    unsigned char onebit = 0;
+    ListNode * head = NULL;
+    
+    while (done == 0) {
+        readBit(infptr, &onebit, &whichbit, &curbyte);
+        if (onebit == 1) {
+            int bitcount;
+            unsigned char value = 0;
+            for (bitcount = 0; bitcount < 8; bitcount ++) {
+                value <<= 1;
+                readBit(infptr, &onebit, &whichbit, &curbyte);
+                value |= onebit;
+            }
+            TreeNode * tn = TreeNode_create(value,0);
+            ListNode * ln = ListNode_create(tn);
+            head = List_insert(head, ln); //TODO
+        }else{
+            if(head == NULL){
+                printf("Error, head is NULL");
+            }
+            if ((head->next)==NULL) {
+                done = 1;
+            }else{
+                head = MergeListNode(head);
+            }
+        }
+    }
+    TreeNode * root = head -> tnptr;
+    free(head);
+    return root;
 }
 
 #endif
@@ -25,6 +57,43 @@ TreeNode * readHeader(FILE * infptr)
 int decode(char * infile, char * outfile)
 {
   // In this function, in addition to the last assignment, you will also decode the rest of the file.
+    FILE * infptr = fopen(infile, "r");
+    if (infptr == NULL) {
+        return 0;
+    }
+    TreeNode * root = readHeader(infptr);
+    FILE * outfptr = fopen(outfile, "w");
+    Tree_print(root,outfptr);
+    unsigned int numChar = 0;
+    fread(& numChar, sizeof(unsigned int), 1, infptr);
+    PrintNumberChar(numChar,outfptr);
+    unsigned char newline;
+    fread(& newline, sizeof(unsigned char), 1, infptr);
+    if (newline != '\n') {
+        printf("ERROR!\n");
+    }
+    
+    unsigned char whichbit = 0;
+    unsigned char onebit = 0;
+    unsigned char curbyte  = 0;
+    
+    while (numChar != 0) {
+        TreeNode * tn = root;
+        while ((tn->left)!=NULL) {
+            readBit(infptr,&onebit, &whichbit, &curbyte);
+            if (onebit == 0) {
+                tn = tn->left;
+            }else{
+                tn = tn->right;
+            }
+        }
+        fprintf(outfptr, "%c", tn->value);
+        numChar--;
+    }
+    Tree_destroy(root); //TODO
+    fclose(infptr);
+    fclose(outfptr);
+    return 1;
   // After getting the Huffman tree and number of character from the header file as in last assignment,
   // we will decode the rest the file as explained in README and will print each character in the `outfile`.
   // Thus, this function have 3 prints into the outfile - printing Huffman tree using Tree_print function

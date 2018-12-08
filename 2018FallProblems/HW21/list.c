@@ -52,6 +52,20 @@ ListNode * MergeListNode(ListNode * head)
   /*
   This function is same as you did in HW20
   */
+    ListNode * second = head->next;
+    ListNode * third = second -> next;
+
+    TreeNode * tn1 = head -> tnptr;
+    TreeNode * tn2 = second -> tnptr;
+
+    free(head);
+    free(second);
+    head = third;
+    TreeNode * mrg;
+    mrg = Tree_merge(tn2,tn1);
+    ListNode * ln = ListNode_create(mrg);
+    head = List_insert(head,ln);
+    return head;
 
 }
 #endif
