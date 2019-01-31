@@ -1,4 +1,4 @@
-/*
+ /*
 modify the file at the said location
 */
 #include "list.h"
