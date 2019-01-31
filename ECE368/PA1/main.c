@@ -1,10 +1,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include "list.h"
-#include "utilities.h"
-
 
 ListNode * generateFrequencyMap(char * );
+void printListWithTree(ListNode *);
 
 
 int main(int argc, char ** argv)
@@ -78,4 +77,14 @@ ListNode * generateFrequencyMap(char * inputFileName){
   fclose(inputFilePtr);
 
   return headListNode;
+}
+
+void printListWithTree(ListNode * head){
+  ListNode *  curPtr = head;
+  int count = 0;
+  while (curPtr != NULL) {
+    printf("Index: %d, Value: %c, Freq: %d\n",count,curPtr->treeNodePtr->value,curPtr->treeNodePtr->freq);
+    curPtr = curPtr->nxtNode;
+    count ++;
+  }
 }

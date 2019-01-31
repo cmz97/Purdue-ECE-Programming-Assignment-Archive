@@ -3,7 +3,6 @@
 #include "tree.h"
 
 
-
 typedef struct listnode{
  struct listnode * nxtNode;
  TreeNode * treeNodePtr;
