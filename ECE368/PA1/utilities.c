@@ -1,5 +1,4 @@
 #include "utilities.h"
-#include "list.h"
 
 void printListWithTree(ListNode * head){
   ListNode *  curPtr = head;
