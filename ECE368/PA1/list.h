@@ -13,4 +13,3 @@ ListNode * mergeListNode(ListNode * );
 ListNode * List_insert(ListNode * , ListNode * );
 int listHas(ListNode * , unsigned char);
 ListNode * getElement(ListNode * , unsigned char );
-TreeNode * Tree_merge(TreeNode * , TreeNode * );

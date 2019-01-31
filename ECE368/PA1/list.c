@@ -25,16 +25,6 @@ ListNode * mergeListNode(ListNode * head){
   return head;
 }
 
-TreeNode * Tree_merge(TreeNode * becomesLeftChild, TreeNode * becomesRighChild)
-{
-  TreeNode * tn = malloc(sizeof(TreeNode));
-  tn -> left = becomesLeftChild;
-  tn -> right = becomesRighChild;
-  tn -> value = 0;
-  tn -> freq = becomesLeftChild -> freq + becomesRighChild -> freq;
-  return tn;
-}
-
 ListNode * List_insert(ListNode * head, ListNode * ln)
 {
   if (ln == NULL)

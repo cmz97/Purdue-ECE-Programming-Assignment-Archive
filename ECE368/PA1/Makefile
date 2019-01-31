@@ -5,7 +5,7 @@ GCC = gcc -std=c99 -g $(WARNING) $(ERROR)
 
 TESTFLAGS = -DTEST_READHEADER -DTEST_DECODE -DTEST_MERGELIST -DDO_NOT_MODIFY
 
-SRCS =  list.c main.c tree.c utilities.c
+SRCS =  list.c main.c tree.c
 OBJS = $(SRCS:%.c=%.o)
 
 VAL =  valgrind --tool=memcheck --log-file=memcheck.txt --leak-check=full --verbose --track-origins=yes
