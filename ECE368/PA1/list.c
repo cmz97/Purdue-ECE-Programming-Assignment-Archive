@@ -20,7 +20,7 @@ ListNode * mergeListNode(ListNode * head){
   free(second);
   head = third;
   TreeNode * mrg;
-  mrg = Tree_merge(tn2,tn1);
+  mrg = Tree_merge(tn1,tn2);
   ListNode * ln = newListNode(mrg);
   head = List_insert(head,ln);
   return head;

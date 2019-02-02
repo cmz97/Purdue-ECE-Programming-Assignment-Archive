@@ -3,16 +3,17 @@
 #include "list.h"
 #include <math.h>
 
-//TODO: Currently is working on the printing of the tree, stucked on initialization of the huffman code array.
+//TODO: currently, the returned path array not correct
 
 ListNode * generateFrequencyMap(char * ,char * , int * );
 void printListWithTree(ListNode *);
 void printPreorder(TreeNode * );
-void printTreeListToFile(char *,TreeNode * , int *, int );
-void append(int * , int , int );
+void printTreeListToFile(char * , TreeNode * , int );
+void pop(int * , int );
 void printPath(char , int * , int , TreeNode *  , int * );
-ListNode * generateHuffmanTree(ListNode *,char *);
+ListNode * generateHuffmanTree(ListNode *,char *, int);
 void printFreqListToFile(ListNode * , char * );
+void push(int * , int , int );
 
 
 int main(int argc, char ** argv)
@@ -46,15 +47,7 @@ int main(int argc, char ** argv)
 
   printf("The HUFFMAN length is %d\n", huffmanLength);
 
-
-  // int lengthArr = (int)ceil((double)huffmanLength/2);
-  // int huffmanCode[lengthArr] = {-1}; //initialize the array to -1,-1,-1,...
-  //
-  // for (int i = 0; i < lengthArr; i++) {
-  //   printf("huffmanCode: %d\n",huffmanCode[i] );
-  // }
-  //
-  // headListNode = generateHuffmanTree(headListNode,argv[3]);
+  headListNode = generateHuffmanTree(headListNode,argv[3],huffmanLength);
 
 
   return EXIT_SUCCESS;
@@ -123,12 +116,11 @@ void printFreqListToFile(ListNode * headListNode, char * outputFileName){
     if (charNode != NULL) {
       castFreq = charNode->treeNodePtr->freq;
       fwrite(&castFreq , 1 , sizeof(long) , outputFilePtr);
-      printf("char: %c freq:%d\n",charNode->treeNodePtr->value,charNode->treeNodePtr->freq );
+      // printf("char: %c freq:%d\n",charNode->treeNodePtr->value,charNode->treeNodePtr->freq );
     }else{
       fwrite(&zero,1,sizeof(long),outputFilePtr);
     }
   }
-
   fclose(outputFilePtr);
 }
 
@@ -144,7 +136,7 @@ void printListWithTree(ListNode * head){
   }
 }
 
-ListNode * generateHuffmanTree(ListNode * headListNode,char * outputFileName){
+ListNode * generateHuffmanTree(ListNode * headListNode,char * outputFileName, int huffmanLength){
 
 
   while(1){
@@ -156,9 +148,10 @@ ListNode * generateHuffmanTree(ListNode * headListNode,char * outputFileName){
     headListNode = sortList(headListNode); //Again, this assume only first element is unsorted
     printListWithTree(headListNode); //REMOVE BEFORE TURNED IN
   }
-  //Now, construct the tree from the list
-  return headListNode;
+  //Now, printf
+  printTreeListToFile(outputFileName, headListNode->treeNodePtr, huffmanLength);
 
+  return headListNode;
 }
 
 void printPreorder(TreeNode * tn)
@@ -166,55 +159,79 @@ void printPreorder(TreeNode * tn)
     if (tn == NULL){
       return;
     }
-    /* first print data of node */
+
     if(tn->right == NULL && tn->left == NULL){ //reached the leaf node
       printf(" Value: %c, Freq: %d\n",tn->value,tn->freq);
     }
-    /* then recur on left sutree */
+
     printPreorder(tn->left);
-    /* now recur on right subtree */
+
     printPreorder(tn->right);
 }
 
-void printTreeListToFile(char * outputFilePath, TreeNode * tn, int * huffmanCode, int length){
-  int found = 0;
+void printTreeListToFile(char * outputFilePath, TreeNode * tn, int length){
+  int found = 0; //start with not found
+  // experiment with one character
+  // this should print the path of 'g'
+  int arrayLength = (int)ceil((double)length/2);
+  int * pathArr = malloc(sizeof(int)*arrayLength);
 
-  //experiment with one character
-  //this should print the path of 'g'
-  printPath('g', huffmanCode, length,  tn , &found);
+  //initialize array
+  for(int i = 0 ; i<arrayLength; i++){
+    pathArr[i] = -1;
+  }
+  //DEBUG: make sure its correctly initialized
+  for (int i = 0; i < arrayLength; i++) {
+    printf("Before huffmanCode: %d\n",pathArr[i] );
+  }
 
+  //print the path to 'g', try it
+  printPath('o', pathArr, arrayLength,  tn , &found);
+
+  //MAKE SURE TO CLEAN THE found variable
+
+  for (int i = 0; i < arrayLength; i++) {
+    printf("After huffmanCode: %d\n",pathArr[i] );
+  }
+  free(pathArr);
 }
 
+//this function print the tree path to the 'value'
 void printPath(char value, int * huffmanCode, int length, TreeNode * tn , int * found){
+  printf("xxx\n");
   if (tn == NULL){
     return;
   }
   /* first print data of node */
   if(tn->right == NULL && tn->left == NULL){ //reached the leaf node
+    printf("value: %c\n",tn->value );
     if (*found == 0 && value == tn->value) { //if not found before and found the value
       *found = 1;
+      printf("found\n");
     }
+    return;
   }
 
-  /* then recur on left sutree */
   if (*found != 1 ) {
-    append(huffmanCode, 0, length);
-    printPreorder(tn->left);
+    push(huffmanCode, 0, length);
+    printPath(value,huffmanCode,length,tn->left,found);
   }else{
     return;
   }
 
   if (*found != 1 ) {
-    /* now recur on right subtree */
-    append(huffmanCode, 1,length);
-    printPreorder(tn->right);
+    pop(huffmanCode,length);
+    push(huffmanCode, 1,length);
+    printPath(value,huffmanCode,length,tn->right,found);
+    pop(huffmanCode,length);
   }else{
     return;
   }
 
 }
 
-void append(int * huffmanCode, int num, int length){
+//this function append 'num' into the end of the array 'huffmanCode'
+void push(int * huffmanCode, int num, int length){
   int lastIndex = 0;
   if (huffmanCode[0] == -1) {
     huffmanCode[0] = num;
@@ -224,10 +241,35 @@ void append(int * huffmanCode, int num, int length){
     lastIndex++;
     if (lastIndex == length) {
       // reached the end, array fulled
-      printf("ERROR ARRAY FULLED\n" );
+      // again this should not happen
+      printf("ERROR: ARRAY FULL\n" );
       return;
     }
   }
-  huffmanCode[lastIndex - 1] = num;
+  printf("\npushing:\n");
+
+  huffmanCode[lastIndex] = num;
+  for (int i = 0; i < length; i++) {
+    printf("pushed: huffmanCode: %d\n",huffmanCode[i] );
+  }
   return;
 }
+
+void pop(int * huffmanCode, int length){
+  int lastIndex = 0;
+  if (huffmanCode[0] == -1) {
+    //Nothing to pop
+    // again this should not happen
+    printf("ERROR: ARRAY EMPTY\n");
+    return;
+  }
+  while(huffmanCode[lastIndex]!=-1 && lastIndex != length){
+    lastIndex++;
+  }
+    huffmanCode[lastIndex - 1] = -1;
+    printf("\npoping:\n");
+    for (int i = 0; i < length; i++) {
+      printf("poped: huffmanCode: %d\n",huffmanCode[i] );
+    }
+    return;
+  }
