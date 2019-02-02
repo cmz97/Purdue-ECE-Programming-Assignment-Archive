@@ -129,7 +129,7 @@ ListNode * getElement(ListNode * head, unsigned char character){
     }
     curPtr = curPtr->nxtNode;
   }
-  return NULL; //this should never happen though
+  return NULL;
 }
 
 //This function sort a 1d singlely linked list according to its ASCII value
@@ -152,14 +152,9 @@ ListNode * sort1dListAccord2Ascii(ListNode * headListNode)
   return sortedHead;
 }
 
-/* function to insert a new_node in a list. Note that this
-  function expects a pointer to head_ref as this can modify the
-  head of the input linked list (similar to push())*/
 ListNode * sortedInsert(ListNode * headListNode, ListNode * newNode)
 {
     ListNode * current = NULL;
-
-
 
     if (headListNode == NULL || ((headListNode->treeNodePtr->value >= newNode->treeNodePtr->value) && (headListNode->treeNodePtr->freq == newNode->treeNodePtr->freq))){
         newNode->nxtNode = headListNode;

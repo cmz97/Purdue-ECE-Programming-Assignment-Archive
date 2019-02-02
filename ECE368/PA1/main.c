@@ -8,10 +8,12 @@
 ListNode * generateFrequencyMap(char * ,char * , int * );
 void printListWithTree(ListNode *);
 void printPreorder(TreeNode * );
-void printFreqListToFile(char *,TreeNode * , int *, int );
+void printTreeListToFile(char *,TreeNode * , int *, int );
 void append(int * , int , int );
-void printPath(char value, int * huffmanCode, int length, TreeNode * tn , int * found);
+void printPath(char , int * , int , TreeNode *  , int * );
 ListNode * generateHuffmanTree(ListNode *,char *);
+void printFreqListToFile(ListNode * , char * );
+
 
 int main(int argc, char ** argv)
 {
@@ -43,10 +45,6 @@ int main(int argc, char ** argv)
   printListWithTree(headListNode); //REMOVE BEFORE TURNED IN
 
   printf("The HUFFMAN length is %d\n", huffmanLength);
-
-  headListNode = sort1dListAccord2Ascii(headListNode);
-  printListWithTree(headListNode); //REMOVE BEFORE TURNED IN
-
 
 
   // int lengthArr = (int)ceil((double)huffmanLength/2);
@@ -97,13 +95,39 @@ ListNode * generateFrequencyMap(char * inputFileName,char * outputFileName, int 
       getElement(headListNode,curbyte) -> treeNodePtr -> freq ++;
     }
   }
+  fclose(inputFilePtr);
   * huffmanLength = getHuffmanLength(headListNode);
 
-  fclose(inputFilePtr);
+  //sort the linked list
+  headListNode = sort1dListAccord2Ascii(headListNode);
+
+  //call the printFreqListToFile to print result
+  printFreqListToFile(headListNode,outputFileName);
 
 
   return headListNode;
 }
+
+void printFreqListToFile(ListNode * headListNode, char * outputFileName){
+  FILE * outputFilePtr = fopen(outputFileName,"w");
+  if(outputFilePtr == NULL){
+    printf("Unable to write to file, path is wrong (this should not happen)");
+    fclose(outputFilePtr);
+    return;
+  }
+  ListNode * charNode = NULL;
+  for(long i = 0; i < 256; i++){
+    charNode = getElement(headListNode, (char)i);
+    if (charNode != NULL) {
+      fwrite(charNode , 1 , sizeof(long) , outputFilePtr);
+    }else{
+      fwrite(0 , 1 , sizeof(long) , outputFilePtr);
+    }
+  }
+
+  fclose(outputFilePtr);
+}
+
 
 void printListWithTree(ListNode * head){
   ListNode *  curPtr = head;
@@ -148,7 +172,7 @@ void printPreorder(TreeNode * tn)
     printPreorder(tn->right);
 }
 
-void printFreqListToFile(char * outputFilePath, TreeNode * tn, int * huffmanCode, int length){
+void printTreeListToFile(char * outputFilePath, TreeNode * tn, int * huffmanCode, int length){
   int found = 0;
 
   //experiment with one character
