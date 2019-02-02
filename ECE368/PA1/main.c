@@ -117,10 +117,12 @@ void printFreqListToFile(ListNode * headListNode, char * outputFileName){
   }
   ListNode * charNode = NULL;
   long zero = 0;
+  long castFreq = 0;
   for(long i = 0; i < 256; i++){
     charNode = getElement(headListNode, (char)i);
     if (charNode != NULL) {
-      fwrite(&(charNode->treeNodePtr->freq) , 1 , sizeof(long) , outputFilePtr);
+      castFreq = charNode->treeNodePtr->freq;
+      fwrite(&castFreq , 1 , sizeof(long) , outputFilePtr);
       printf("char: %c freq:%d\n",charNode->treeNodePtr->value,charNode->treeNodePtr->freq );
     }else{
       fwrite(&zero,1,sizeof(long),outputFilePtr);
