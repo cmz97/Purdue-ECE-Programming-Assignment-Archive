@@ -40,8 +40,14 @@ int main(int argc, char ** argv)
   int huffmanLength = 0; //this is the number of unique char in the file
 
   headListNode = generateFrequencyMap(argv[1],argv[2],&huffmanLength);
+  printListWithTree(headListNode); //REMOVE BEFORE TURNED IN
 
   printf("The HUFFMAN length is %d\n", huffmanLength);
+
+  headListNode = sort1dListAccord2Ascii(headListNode);
+  printListWithTree(headListNode); //REMOVE BEFORE TURNED IN
+
+
 
   // int lengthArr = (int)ceil((double)huffmanLength/2);
   // int huffmanCode[lengthArr] = {-1}; //initialize the array to -1,-1,-1,...
@@ -94,7 +100,6 @@ ListNode * generateFrequencyMap(char * inputFileName,char * outputFileName, int 
   * huffmanLength = getHuffmanLength(headListNode);
 
   fclose(inputFilePtr);
-  printListWithTree(headListNode); //REMOVE BEFORE TURNED IN
 
 
   return headListNode;

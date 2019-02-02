@@ -62,13 +62,11 @@ ListNode * mergeListNode(ListNode * head){
 //       return head;
 //     }
 //   }
-
+//
 //   //this mean the inserted node is the largest
 //   ln->nxtNode = nxtListPtr;
 //   curListPtr -> nxtNode = ln;
 //   return head;
-//
-//
 //
 // }
 
@@ -135,8 +133,49 @@ ListNode * getElement(ListNode * head, unsigned char character){
 }
 
 //This function sort a 1d singlely linked list according to its ASCII value
-ListNode * sort1dListAccord2Ascii(ListNode * head){
-  return NULL;
+
+
+ListNode * sort1dListAccord2Ascii(ListNode * headListNode)
+{
+  ListNode * sortedHead = NULL;
+  ListNode * next = NULL;
+  ListNode * current = headListNode;
+
+  while (current != NULL)
+  {
+      next = current->nxtNode;
+      sortedHead = sortedInsert(sortedHead,current);
+
+      current = next;
+  }
+
+  return sortedHead;
+}
+
+/* function to insert a new_node in a list. Note that this
+  function expects a pointer to head_ref as this can modify the
+  head of the input linked list (similar to push())*/
+ListNode * sortedInsert(ListNode * headListNode, ListNode * newNode)
+{
+    ListNode * current = NULL;
+
+
+
+    if (headListNode == NULL || ((headListNode->treeNodePtr->value >= newNode->treeNodePtr->value) && (headListNode->treeNodePtr->freq == newNode->treeNodePtr->freq))){
+        newNode->nxtNode = headListNode;
+        headListNode = newNode;
+        return headListNode;
+    }
+
+    current = headListNode;
+    while (current->nxtNode!=NULL && ((current->nxtNode->treeNodePtr->value < newNode->treeNodePtr->value) || (current->nxtNode->treeNodePtr->freq < newNode->treeNodePtr->freq))){
+        current = current->nxtNode;
+    }
+
+    newNode->nxtNode = current->nxtNode;
+    current->nxtNode = newNode;
+
+    return headListNode;
 }
 
 //This function get the number of char in a file, our linked list

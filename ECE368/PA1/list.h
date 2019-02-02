@@ -16,3 +16,5 @@ ListNode * getElement(ListNode * , unsigned char );
 ListNode * sortList(ListNode * );
 // ListNode * List_insert_ASCII(ListNode * , ListNode * );
 int getHuffmanLength(ListNode * );
+ListNode * sort1dListAccord2Ascii(ListNode * );
+ListNode * sortedInsert(ListNode * , ListNode * );
