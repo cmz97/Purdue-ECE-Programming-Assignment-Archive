@@ -8,12 +8,13 @@
 ListNode * generateFrequencyMap(char * ,char * , int * );
 void printListWithTree(ListNode *);
 void printPreorder(TreeNode * );
-void printTreeListToFile(char * , TreeNode * , int );
+void printTreeListToFile(char * , ListNode * , int );
 void pop(int * , int );
 void printPath(char , int * , int , TreeNode *  , int * );
 ListNode * generateHuffmanTree(ListNode *,char *, int);
 void printFreqListToFile(ListNode * , char * );
 void push(int * , int , int );
+void resetArray(int * , int );
 
 
 int main(int argc, char ** argv)
@@ -138,22 +139,22 @@ void printListWithTree(ListNode * head){
 
 ListNode * generateHuffmanTree(ListNode * headListNode,char * outputFileName, int huffmanLength){
 
-
   while(1){
-    printf("\n\n New Merge Begin!\n");
+    // printf("\n\n New Merge Begin!\n");
     headListNode = mergeListNode(headListNode);
-    printListWithTree(headListNode); //REMOVE BEFORE TURNED IN
+    // printListWithTree(headListNode); //REMOVE BEFORE TURNED IN
     if (headListNode->nxtNode == NULL)break;
-    printf("\n       Now Sort!\n");
+    // printf("\n       Now Sort!\n");
     headListNode = sortList(headListNode); //Again, this assume only first element is unsorted
-    printListWithTree(headListNode); //REMOVE BEFORE TURNED IN
+    // printListWithTree(headListNode); //REMOVE BEFORE TURNED IN
   }
   //Now, printf
-  printTreeListToFile(outputFileName, headListNode->treeNodePtr, huffmanLength);
+  printTreeListToFile(outputFileName, headListNode, huffmanLength);
 
   return headListNode;
 }
 
+//print tree pre-order
 void printPreorder(TreeNode * tn)
 {
     if (tn == NULL){
@@ -169,45 +170,64 @@ void printPreorder(TreeNode * tn)
     printPreorder(tn->right);
 }
 
-void printTreeListToFile(char * outputFilePath, TreeNode * tn, int length){
+void printTreeListToFile(char * outputFilePath, ListNode * headListNode, int length){
+  TreeNode * tn = headListNode->treeNodePtr;
   int found = 0; //start with not found
-  // experiment with one character
-  // this should print the path of 'g'
   int arrayLength = (int)ceil((double)length/2);
+  //this array store the path to a particular node
   int * pathArr = malloc(sizeof(int)*arrayLength);
+  ListNode *  curPtr = headListNode;
+  int count = 0;
+  char * stringPrinted = NULL;
+  //open file for writing
 
+  FILE * outputFilePtr = fopen(outputFilePath,"w");
+  if(outputFilePtr == NULL){
+    printf("Unable to write to code file, path is wrong (this should not happen)");
+    fclose(outputFilePtr);
+    return;
+  }
   //initialize array
-  for(int i = 0 ; i<arrayLength; i++){
-    pathArr[i] = -1;
-  }
-  //DEBUG: make sure its correctly initialized
-  for (int i = 0; i < arrayLength; i++) {
-    printf("Before huffmanCode: %d\n",pathArr[i] );
-  }
+  resetArray(pathArr, arrayLength);
 
-  //print the path to 'g', try it
-  printPath('o', pathArr, arrayLength,  tn , &found);
+  //traverse the linked list and print list
 
-  //MAKE SURE TO CLEAN THE found variable
 
-  for (int i = 0; i < arrayLength; i++) {
-    printf("After huffmanCode: %d\n",pathArr[i] );
+  while (curPtr != NULL) {
+    printPath(curPtr->value, pathArr, arrayLength,  tn , &found);
+    assembleString(stringPrinted,arrayLength);
+    fwrite(stringPrinted , 1 , sizeof(stringPrinted) , outputFilePtr);
+    free(stringPrinted);
+    found = 0; //reset found variable
+    resetArray(pathArr, arrayLength); //reset path array
+    curPtr = curPtr->nxtNode;
+    count ++;
   }
+  fclose(outputFilePtr);
   free(pathArr);
+}
+
+void assembleString(char * stringPrinted,int arrayLength){
+
+}
+
+
+void resetArray(int * pathArr, int arrayLength){
+  for(int i = 0 ; i<arrayLength; i++){
+    pathArr[i] = -1; //-1 mean the end of the array. do not change here
+  }
 }
 
 //this function print the tree path to the 'value'
 void printPath(char value, int * huffmanCode, int length, TreeNode * tn , int * found){
-  printf("xxx\n");
   if (tn == NULL){
     return;
   }
   /* first print data of node */
   if(tn->right == NULL && tn->left == NULL){ //reached the leaf node
-    printf("value: %c\n",tn->value );
+    // printf("value: %c\n",tn->value );
     if (*found == 0 && value == tn->value) { //if not found before and found the value
       *found = 1;
-      printf("found\n");
     }
     return;
   }
@@ -223,6 +243,11 @@ void printPath(char value, int * huffmanCode, int length, TreeNode * tn , int * 
     pop(huffmanCode,length);
     push(huffmanCode, 1,length);
     printPath(value,huffmanCode,length,tn->right,found);
+  }else{
+    return;
+  }
+
+  if (*found != 1 ) {
     pop(huffmanCode,length);
   }else{
     return;
@@ -235,6 +260,11 @@ void push(int * huffmanCode, int num, int length){
   int lastIndex = 0;
   if (huffmanCode[0] == -1) {
     huffmanCode[0] = num;
+    // printf("\npushing:\n");
+    //
+    // for (int i = 0; i < length; i++) {
+    //   printf("pushed: huffmanCode: %d\n",huffmanCode[i] );
+    // }
     return;
   }
   while(huffmanCode[lastIndex]!=-1){
@@ -246,12 +276,12 @@ void push(int * huffmanCode, int num, int length){
       return;
     }
   }
-  printf("\npushing:\n");
+  // printf("\npushing:\n");
 
   huffmanCode[lastIndex] = num;
-  for (int i = 0; i < length; i++) {
-    printf("pushed: huffmanCode: %d\n",huffmanCode[i] );
-  }
+  // for (int i = 0; i < length; i++) {
+  //   printf("pushed: huffmanCode: %d\n",huffmanCode[i] );
+  // }
   return;
 }
 
@@ -267,9 +297,9 @@ void pop(int * huffmanCode, int length){
     lastIndex++;
   }
     huffmanCode[lastIndex - 1] = -1;
-    printf("\npoping:\n");
-    for (int i = 0; i < length; i++) {
-      printf("poped: huffmanCode: %d\n",huffmanCode[i] );
-    }
+    // printf("\npoping:\n");
+    // for (int i = 0; i < length; i++) {
+    //   printf("poped: huffmanCode: %d\n",huffmanCode[i] );
+    // }
     return;
   }
