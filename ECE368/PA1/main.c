@@ -10,11 +10,10 @@ void printListWithTree(ListNode *);
 void printPreorder(TreeNode * );
 void printTreeListToFile(char * , ListNode * , int );
 void pop(int * , int );
-void printPath(char , int * , int , TreeNode *  , int * );
-ListNode * generateHuffmanTree(ListNode *,char *, int);
+void printTreeListPreorderToFile(int * , int , TreeNode * , FILE * , char * );
+ListNode * generateHuffmanCode(ListNode *,char *, int);
 void printFreqListToFile(ListNode * , char * );
 void push(int * , int , int );
-void resetArray(int * , int );
 
 
 int main(int argc, char ** argv)
@@ -48,7 +47,7 @@ int main(int argc, char ** argv)
 
   printf("The HUFFMAN length is %d\n", huffmanLength);
 
-  headListNode = generateHuffmanTree(headListNode,argv[3],huffmanLength);
+  headListNode = generateHuffmanCode(headListNode,argv[4],huffmanLength);
 
 
   return EXIT_SUCCESS;
@@ -137,7 +136,7 @@ void printListWithTree(ListNode * head){
   }
 }
 
-ListNode * generateHuffmanTree(ListNode * headListNode,char * outputFileName, int huffmanLength){
+ListNode * generateHuffmanCode(ListNode * headListNode,char * outputFileName, int huffmanLength){
 
   while(1){
     // printf("\n\n New Merge Begin!\n");
@@ -172,12 +171,9 @@ void printPreorder(TreeNode * tn)
 
 void printTreeListToFile(char * outputFilePath, ListNode * headListNode, int length){
   TreeNode * tn = headListNode->treeNodePtr;
-  int found = 0; //start with not found
   int arrayLength = (int)ceil((double)length/2);
   //this array store the path to a particular node
   int * pathArr = malloc(sizeof(int)*arrayLength);
-  ListNode *  curPtr = headListNode;
-  int count = 0;
   char * stringPrinted = NULL;
   //open file for writing
 
@@ -188,70 +184,44 @@ void printTreeListToFile(char * outputFilePath, ListNode * headListNode, int len
     return;
   }
   //initialize array
-  resetArray(pathArr, arrayLength);
+  for(int i = 0 ; i<arrayLength; i++){
+    pathArr[i] = -1; //-1 mean the end of the array. do not change here
+  }
 
   //traverse the linked list and print list
+  printTreeListPreorderToFile(pathArr, arrayLength,  tn, outputFilePtr, stringPrinted);
 
-
-  while (curPtr != NULL) {
-    printPath(curPtr->value, pathArr, arrayLength,  tn , &found);
-    assembleString(stringPrinted,arrayLength);
-    fwrite(stringPrinted , 1 , sizeof(stringPrinted) , outputFilePtr);
-    free(stringPrinted);
-    found = 0; //reset found variable
-    resetArray(pathArr, arrayLength); //reset path array
-    curPtr = curPtr->nxtNode;
-    count ++;
-  }
   fclose(outputFilePtr);
   free(pathArr);
 }
 
-void assembleString(char * stringPrinted,int arrayLength){
-
-}
-
-
-void resetArray(int * pathArr, int arrayLength){
-  for(int i = 0 ; i<arrayLength; i++){
-    pathArr[i] = -1; //-1 mean the end of the array. do not change here
-  }
-}
-
 //this function print the tree path to the 'value'
-void printPath(char value, int * huffmanCode, int length, TreeNode * tn , int * found){
-  if (tn == NULL){
-    return;
-  }
+void printTreeListPreorderToFile(int * huffmanCode, int length, TreeNode * tn, FILE * outputFilePtr, char * stringPrinted){
+
   /* first print data of node */
   if(tn->right == NULL && tn->left == NULL){ //reached the leaf node
-    // printf("value: %c\n",tn->value );
-    if (*found == 0 && value == tn->value) { //if not found before and found the value
-      *found = 1;
-    }
+      int trueArrayLength = 0; //the array length without the -1
+      //count the element in the huffmancode array that is not -1
+      while (trueArrayLength != length  && huffmanCode[trueArrayLength]!=-1) trueArrayLength
+      //print char
+      fprintf (outputFilePtr, "%c:",tn->value);
+      //print the tree path code
+      for(int i = 0 ; i < trueArrayLength; i++ ){
+          fprintf(outputFilePtr, "%d",huffmanCode[i]);
+      }
+      //print new line
+      fprintf (outputFilePtr, "\n");
+      // fprintf(stringPrinted , 1 , writeSize, outputFilePtr);
     return;
   }
 
-  if (*found != 1 ) {
     push(huffmanCode, 0, length);
-    printPath(value,huffmanCode,length,tn->left,found);
-  }else{
-    return;
-  }
-
-  if (*found != 1 ) {
+    printTreeListPreorderToFile(huffmanCode,length,tn->left,outputFilePtr,stringPrinted);
     pop(huffmanCode,length);
+
     push(huffmanCode, 1,length);
-    printPath(value,huffmanCode,length,tn->right,found);
-  }else{
-    return;
-  }
-
-  if (*found != 1 ) {
+    printTreeListPreorderToFile(huffmanCode,length,tn->right,outputFilePtr,stringPrinted);
     pop(huffmanCode,length);
-  }else{
-    return;
-  }
 
 }
 
