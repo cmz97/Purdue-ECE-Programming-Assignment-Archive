@@ -14,6 +14,11 @@ void printTreeListPreorderToFile(int * , int , TreeNode * , FILE * , char * );
 ListNode * generateHuffmanCode(ListNode *,char *, int);
 void printFreqListToFile(ListNode * , char * );
 void push(int * , int , int );
+void recursiveHuffmanTreePrintFile(char * , int , TreeNode * );
+void pushChar(char * , char , int );
+void generateHuffmanTree(ListNode * , char * , int );
+
+
 
 
 int main(int argc, char ** argv)
@@ -46,12 +51,54 @@ int main(int argc, char ** argv)
   printListWithTree(headListNode); //REMOVE BEFORE TURNED IN
 
   printf("The HUFFMAN length is %d\n", huffmanLength);
-
   headListNode = generateHuffmanCode(headListNode,argv[4],huffmanLength);
+  generateHuffmanTree(headListNode,argv[3],huffmanLength);
+
 
 
   return EXIT_SUCCESS;
 }
+
+void generateHuffmanTree(ListNode * headListNode, char * outputFilePath, int huffmanLength){
+  int huffmanArrLength = 3*huffmanLength-1;
+  char * huffmanTreeArr = malloc(sizeof(unsigned char)*huffmanArrLength);
+
+  for (int i = 0; i < huffmanArrLength; i++) {
+    huffmanTreeArr[i] = 0; //initialize everything to NULL in ascii
+  }
+
+  recursiveHuffmanTreePrintFile(huffmanTreeArr,huffmanArrLength,headListNode->treeNodePtr);
+
+  for(int i = 0 ; i < huffmanArrLength ; i++){
+    printf("huffmanTreeArr[%d]: %c:\n",i,huffmanTreeArr[i]);
+  }
+
+  FILE * outputFilePtr = fopen(outputFilePath,"w");
+  if(outputFilePtr == NULL){
+    printf("Error whilte reading file");
+    fclose(outputFilePtr);
+    return;
+  }
+
+  fwrite(huffmanTreeArr , huffmanArrLength , 1 , outputFilePtr);
+  fclose(outputFilePtr);
+
+}
+
+void recursiveHuffmanTreePrintFile(char * huffmanTreeArr, int huffmanArrLength, TreeNode * tn){
+  if(tn->right == NULL && tn->left == NULL){ //reached the leaf node
+    pushChar(huffmanTreeArr,'1',huffmanArrLength);
+    pushChar(huffmanTreeArr,tn->value,huffmanArrLength);
+    return;
+  }else if (tn->right != NULL && tn->left != NULL){
+    pushChar(huffmanTreeArr,'0',huffmanArrLength);
+  }
+
+  recursiveHuffmanTreePrintFile(huffmanTreeArr,huffmanArrLength,tn->left);
+  recursiveHuffmanTreePrintFile(huffmanTreeArr,huffmanArrLength,tn->right);
+}
+
+
 
 ListNode * generateFrequencyMap(char * inputFileName,char * outputFileName, int * huffmanLength){
   int numByteFile = 0;
@@ -152,10 +199,8 @@ ListNode * generateHuffmanCode(ListNode * headListNode,char * outputFileName, in
 
   return headListNode;
 }
-
 //print tree pre-order
-void printPreorder(TreeNode * tn)
-{
+void printPreorder(TreeNode * tn){
     if (tn == NULL){
       return;
     }
@@ -202,7 +247,7 @@ void printTreeListPreorderToFile(int * huffmanCode, int length, TreeNode * tn, F
   if(tn->right == NULL && tn->left == NULL){ //reached the leaf node
       int trueArrayLength = 0; //the array length without the -1
       //count the element in the huffmancode array that is not -1
-      while (trueArrayLength != length  && huffmanCode[trueArrayLength]!=-1) trueArrayLength
+      while (trueArrayLength != length  && huffmanCode[trueArrayLength]!=-1) trueArrayLength++;
       //print char
       fprintf (outputFilePtr, "%c:",tn->value);
       //print the tree path code
@@ -230,11 +275,6 @@ void push(int * huffmanCode, int num, int length){
   int lastIndex = 0;
   if (huffmanCode[0] == -1) {
     huffmanCode[0] = num;
-    // printf("\npushing:\n");
-    //
-    // for (int i = 0; i < length; i++) {
-    //   printf("pushed: huffmanCode: %d\n",huffmanCode[i] );
-    // }
     return;
   }
   while(huffmanCode[lastIndex]!=-1){
@@ -246,12 +286,27 @@ void push(int * huffmanCode, int num, int length){
       return;
     }
   }
-  // printf("\npushing:\n");
 
   huffmanCode[lastIndex] = num;
-  // for (int i = 0; i < length; i++) {
-  //   printf("pushed: huffmanCode: %d\n",huffmanCode[i] );
-  // }
+  return;
+}
+
+void pushChar(char * huffmanCode, char stuff, int length){
+  int lastIndex = 0;
+  if (huffmanCode[0] == 0) { //0 is NULL in ascii
+    huffmanCode[0] = stuff;
+    return;
+  }
+  while(huffmanCode[lastIndex]!=0){
+    lastIndex++;
+    if (lastIndex == length) {
+      // reached the end, array fulled, again this should not happen
+      printf("ERROR: ARRAY FULL\n" );
+      return;
+    }
+  }
+
+  huffmanCode[lastIndex] = stuff;
   return;
 }
 
