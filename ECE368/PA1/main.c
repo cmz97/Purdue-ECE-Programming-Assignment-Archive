@@ -327,7 +327,7 @@ void pop(int * huffmanCode, int length){
     printf("ERROR: ARRAY EMPTY\n");
     return;
   }
-  while(huffmanCode[lastIndex]!=-1 && lastIndex != length){
+  while(lastIndex != length && huffmanCode[lastIndex]!=-1){
     lastIndex++;
   }
     huffmanCode[lastIndex - 1] = -1;
