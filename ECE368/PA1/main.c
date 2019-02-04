@@ -41,16 +41,11 @@ int main(int argc, char ** argv)
   }
   fclose(inputFilePtr);
 
-  // ---- end preprocess -----
-
-  //--- compression ---
   ListNode * headListNode = NULL;
   int huffmanLength = 0; //this is the number of unique char in the file
 
   headListNode = generateFrequencyMap(argv[1],argv[2],&huffmanLength);
-  printListWithTree(headListNode); //REMOVE BEFORE TURNED IN
 
-  printf("The HUFFMAN length is %d\n", huffmanLength);
   headListNode = generateHuffmanCode(headListNode,argv[4],huffmanLength);
   generateHuffmanTree(headListNode,argv[3],huffmanLength);
 
@@ -69,9 +64,6 @@ void generateHuffmanTree(ListNode * headListNode, char * outputFilePath, int huf
 
   recursiveHuffmanTreePrintFile(huffmanTreeArr,huffmanArrLength,headListNode->treeNodePtr);
 
-  for(int i = 0 ; i < huffmanArrLength ; i++){
-    printf("huffmanTreeArr[%d]: %c:\n",i,huffmanTreeArr[i]);
-  }
 
   FILE * outputFilePtr = fopen(outputFilePath,"w");
   if(outputFilePtr == NULL){
@@ -82,6 +74,7 @@ void generateHuffmanTree(ListNode * headListNode, char * outputFilePath, int huf
 
   fwrite(huffmanTreeArr , huffmanArrLength , 1 , outputFilePtr);
   fclose(outputFilePtr);
+  free(huffmanTreeArr);
 
 }
 
@@ -119,7 +112,6 @@ ListNode * generateFrequencyMap(char * inputFileName,char * outputFileName, int 
   //initialize the headListNode
   fread(&curbyte, sizeof(unsigned char), 1, inputFilePtr);
   headListNode = newListNode(TreeNode_create(curbyte,1));
-  // if(headListNode == NULL)printf("headListNode is NULL\n" );
 
   for(int i = 1 ; i<numByteFile ; i++){
     //Read byte from file
