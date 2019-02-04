@@ -16,7 +16,7 @@ void push(int * , int , int );
 void recursiveHuffmanTreePrintFile(char * , int , TreeNode * );
 void pushChar(char * , char , int );
 void generateHuffmanTree(ListNode * , char * , int );
-
+void freeTree(TreeNode * tn);
 
 
 
@@ -48,9 +48,20 @@ int main(int argc, char ** argv)
   headListNode = generateHuffmanCode(headListNode,argv[4],huffmanLength);
   generateHuffmanTree(headListNode,argv[3],huffmanLength);
 
-
-
+  freeTree(headListNode->treeNodePtr);
+  free(headListNode);
   return EXIT_SUCCESS;
+}
+
+void freeTree(TreeNode * tn){
+  if(tn == NULL){ //reached the leaf node
+    return;
+  }
+
+  freeTree(tn->left);
+  freeTree(tn->right);
+
+  free(tn);
 }
 
 int myCeil(float num) {
