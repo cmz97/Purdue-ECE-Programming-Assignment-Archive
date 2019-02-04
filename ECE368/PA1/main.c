@@ -1,7 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "list.h"
-#include <math.h>
 
 //TODO: currently, the returned path array not correct
 
@@ -52,6 +51,13 @@ int main(int argc, char ** argv)
 
 
   return EXIT_SUCCESS;
+}
+
+int myCeil(float num) {
+    int myNum = (int)num;
+    if (num == (float)myNum)return myNum;
+    myNum += 1;
+    return myNum;
 }
 
 void generateHuffmanTree(ListNode * headListNode, char * outputFilePath, int huffmanLength){
@@ -208,7 +214,7 @@ void printPreorder(TreeNode * tn){
 
 void printTreeListToFile(char * outputFilePath, ListNode * headListNode, int length){
   TreeNode * tn = headListNode->treeNodePtr;
-  int arrayLength = (int)ceil((double)length/2);
+  int arrayLength = (int)myCeil((double)length/2);
   //this array store the path to a particular node
   int * pathArr = malloc(sizeof(int)*arrayLength);
   char * stringPrinted = NULL;
