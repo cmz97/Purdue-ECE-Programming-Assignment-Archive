@@ -15,7 +15,7 @@ int main(int argc, char ** argv)
   inputArr = Array_Load_From_File(argv[2], &sizeofInputArr);
   Array_Shellsort(inputArr, sizeofInputArr, &n_comp);
   Array_Save_To_File(argv[3], inputArr, sizeofInputArr);
-
+  free(inputArr);
 
   return EXIT_SUCCESS;
 }
