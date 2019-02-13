@@ -10,12 +10,17 @@ int main(int argc, char ** argv)
   // argv[3]: outputName
 
   int sizeofInputArr = 0;
+  Node * head = NULL;
   long * inputArr = NULL; //input array reading from file
   double n_comp = 0; //number of comparision
   inputArr = Array_Load_From_File(argv[2], &sizeofInputArr);
   Array_Shellsort(inputArr, sizeofInputArr, &n_comp);
   Array_Save_To_File(argv[3], inputArr, sizeofInputArr);
   free(inputArr);
+
+  head = List_Load_From_File(argv[2]);
+  List_Save_To_File(argv[3],head);
+
 
   return EXIT_SUCCESS;
 }

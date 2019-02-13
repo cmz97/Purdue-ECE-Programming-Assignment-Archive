@@ -68,5 +68,4 @@ void Array_Shellsort(long *array, int size, double *n_comp){
     }
   }
   free(sequence);
-
 }
