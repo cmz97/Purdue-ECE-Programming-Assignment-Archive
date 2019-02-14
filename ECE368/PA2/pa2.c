@@ -4,6 +4,7 @@
 #include "shell_array.h"
 #include <string.h>
 
+void destroyList(Node * head);
 int main(int argc, char ** argv)
 {
   // argv[1]: mode -l for list, -a for array
@@ -32,9 +33,20 @@ int main(int argc, char ** argv)
     List_Save_To_File(argv[3],head);
     printf("List Sorting\n");
     //FREE HEAD
+    destroyList(head);
     return EXIT_SUCCESS;
   }
   printf("Wrong Argument (usage: -l or -a)\n");
   return EXIT_FAILURE;
 
+}
+
+void destroyList(Node * head){
+  Node * tempNode = NULL;
+  Node * curNode = head;
+  while (curNode != NULL) {
+    tempNode = curNode->next;
+    free(curNode);
+    curNode = tempNode;
+  }
 }
