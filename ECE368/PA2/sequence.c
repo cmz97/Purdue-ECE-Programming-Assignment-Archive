@@ -35,9 +35,7 @@ long *Generate_2p3q_Seq(int n, int *seq_size){
         // printf("index_2:%ld\n", index_2);
         // printf("index_3:%ld\n", index_3);
         // printf("curStackIndex:%ld\n",curStackIndex);
-        if (currentNumber >= n) {
-          break;
-        }
+        if (currentNumber >= n) break;
         sequenceStack = push(&stacksize,&curStackIndex,sequenceStack,currentNumber);
         if (yeild_2 <= yeild_3) index_2++;
         if (yeild_2 >= yeild_3) index_3++;
