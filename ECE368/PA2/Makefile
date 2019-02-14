@@ -18,13 +18,13 @@ $(TARGET): $(OBJS)
 	$(GCC) $(TESTFLAGS) -c $*.c
 
 testmemory: $(TARGET)
-	$(VAL) 	./pa2 -l ./examples/1000.b output_1000_a.b
+	$(VAL) 	./PA2 -l ./examples/1000.b output_1000_a.b
 
 test1: PA2
-	./pa2 -a ./examples/1000.b output_1000_a.b
+	./PA2 -a ./examples/1000.b output_1000_a.b
 
 test2: PA2
-	./pa2 -l ./examples/1000.b output_1000_l.b
+	./PA2 -l ./examples/1000.b output_1000_l.b
 
 testall: test1 test2
 
