@@ -26,6 +26,9 @@ test1: PA2
 test2: PA2
 	./PA2 -l ./examples/1000.b output_1000_l.b
 
+test3: PA2
+	./PA2 -l ./examples/15.b output_15b_l.b
+
 testall: test1 test2
 
 clean:

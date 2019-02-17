@@ -25,7 +25,7 @@ int main(int argc, char ** argv)
     Array_Shellsort(inputArr, sizeofInputArr, &n_comp);
     Array_Save_To_File(argv[3], inputArr, sizeofInputArr);
     free(inputArr);
-    printf("Array Sorting\n");
+    printf("Array Sorting, Numer of Comp: %f \n",n_comp);
     return EXIT_SUCCESS;
   }else if (strcmp(argv[1],"-l") == 0) {
     head = List_Load_From_File(argv[2]);
