@@ -78,6 +78,7 @@ Node *List_Shellsort(Node *list, double *n_comp){
   // }
 
   destroyAllListAndNode(headList);
+  free(sequence);
   return list;
 }
 
@@ -205,7 +206,7 @@ List * sortedInsert(List * headList, int listIndex, long value)
     //In the middle
     lastNode->next = newNode;
     newNode->next = curNode;
-    
+
     printf("\n4\n");
     return curList;
 }
