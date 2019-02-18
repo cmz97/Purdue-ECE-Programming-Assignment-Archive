@@ -12,8 +12,8 @@ long *Generate_2p3q_Seq(int n, int *seq_size){
     int curStackIndex = 0;
     int index_2 = 0;  //storing the 2 index
     int index_3 = 0; //storing the 3 index
-    long yeild_2 = 0;
-    long yeild_3 = 0;
+    long current_2 = 0;
+    long current_3 = 0;
     long currentNumber = 0;
 
     long * sequenceStack = malloc(sizeof(long) * stacksize);
@@ -27,21 +27,15 @@ long *Generate_2p3q_Seq(int n, int *seq_size){
         return sequenceStack;
     }
     sequenceStack = push(&stacksize,&curStackIndex,sequenceStack,1); //first initialize the first variable
-
     while(1){
-        yeild_2 = 2 * sequenceStack[index_2];
-        yeild_3 = 3 * sequenceStack[index_3];
-        currentNumber = getMin(yeild_2, yeild_3);
-        // printf("index_2:%ld\n", index_2);
-        // printf("index_3:%ld\n", index_3);
-        // printf("curStackIndex:%ld\n",curStackIndex);
+        current_2 = 2 * sequenceStack[index_2];
+        current_3 = 3 * sequenceStack[index_3];
+        currentNumber = getMin(current_2, current_3);
         if (currentNumber >= n) break;
         sequenceStack = push(&stacksize,&curStackIndex,sequenceStack,currentNumber);
-        if (yeild_2 <= yeild_3) index_2++;
-        if (yeild_2 >= yeild_3) index_3++;
+        if (current_2 <= current_3) index_2++;
+        if (current_2 >= current_3) index_3++;
     }
-
-    // printArrayDEBUG(sequenceStack,curStackIndex);
     *seq_size = curStackIndex;
     return sequenceStack;
 }

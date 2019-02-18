@@ -25,14 +25,15 @@ int main(int argc, char ** argv)
     Array_Shellsort(inputArr, sizeofInputArr, &n_comp);
     Array_Save_To_File(argv[3], inputArr, sizeofInputArr);
     free(inputArr);
-    printf("Array Sorting, Numer of Comp: %f \n",n_comp);
+    printf("%le\n",n_comp);
     return EXIT_SUCCESS;
   }else if (strcmp(argv[1],"-l") == 0) {
     head = List_Load_From_File(argv[2]);
     head = List_Shellsort(head,&n_comp);
     List_Save_To_File(argv[3],head);
-    printf("List Sorting\n");
+    // printf("List Sorting\n");
     //FREE HEAD
+    printf("%le\n",n_comp);
     destroyList(head);
     return EXIT_SUCCESS;
   }

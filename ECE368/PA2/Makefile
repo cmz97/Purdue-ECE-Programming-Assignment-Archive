@@ -18,21 +18,27 @@ $(TARGET): $(OBJS)
 	$(GCC) $(TESTFLAGS) -c $*.c
 
 testmemory: $(TARGET)
-	$(VAL) 	./PA2 -l ./examples/1000.b output_1000_a.b
+	$(VAL) 	./PA2 -l ./examples/10000.b output_10000_l.b
 
 test1: PA2
 	./PA2 -a ./examples/1000.b output_1000_a.b
+	./PA2 -l ./examples/1000.b output_1000_l.b
+	diff ./examples/1000sa.b output_1000_a.b
+	diff ./examples/1000sl.b output_1000_l.b
 
 test2: PA2
-	./PA2 -l ./examples/1000.b output_1000_l.b
+	./PA2 -a ./examples/15.b output_15_a.b
+	./PA2 -l ./examples/15.b output_15_l.b
+	diff ./examples/15sa.b output_15_a.b
+	diff ./examples/15sl.b output_15_l.b
 
 test3: PA2
-	./PA2 -l ./examples/15.b output_15b_l.b
+	./PA2 -a ./examples/10000.b output_10000_a.b
+	./PA2 -l ./examples/10000.b output_10000_l.b
+	diff output_10000_a.b output_10000_l.b
 
-test4: PA2
-	./PA2 -l ./examples/1000000.b output_1000000b_l.b
+testall: test1 test2 test3
 
-testall: test1 test2
 
 clean:
 	rm -f $(OBJS) $(TARGET) $(BIN)

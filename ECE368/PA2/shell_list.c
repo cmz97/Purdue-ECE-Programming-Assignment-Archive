@@ -11,7 +11,7 @@ typedef struct List {
 
 Node * Node_insert_rear(Node * head, Node * ln);
 int getNodeListSize(Node * head);
-List * divideNodeList(List * headList, Node * list, int k, int listSize, int k_ind);
+List * divideNodeList(List * headList, Node * list, int k, int listSize, int k_ind, double * n_comp);
 void sortedInsert(List * headList, int listIndex, Node * value, int k_ind);
 List * List_insert(List * head, List * ln);
 void destroyAllList(List * headList);
@@ -75,7 +75,7 @@ Node *List_Shellsort(Node *list, double *n_comp){
 
   for(int i = seq_size - 1 ; i >= 0 ; i--){
     // printf("DEBUG: sequence[2]:%ld\n", sequence[i]);
-    headList = divideNodeList(headList,list,sequence[i],listSize,i);
+    headList = divideNodeList(headList,list,sequence[i],listSize,i,n_comp);
     // debugListofNodes(headList);
     list = revert2SingleNodeList(headList,sequence[i],listSize);
     // debugNodes(list);
@@ -125,7 +125,7 @@ void destroyAllList(List * headList){
 }
 
 
-List * divideNodeList(List * headList, Node * list, int k, int listSize, int k_ind){
+List * divideNodeList(List * headList, Node * list, int k, int listSize, int k_ind, double * n_comp){
   if (headList != NULL) { //this means the list is not initialized
     printf("HeadList is not NULL\n");
     return NULL;
@@ -144,6 +144,7 @@ List * divideNodeList(List * headList, Node * list, int k, int listSize, int k_i
     // printf("curNode->%ld, imodk = %d \n",curNode->value,i%k);
     tempNode = curNode->next;
     sortedInsert(headList,i%k,curNode,k_ind);
+    *n_comp = *n_comp + 1.0;
     // debugListofNodes(headList);
 
     curNode = tempNode;
@@ -203,7 +204,7 @@ void sortedInsert(List * headList, int listIndex, Node * thisNode, int k_ind)
       // printf("\n1\n");
       return;
     }
-    if (mode == 0) {
+    if (mode == 1) {
       while (curNode->value < thisNode->value && curNode->next != NULL) {
         lastNode = curNode;
         curNode = curNode->next;
@@ -221,7 +222,7 @@ void sortedInsert(List * headList, int listIndex, Node * thisNode, int k_ind)
 
     // printf("Debug: Currenty curNode->value:%ld value:%ld difference : %ld\n",curNode->value,thisNode->value, curNode->value-thisNode->value);
 
-    if (mode == 0) {
+    if (mode == 1) {
       if (curNode->next == NULL && curNode->value < thisNode->value) { //in the end
         curNode->next = thisNode;
         // printf("\n2\n");
