@@ -14,10 +14,10 @@ int getNodeListSize(Node * head);
 List * divideNodeList(List * headList, Node * list, int k, int listSize, int k_ind);
 List * sortedInsert(List * headList, int listIndex, Node * value, int k_ind);
 List * List_insert(List * head, List * ln);
-void destroyAllListAndNode(List * headList);
+void destroyAllList(List * headList);
 void debugListofNodes(List * headList);
-void destroyAllNode(Node * headNode);
-
+Node * revert2SingleNodeList(List * headList, Node * NodeList, long k, int listSize);
+void popNodefromList(List * headList, int listIndex, Node ** result);
 
 Node *List_Load_From_File(char *filename){
   int size = 0;
@@ -73,45 +73,49 @@ Node *List_Shellsort(Node *list, double *n_comp){
 
   printf("DEBUG: sequence[2]:%ld\n", sequence[2]);
   headList = divideNodeList(headList,list,sequence[2],listSize,2);
-  // list = revert2SingleNodeList(headList,list);
-  //
+  debugListofNodes(headList);
+  list = revert2SingleNodeList(headList,list,sequence[2],listSize);
+  destroyAllList(headList);
+  headList = NULL;
   // for(int i = 0 ; i < seq_size ; i++){
   //   headList = divideNodeList(headList,list,sequence[i]);
   // }
 
-  // destroyAllListAndNode(headList);
   free(sequence);
   return list;
 }
-//
-// void revert2SingleNodeList(List * headList,Node * NodeList){
-//
-// }
 
-void destroyAllNode(Node * headNode){
-  Node * curNode = headNode;
+Node * revert2SingleNodeList(List * headList, Node * NodeList, long k, int listSize){
+  Node * curNode = NodeList;
   Node * tempNode = NULL;
-
-  while(curNode!= NULL){
-    tempNode = curNode->next;
-    free(curNode);
+  for (int i = 0; i < listSize; i++) {
+    printf("curNode->%ld, imodk = %ld \n",curNode->value,i%k);
+    popNodefromList(headList,i%k,&tempNode);
+    tempNode->next = curNode;
     curNode = tempNode;
+    tempNode = NULL;
   }
+  return curNode;
 }
 
-void destroyAllListAndNode(List * headList){
+void popNodefromList(List * headList, int listIndex, Node ** result){
+  List * curList = headList;
+  int index = 0;
+
+  while(index!=listIndex && curList!= NULL){
+    curList = curList->next;
+    index++;
+  }
+
+  * result = curList->node;
+  curList->node = curList->node->next;
+  printf("curList->node->next->value: %ld\n",curList->node->next->value);
+}
+
+void destroyAllList(List * headList){
   List * curList = headList;
   List * tempList = NULL;
-  Node * curNode = NULL;
-  Node * tempNode = NULL;
-
   while (curList != NULL) {
-    curNode = curList->node;
-    while(curNode!= NULL){
-      tempNode = curNode->next;
-      free(curNode);
-      curNode = tempNode;
-    }
     tempList = curList->next;
     free(curList);
     curList = tempList;
@@ -138,7 +142,7 @@ List * divideNodeList(List * headList, Node * list, int k, int listSize, int k_i
     // printf("curNode->%ld, imodk = %d \n",curNode->value,i%k);
     tempNode = curNode->next;
     sortedInsert(headList,i%k,curNode,k_ind);
-    debugListofNodes(headList);
+    // debugListofNodes(headList);
 
     curNode = tempNode;
     if (curNode == NULL) {
@@ -147,7 +151,7 @@ List * divideNodeList(List * headList, Node * list, int k, int listSize, int k_i
   }
 
   //----------- DEBUG -----------
-  debugListofNodes(headList);
+  // debugListofNodes(headList);
 
   return headList;
 }
@@ -190,7 +194,7 @@ List * sortedInsert(List * headList, int listIndex, Node * thisNode, int k_ind)
       printf("\n1\n");
       return curList;
     }
-    if (mode == 1) {
+    if (mode == 0) {
       while (curNode->value < thisNode->value && curNode->next != NULL) {
         lastNode = curNode;
         curNode = curNode->next;
@@ -208,7 +212,7 @@ List * sortedInsert(List * headList, int listIndex, Node * thisNode, int k_ind)
 
     printf("Debug: Currenty curNode->value:%ld value:%ld difference : %ld\n",curNode->value,thisNode->value, curNode->value-thisNode->value);
 
-    if (mode == 1) {
+    if (mode == 0) {
       if (curNode->next == NULL && curNode->value < thisNode->value) { //in the end
         curNode->next = thisNode;
         printf("\n2\n");

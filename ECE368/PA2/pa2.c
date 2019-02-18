@@ -33,7 +33,7 @@ int main(int argc, char ** argv)
     List_Save_To_File(argv[3],head);
     printf("List Sorting\n");
     //FREE HEAD
-    // destroyList(head);
+    destroyList(head);
     return EXIT_SUCCESS;
   }
   printf("Wrong Argument (usage: -l or -a)\n");
