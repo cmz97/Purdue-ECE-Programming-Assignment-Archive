@@ -94,7 +94,7 @@ Node * revert2SingleNodeList(List * headList, long k, int listSize){
     popNodefromList(headList,i%k,&tempNode);
     tempNode->next = curNode;
     curNode = tempNode;
-     // printf("curNode->%ld, imodk = %ld \n",curNode->value,i%k);
+    // printf("curNode->%ld, imodk = %ld \n",curNode->value,i%k);
     tempNode = NULL;
   }
   return curNode;

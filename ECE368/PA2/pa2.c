@@ -29,7 +29,7 @@ int main(int argc, char ** argv)
     return EXIT_SUCCESS;
   }else if (strcmp(argv[1],"-l") == 0) {
     head = List_Load_From_File(argv[2]);
-    List_Shellsort(head,&n_comp);
+    head = List_Shellsort(head,&n_comp);
     List_Save_To_File(argv[3],head);
     printf("List Sorting\n");
     //FREE HEAD
