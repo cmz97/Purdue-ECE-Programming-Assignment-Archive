@@ -72,11 +72,11 @@ ListNode * mergeListNode(ListNode * head){
 
 ListNode * List_insert(ListNode * head, ListNode * ln){
   if (ln == NULL){
-    printf("ERROR! ln is NULL\n");
+    // printf("ERROR! ln is NULL\n");
     return NULL;
   }
   if ((ln -> nxtNode) != NULL){
-      printf("ERROR! ln -> next is not NULL\n");
+      // printf("ERROR! ln -> next is not NULL\n");
       return NULL;
   }
   //CODE BLOCK BELLLOW IS FOR REAR APPENDs

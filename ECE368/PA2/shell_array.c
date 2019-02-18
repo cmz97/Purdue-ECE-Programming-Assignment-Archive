@@ -35,15 +35,17 @@ long *Array_Load_From_File(char *filename, int *size){
 }
 
 int Array_Save_To_File(char *filename, long *array, int size){
+  long trueSize = 0;
   FILE * outputFilePtr = fopen(filename,"w");
   if(outputFilePtr == NULL){
     printf("Can not create file\n");
     fclose(outputFilePtr);
     return 0;
   }
-  fwrite(array,sizeof(long),size,outputFilePtr);
+  trueSize = fwrite(array,sizeof(long),size,outputFilePtr);
   fclose(outputFilePtr);
-  return size;
+
+  return trueSize;
 }
 
 void Array_Shellsort(long *array, int size, double *n_comp){

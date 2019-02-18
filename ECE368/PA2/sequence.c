@@ -4,7 +4,7 @@
 #define GROWFACTOR 2
 
 static long * push(long * stacksize, int * curStackIndex, long * sequenceStack, long value);
-static void printArrayDEBUG(long * sequenceStack, long stacksize);
+// static void printArrayDEBUG(long * sequenceStack, long stacksize);
 static long getMin(long num1, long num2);
 
 long *Generate_2p3q_Seq(int n, int *seq_size){
@@ -41,7 +41,7 @@ long *Generate_2p3q_Seq(int n, int *seq_size){
         if (yeild_2 >= yeild_3) index_3++;
     }
 
-    printArrayDEBUG(sequenceStack,curStackIndex);
+    // printArrayDEBUG(sequenceStack,curStackIndex);
     *seq_size = curStackIndex;
     return sequenceStack;
 }
@@ -54,7 +54,7 @@ static long getMin(long num1, long num2){
 static long * push(long * stacksize, int * curStackIndex, long * sequenceStack, long value){
   if (*curStackIndex == *stacksize) { //If the array is full, realloc
     * stacksize = (long)((* stacksize) * GROWFACTOR); //grow the stack size by this factor
-    printf("Stack Growed to : %ld \n", (*stacksize));
+    // printf("Stack Growed to : %ld \n", (*stacksize));
     sequenceStack = realloc(sequenceStack, sizeof(long)*(*stacksize));
     sequenceStack[*curStackIndex] = value;
     * curStackIndex += 1; //increment the curent Stack Index by one
@@ -65,8 +65,8 @@ static long * push(long * stacksize, int * curStackIndex, long * sequenceStack, 
   return sequenceStack;
 }
 
-static void printArrayDEBUG(long * sequenceStack, long stacksize){
-  for (int i = 0 ; i < stacksize ; i++) {
-    printf("sequenceStack[%d]: %ld\n",i, sequenceStack[i]);
-  }
-}
+// static void printArrayDEBUG(long * sequenceStack, long stacksize){
+//   for (int i = 0 ; i < stacksize ; i++) {
+//     printf("sequenceStack[%d]: %ld\n",i, sequenceStack[i]);
+//   }
+// }

@@ -12,12 +12,13 @@ typedef struct List {
 Node * Node_insert_rear(Node * head, Node * ln);
 int getNodeListSize(Node * head);
 List * divideNodeList(List * headList, Node * list, int k, int listSize, int k_ind);
-List * sortedInsert(List * headList, int listIndex, Node * value, int k_ind);
+void sortedInsert(List * headList, int listIndex, Node * value, int k_ind);
 List * List_insert(List * head, List * ln);
 void destroyAllList(List * headList);
 void debugListofNodes(List * headList);
-Node * revert2SingleNodeList(List * headList, Node * NodeList, long k, int listSize);
+Node * revert2SingleNodeList(List * headList, long k, int listSize);
 void popNodefromList(List * headList, int listIndex, Node ** result);
+void debugNodes(Node * curNode);
 
 Node *List_Load_From_File(char *filename){
   int size = 0;
@@ -71,28 +72,29 @@ Node *List_Shellsort(Node *list, double *n_comp){
   int listSize = getNodeListSize(list);
   long * sequence = Generate_2p3q_Seq(listSize,&seq_size);
 
-  printf("DEBUG: sequence[2]:%ld\n", sequence[2]);
-  headList = divideNodeList(headList,list,sequence[2],listSize,2);
-  debugListofNodes(headList);
-  list = revert2SingleNodeList(headList,list,sequence[2],listSize);
-  destroyAllList(headList);
-  headList = NULL;
-  // for(int i = 0 ; i < seq_size ; i++){
-  //   headList = divideNodeList(headList,list,sequence[i]);
-  // }
+
+  for(int i = seq_size - 1 ; i >= 0 ; i--){
+    // printf("DEBUG: sequence[2]:%ld\n", sequence[i]);
+    headList = divideNodeList(headList,list,sequence[i],listSize,i);
+    // debugListofNodes(headList);
+    list = revert2SingleNodeList(headList,sequence[i],listSize);
+    // debugNodes(list);
+    destroyAllList(headList);
+    headList = NULL;
+  }
 
   free(sequence);
   return list;
 }
 
-Node * revert2SingleNodeList(List * headList, Node * NodeList, long k, int listSize){
-  Node * curNode = NodeList;
+Node * revert2SingleNodeList(List * headList, long k, int listSize){
+  Node * curNode = NULL;
   Node * tempNode = NULL;
   for (int i = 0; i < listSize; i++) {
-    printf("curNode->%ld, imodk = %ld \n",curNode->value,i%k);
     popNodefromList(headList,i%k,&tempNode);
     tempNode->next = curNode;
     curNode = tempNode;
+     // printf("curNode->%ld, imodk = %ld \n",curNode->value,i%k);
     tempNode = NULL;
   }
   return curNode;
@@ -109,7 +111,7 @@ void popNodefromList(List * headList, int listIndex, Node ** result){
 
   * result = curList->node;
   curList->node = curList->node->next;
-  printf("curList->node->next->value: %ld\n",curList->node->next->value);
+  // printf("curList->node->next->value: %ld\n",curList->node->next->value);
 }
 
 void destroyAllList(List * headList){
@@ -145,9 +147,9 @@ List * divideNodeList(List * headList, Node * list, int k, int listSize, int k_i
     // debugListofNodes(headList);
 
     curNode = tempNode;
-    if (curNode == NULL) {
-      printf("ERROR: CurNode is NULL!");
-    }
+    // if (curNode == NULL) {
+    //   printf("ERROR: CurNode is NULL!");
+    // }
   }
 
   //----------- DEBUG -----------
@@ -161,19 +163,26 @@ void debugListofNodes(List * headList){
   Node * curNode = NULL;
   int listIndex = 0;
   while (curList != NULL) {
-    printf("List[%d]\n",listIndex);
+    // printf("List[%d]\n",listIndex);
     curNode = curList->node;
     while(curNode!= NULL){
-      printf("curNode:%ld -> ", curNode->value);
+      // printf("curNode:%ld -> ", curNode->value);
       curNode = curNode->next;
     }
-    printf("NULL\n");
+    // printf("NULL\n");
     curList = curList->next;
     listIndex++;
   }
 }
 
-List * sortedInsert(List * headList, int listIndex, Node * thisNode, int k_ind)
+void debugNodes(Node * curNode){
+  while(curNode!= NULL){
+    printf("Node:%ld -> ", curNode->value);
+    curNode = curNode->next;
+  }
+}
+
+void sortedInsert(List * headList, int listIndex, Node * thisNode, int k_ind)
 {
     List * curList = headList;
     int index = 0;
@@ -191,8 +200,8 @@ List * sortedInsert(List * headList, int listIndex, Node * thisNode, int k_ind)
     if(curNode == NULL){
       thisNode->next = NULL; //continute
       curList->node = thisNode;
-      printf("\n1\n");
-      return curList;
+      // printf("\n1\n");
+      return;
     }
     if (mode == 0) {
       while (curNode->value < thisNode->value && curNode->next != NULL) {
@@ -210,19 +219,19 @@ List * sortedInsert(List * headList, int listIndex, Node * thisNode, int k_ind)
     //create the new Node
     thisNode->next = NULL;
 
-    printf("Debug: Currenty curNode->value:%ld value:%ld difference : %ld\n",curNode->value,thisNode->value, curNode->value-thisNode->value);
+    // printf("Debug: Currenty curNode->value:%ld value:%ld difference : %ld\n",curNode->value,thisNode->value, curNode->value-thisNode->value);
 
     if (mode == 0) {
       if (curNode->next == NULL && curNode->value < thisNode->value) { //in the end
         curNode->next = thisNode;
-        printf("\n2\n");
-        return curList;
+        // printf("\n2\n");
+        return;
       }
     }else{
       if (curNode->next == NULL && curNode->value > thisNode->value) { //in the end
         curNode->next = thisNode;
-        printf("\n2\n");
-        return curList;
+        // printf("\n2\n");
+        return;
       }
     }
 
@@ -230,25 +239,25 @@ List * sortedInsert(List * headList, int listIndex, Node * thisNode, int k_ind)
     if (curList->node == curNode){//in the beginning, first node is greater than the value
       thisNode->next = curNode;
       curList->node = thisNode;
-      printf("\n3\n");
-      return curList;
+      // printf("\n3\n");
+      return;
     }
 
     //In the middle
     lastNode->next = thisNode;
     thisNode->next = curNode;
 
-    printf("\n4\n");
-    return curList;
+    // printf("\n4\n");
+    return;
 }
 
 List * List_insert(List * head, List * ln){
   if (ln == NULL){
-    printf("ERROR! ln is NULL\n");
+    // printf("ERROR! ln is NULL\n");
     return NULL;
   }
   if ((ln -> next) != NULL){
-      printf("ERROR! ln -> next is not NULL\n");
+      // printf("ERROR! ln -> next is not NULL\n");
       return NULL;
   }
   //CODE BLOCK BELLLOW IS FOR REAR APPENDs
@@ -265,17 +274,17 @@ int getNodeListSize(Node * head){
     curNode = curNode->next;
     length++;
   }
-  printf("Length from List: %d\n", length);
+  // printf("Length from List: %d\n", length);
   return length;
 }
 
 Node * Node_insert_rear(Node * head, Node * ln){
   if (ln == NULL){
-    printf("ERROR! ln is NULL\n");
+    // printf("ERROR! ln is NULL\n");
     return NULL;
   }
   if ((ln -> next) != NULL){
-      printf("ERROR! ln -> next is not NULL\n");
+      // printf("ERROR! ln -> next is not NULL\n");
       return NULL;
   }
   if (head == NULL)return ln;
