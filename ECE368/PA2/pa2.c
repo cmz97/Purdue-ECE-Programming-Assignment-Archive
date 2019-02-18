@@ -47,6 +47,7 @@ void destroyList(Node * head){
   while (curNode != NULL) {
     tempNode = curNode->next;
     free(curNode);
+    printf("here\n")
     curNode = tempNode;
   }
 }
