@@ -51,7 +51,7 @@ void Array_Shellsort(long *array, int size, double *n_comp){
   long * sequence = Generate_2p3q_Seq(size,&seq_size);
   int gapLength = 0; //the current sequence
   int x = 0; // inner array index
-  int temp_r = 0; //the temperary r for swaping
+  long temp_r = 0; //the temperary r for swaping
 
   for(int i = seq_size - 1; i >= 0 ; i--){
     gapLength = sequence[i];
@@ -67,6 +67,5 @@ void Array_Shellsort(long *array, int size, double *n_comp){
       array[x] = temp_r;
     }
   }
-  free(sequence);
   free(sequence);
 }

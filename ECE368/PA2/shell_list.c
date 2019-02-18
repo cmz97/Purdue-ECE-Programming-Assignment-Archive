@@ -11,11 +11,12 @@ typedef struct List {
 
 Node * Node_insert_rear(Node * head, Node * ln);
 int getNodeListSize(Node * head);
-List * divideNodeList(List * headList, Node * list, int k, int listSize);
-List * sortedInsert(List * headList, int listIndex, long value);
+List * divideNodeList(List * headList, Node * list, int k, int listSize, int k_ind);
+List * sortedInsert(List * headList, int listIndex, Node * value, int k_ind);
 List * List_insert(List * head, List * ln);
 void destroyAllListAndNode(List * headList);
 void debugListofNodes(List * headList);
+void destroyAllNode(Node * headNode);
 
 
 Node *List_Load_From_File(char *filename){
@@ -71,17 +72,32 @@ Node *List_Shellsort(Node *list, double *n_comp){
   long * sequence = Generate_2p3q_Seq(listSize,&seq_size);
 
   printf("DEBUG: sequence[2]:%ld\n", sequence[2]);
-  headList = divideNodeList(headList,list,sequence[2],listSize);
-
+  headList = divideNodeList(headList,list,sequence[2],listSize,2);
+  // list = revert2SingleNodeList(headList,list);
+  //
   // for(int i = 0 ; i < seq_size ; i++){
-  //   headList = divideNodeList(headList,list,sequence[i])
+  //   headList = divideNodeList(headList,list,sequence[i]);
   // }
 
-  destroyAllListAndNode(headList);
+  // destroyAllListAndNode(headList);
   free(sequence);
   return list;
 }
+//
+// void revert2SingleNodeList(List * headList,Node * NodeList){
+//
+// }
 
+void destroyAllNode(Node * headNode){
+  Node * curNode = headNode;
+  Node * tempNode = NULL;
+
+  while(curNode!= NULL){
+    tempNode = curNode->next;
+    free(curNode);
+    curNode = tempNode;
+  }
+}
 
 void destroyAllListAndNode(List * headList){
   List * curList = headList;
@@ -103,7 +119,7 @@ void destroyAllListAndNode(List * headList){
 }
 
 
-List * divideNodeList(List * headList, Node * list, int k, int listSize){
+List * divideNodeList(List * headList, Node * list, int k, int listSize, int k_ind){
   if (headList != NULL) { //this means the list is not initialized
     printf("HeadList is not NULL\n");
     return NULL;
@@ -117,12 +133,14 @@ List * divideNodeList(List * headList, Node * list, int k, int listSize){
   }
 
   Node * curNode = list;
+  Node * tempNode = NULL; //if node deletion
   for (int i = 0; i < listSize; i++) {
     // printf("curNode->%ld, imodk = %d \n",curNode->value,i%k);
-    sortedInsert(headList,i%k,curNode->value);
+    tempNode = curNode->next;
+    sortedInsert(headList,i%k,curNode,k_ind);
     debugListofNodes(headList);
 
-    curNode = curNode -> next;
+    curNode = tempNode;
     if (curNode == NULL) {
       printf("ERROR: CurNode is NULL!");
     }
@@ -151,10 +169,11 @@ void debugListofNodes(List * headList){
   }
 }
 
-List * sortedInsert(List * headList, int listIndex, long value)
+List * sortedInsert(List * headList, int listIndex, Node * thisNode, int k_ind)
 {
     List * curList = headList;
     int index = 0;
+    int mode = k_ind % 2; //odd for assending, even for dessending
 
     //traverse to correct list
     while(index!=listIndex && curList!= NULL){
@@ -163,49 +182,57 @@ List * sortedInsert(List * headList, int listIndex, long value)
     }
 
     Node * curNode = curList->node;
-    Node * newNode = NULL;
     Node * lastNode = NULL;
 
     if(curNode == NULL){
-      newNode = malloc(sizeof(Node));
-      newNode->value = value;
-      newNode->next = NULL;
-      curList->node = newNode;
+      thisNode->next = NULL; //continute
+      curList->node = thisNode;
       printf("\n1\n");
       return curList;
     }
-    while (curNode->value < value && curNode->next != NULL) {
-      lastNode = curNode;
-      curNode = curNode->next;
+    if (mode == 1) {
+      while (curNode->value < thisNode->value && curNode->next != NULL) {
+        lastNode = curNode;
+        curNode = curNode->next;
+      }
+    }else{
+      while (curNode->value > thisNode->value && curNode->next != NULL) {
+        lastNode = curNode;
+        curNode = curNode->next;
+      }
     }
+
 
     //create the new Node
-    newNode = malloc(sizeof(Node));
-    newNode->value = value;
-    newNode->next = NULL;
+    thisNode->next = NULL;
 
-    if (curNode->value < value) {
-      printf("\n curNode->value < value TRUE\n");
+    printf("Debug: Currenty curNode->value:%ld value:%ld difference : %ld\n",curNode->value,thisNode->value, curNode->value-thisNode->value);
+
+    if (mode == 1) {
+      if (curNode->next == NULL && curNode->value < thisNode->value) { //in the end
+        curNode->next = thisNode;
+        printf("\n2\n");
+        return curList;
+      }
+    }else{
+      if (curNode->next == NULL && curNode->value > thisNode->value) { //in the end
+        curNode->next = thisNode;
+        printf("\n2\n");
+        return curList;
+      }
     }
-    printf("\ncurNode->value < value FALSE\n");
-    printf("Debug: Currenty curNode->value:%ld value:%ld difference : %ld\n",curNode->value,value, curNode->value-value);
 
-    if (curNode->next == NULL && curNode->value < value) { //in the end
-      curNode->next = newNode;
-      printf("\n2\n");
-      return curList;
-    }
 
-    if (curList->node == curNode ){//in the beginning, first node is greater than the value
-      newNode->next = curNode;
-      curList->node = newNode;
+    if (curList->node == curNode){//in the beginning, first node is greater than the value
+      thisNode->next = curNode;
+      curList->node = thisNode;
       printf("\n3\n");
       return curList;
     }
 
     //In the middle
-    lastNode->next = newNode;
-    newNode->next = curNode;
+    lastNode->next = thisNode;
+    thisNode->next = curNode;
 
     printf("\n4\n");
     return curList;
