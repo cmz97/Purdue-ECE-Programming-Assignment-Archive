@@ -76,12 +76,11 @@ ListNode * List_insert(ListNode * head, ListNode * ln){
     return NULL;
   }
   if ((ln -> nxtNode) != NULL){
-      // printf("ERROR! ln -> next is not NULL\n");
-      return NULL;
+    // printf("ERROR! ln -> next is not NULL\n");
+    return NULL;
   }
   //CODE BLOCK BELLLOW IS FOR REAR APPENDs
   if (head == NULL)return ln;
-
   ln -> nxtNode = head;
   return ln;
 }
