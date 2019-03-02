@@ -27,3 +27,5 @@ void postOrderDEBUG(TreeNode * tn);
 #define KRED  "\x1B[31m"
 #define KRESET "\033[0m"
 #define KGRN  "\x1B[32m"
+
+void Tree_destroy(TreeNode * tn);

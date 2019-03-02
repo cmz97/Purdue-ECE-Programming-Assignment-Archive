@@ -133,3 +133,14 @@ void postOrderDEBUG(TreeNode * tn){
   postOrderDEBUG(tn->right);
   printf("<treeNode> label: %s%d%s wireLength: %s%le%s cap: %s%le%s res: %s%le%s SNCap: %s%le%s\n",KGRN,tn->label,KRESET,KRED,tn->wireLength,KRESET,KRED,tn->cap,KRESET,KRED,tn->res,KRESET,KRED,tn->SNCap,KRESET);
 }
+
+void Tree_destroy(TreeNode * tn)
+{
+  if (tn == NULL)
+    {
+      return;
+    }
+  Tree_destroy(tn -> left);
+  Tree_destroy(tn -> right);
+  free (tn);
+}
