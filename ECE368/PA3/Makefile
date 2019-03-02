@@ -1,4 +1,4 @@
-TARGET = PA3
+TARGET = pa3
 WARNING = -Wall -Wshadow --pedantic
 ERROR = -Wvla -Werror
 GCC = gcc -std=c99 -g $(WARNING) $(ERROR)
@@ -18,12 +18,13 @@ $(TARGET): $(OBJS)
 	$(GCC) $(TESTFLAGS) -c $*.c
 
 testmemory: $(TARGET)
-	$(VAL) 	./PA2 -l ./examples/10000.b output_10000_l.b
+	$(VAL)	./pa3 ./examples/3.txt ./output/3_out.txt
 
-test1: PA3
+
+test1: pa3
 	./pa3 ./examples/3.txt ./output/3_out.txt
 
-test2: PA3
+test2: pa3
 	./pa3 ./examples/5.txt ./output/5_out.txt
 
 testall: test1
