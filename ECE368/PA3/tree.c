@@ -31,6 +31,7 @@ TreeNode * constructTree(char * inputfileName, double * rd, double * r, double *
 
   TreeNode * rightNode = NULL;
   TreeNode * leftNode = NULL;
+  TreeNode * returnNode = NULL;
 
   while(fgets(curLine,100,inputFilePtr)!=NULL){
     if(sscanf(curLine, "%d(%le)", &label, &SNCap) == 2){ //The leaf Node
@@ -38,6 +39,7 @@ TreeNode * constructTree(char * inputfileName, double * rd, double * r, double *
       thisListNode = malloc(sizeof(ListNode));
       thisListNode -> tn = malloc(sizeof(TreeNode));
       thisListNode -> tn = initTree(thisListNode -> tn);
+
       thisListNode -> tn -> SNCap = SNCap;
       thisListNode -> tn -> label = label;
       thisListNode -> nxtNode = NULL;
@@ -53,6 +55,7 @@ TreeNode * constructTree(char * inputfileName, double * rd, double * r, double *
       rightNode -> wireLength = leftWL;
       rightNode -> cap = leftWL * (*c);
       rightNode -> res = leftWL * (*r);
+
       leftNode = popListNode(&headList);
       leftNode -> wireLength = leftWL;
       leftNode -> cap = leftWL * (*c);
@@ -61,6 +64,7 @@ TreeNode * constructTree(char * inputfileName, double * rd, double * r, double *
       //assign left and right
       thisListNode -> tn -> right = rightNode;
       thisListNode -> tn -> left = leftNode;
+
       //push back this ListNode
       headList = List_insert(headList,thisListNode);
       //from here, calculate the line cap and line res to the children node
@@ -70,9 +74,12 @@ TreeNode * constructTree(char * inputfileName, double * rd, double * r, double *
   }
   //add the rd to the headNode
   thisListNode -> tn -> res = *rd;
+  returnNode = thisListNode -> tn;
+
+  free(thisListNode);
   printf("\n");
 
-  return thisListNode->tn;
+  return returnNode;
 }
 
 TreeNode * initTree(TreeNode * tn){
@@ -96,8 +103,11 @@ ListNode * List_insert(ListNode * head, ListNode * ln){
       return NULL;
   }
   //CODE BLOCK BELLLOW IS FOR REAR APPENDs
-  if (head == NULL)return ln;
+  if (head == NULL){
+    return ln;
+  }
   ln -> nxtNode = head;
+
   return ln;
 }
 
@@ -111,6 +121,7 @@ TreeNode * popListNode(ListNode ** head){
   ListNode * oldHead = *head;
   *head = (*head) -> nxtNode;
   free(oldHead);
+
   return returnNode;
 }
 
