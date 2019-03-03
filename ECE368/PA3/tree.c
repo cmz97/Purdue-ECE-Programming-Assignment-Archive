@@ -4,8 +4,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-
-
 //**Note that when you push to list, you change from post order to pre order.
 TreeNode * constructTree(char * inputfileName, double * rd, double * r, double * c){
   FILE * inputFilePtr = fopen(inputfileName,"r");
@@ -44,11 +42,12 @@ TreeNode * constructTree(char * inputfileName, double * rd, double * r, double *
       thisListNode -> tn -> label = label;
       thisListNode -> nxtNode = NULL;
       headList = List_insert(headList,thisListNode);
+
     }else if(sscanf(curLine, "(%le %le)", &leftWL, &rightWL) == 2){ //Non Leaf Node
       printf("<None Leaf Node> Leftlength: %s%le%s, Rightlength: %s%le%s\n",KRED,leftWL,KRESET, KRED,rightWL,KRESET);
       thisListNode = malloc(sizeof(ListNode));
       thisListNode -> tn = malloc(sizeof(TreeNode));
-      thisListNode -> tn = initTree(headList -> tn);
+      thisListNode -> tn = initTree(thisListNode -> tn);
 
       //pop treeNode, assume two node already in
       rightNode = popListNode(&headList);
@@ -60,6 +59,7 @@ TreeNode * constructTree(char * inputfileName, double * rd, double * r, double *
       leftNode -> wireLength = leftWL;
       leftNode -> cap = leftWL * (*c);
       leftNode -> res = leftWL * (*r);
+      thisListNode -> nxtNode = NULL;
 
       //assign left and right
       thisListNode -> tn -> right = rightNode;
@@ -96,18 +96,25 @@ TreeNode * initTree(TreeNode * tn){
 }
 
 ListNode * List_insert(ListNode * head, ListNode * ln){
+
   if (ln == NULL){
+    printf("Something wrong 1\n");
+
     return NULL;
   }
   if ((ln -> nxtNode) != NULL){
+      printf("Something wrong 2\n");
       return NULL;
   }
+
+  TreeNode * headNode = ln -> tn;
   //CODE BLOCK BELLLOW IS FOR REAR APPENDs
+  printf("%sCHECK%s <Insert TreeNode> label: %s%d%s wireLength: %s%le%s cap: %s%le%s res: %s%le%s SNCap: %s%le%s\n",KYEL,KRESET,KGRN,headNode->label,KRESET,KRED,headNode->wireLength,KRESET,KRED,headNode->cap,KRESET,KRED,headNode->res,KRESET,KRED,headNode->SNCap,KRESET);
+
   if (head == NULL){
     return ln;
   }
   ln -> nxtNode = head;
-
   return ln;
 }
 
@@ -117,6 +124,10 @@ TreeNode * popListNode(ListNode ** head){
     printf("ERROR: Can not pop anymore\n");
     return NULL;
   }
+  TreeNode * headNode = (*head) -> tn;
+
+  printf("%sCHECK%s <Pop TreeNode> label: %s%d%s wireLength: %s%le%s cap: %s%le%s res: %s%le%s SNCap: %s%le%s\n",KYEL,KRESET,KGRN,headNode->label,KRESET,KRED,headNode->wireLength,KRESET,KRED,headNode->cap,KRESET,KRED,headNode->res,KRESET,KRED,headNode->SNCap,KRESET);
+
   TreeNode * returnNode = (*head) -> tn;
   ListNode * oldHead = *head;
   *head = (*head) -> nxtNode;
