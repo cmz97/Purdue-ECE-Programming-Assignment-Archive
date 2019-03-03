@@ -77,6 +77,7 @@ TreeNode * constructTree(char * inputfileName, double * rd, double * r, double *
   returnNode = thisListNode -> tn;
 
   free(thisListNode);
+  fclose(inputFilePtr);
   printf("\n");
 
   return returnNode;
