@@ -9,7 +9,7 @@ SRCS =  pa3.c tree.c
 OBJS = $(SRCS:%.c=%.o)
 BIN = *.b
 
-VAL =  valgrind --tool=memcheck --log-file=memcheck.txt --leak-check=full --verbose --track-origins=yes
+VAL =  valgrind --tool=memcheck --log-file=memcheck.txt --leak-check=full --show-reachable=yes --verbose --track-origins=yes
 
 $(TARGET): $(OBJS)
 	$(GCC) $(TESTFLAGS) $(OBJS) -o $(TARGET)
