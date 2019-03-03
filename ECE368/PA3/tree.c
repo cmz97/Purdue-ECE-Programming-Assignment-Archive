@@ -1,8 +1,50 @@
 #include "tree.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+
+//post order to get the nodal capacitance
+
+void assignDelay(TreeNode * tn, double delay, double pathres){
+  //the pathres include the current path
+  double leftDelay = 0;
+  double rightDelay = 0;
+  double myDelay = 0;
+  pathres += tn->res;
+
+  // printf("<Path Resistance> %le\n",pathres);
+  if(tn->left == NULL && tn->right == NULL){ //leafNode
+    delay += pathres*pathres*tn->nodalCap;
+    tn->tn_delay = delay/pathres;
+    printf("<TN_DELAY> label:%d delay:%le pathRes:%le\n",tn->label,tn->tn_delay,pathres);
+    return;
+  }
+  myDelay = pathres*pathres * tn->nodalCap + delay;
+
+  printf("<TN_DELAY> pathRes:%le myDelay: %le delay:%le \n",pathres,myDelay,delay);
+
+  leftDelay = myDelay + pathres*pathres*tn->right->totalNodalCap;
+  assignDelay(tn->left,leftDelay,pathres);
+  rightDelay =  myDelay + pathres*pathres*tn->left->totalNodalCap;
+  assignDelay(tn->right,rightDelay,pathres);
+
+}
+
+double fillInNodalCapacitance(TreeNode * curNode){
+  if (curNode->left == NULL && curNode->right == NULL ) { //leaf Node
+    //update self nodal capacitance
+    curNode -> nodalCap = (curNode->cap / 2) + curNode -> SNCap;
+    curNode -> totalNodalCap = curNode -> nodalCap;
+    return curNode->cap; //return the upsteam capacitance
+  }
+  //non leaf Node
+  double leftCap = fillInNodalCapacitance(curNode->left);
+  double rightCap = fillInNodalCapacitance(curNode->right);
+  curNode -> nodalCap = (curNode->cap + leftCap + rightCap) / 2;
+  curNode -> totalNodalCap = curNode->left->totalNodalCap + curNode->right->totalNodalCap + curNode -> nodalCap;
+  return curNode->cap;
+}
+
 
 //**Note that when you push to list, you change from post order to pre order.
 TreeNode * constructTree(char * inputfileName, double * rd, double * r, double * c){
@@ -33,7 +75,7 @@ TreeNode * constructTree(char * inputfileName, double * rd, double * r, double *
 
   while(fgets(curLine,100,inputFilePtr)!=NULL){
     if(sscanf(curLine, "%d(%le)", &label, &SNCap) == 2){ //The leaf Node
-      printf("<Leaf Node> label: %s%d%s SNCap: %s%le%s\n",KRED,label,KRESET,KRED, SNCap, KRESET);
+      // printf("<Leaf Node> label: %s%d%s SNCap: %s%le%s\n",KRED,label,KRESET,KRED, SNCap, KRESET);
       thisListNode = malloc(sizeof(ListNode));
       thisListNode -> tn = malloc(sizeof(TreeNode));
       thisListNode -> tn = initTree(thisListNode -> tn);
@@ -44,10 +86,15 @@ TreeNode * constructTree(char * inputfileName, double * rd, double * r, double *
       headList = List_insert(headList,thisListNode);
 
     }else if(sscanf(curLine, "(%le %le)", &leftWL, &rightWL) == 2){ //Non Leaf Node
-      printf("<None Leaf Node> Leftlength: %s%le%s, Rightlength: %s%le%s\n",KRED,leftWL,KRESET, KRED,rightWL,KRESET);
+      // printf("<None Leaf Node> Leftlength: %s%le%s, Rightlength: %s%le%s\n",KRED,leftWL,KRESET, KRED,rightWL,KRESET);
       thisListNode = malloc(sizeof(ListNode));
       thisListNode -> tn = malloc(sizeof(TreeNode));
       thisListNode -> tn = initTree(thisListNode -> tn);
+
+      //child wireLength for printing
+      thisListNode -> tn -> leftWireLength = leftWL;
+      thisListNode -> tn -> rightWireLength = rightWL;
+
 
       //pop treeNode, assume two node already in
       rightNode = popListNode(&headList);
@@ -91,8 +138,16 @@ TreeNode * initTree(TreeNode * tn){
   tn -> SNCap = 0; //Sink Node Cap
   tn -> label = 0; //label for the leaf node
 
+  tn -> nodalCap = 0;
+
+  tn ->leftWireLength = 0;
+  tn ->rightWireLength = 0;
+
   tn -> left = NULL;
   tn -> right = NULL;
+
+  tn -> totalNodalCap = 0;
+  tn -> tn_delay = 0;
   return tn;
 }
 
@@ -107,10 +162,9 @@ ListNode * List_insert(ListNode * head, ListNode * ln){
       printf("Something wrong 2\n");
       return NULL;
   }
-
-  TreeNode * headNode = ln -> tn;
+  // TreeNode * headNode = ln -> tn;
   //CODE BLOCK BELLLOW IS FOR REAR APPENDs
-  printf("%sCHECK%s <Insert TreeNode> label: %s%d%s wireLength: %s%le%s cap: %s%le%s res: %s%le%s SNCap: %s%le%s\n",KYEL,KRESET,KGRN,headNode->label,KRESET,KRED,headNode->wireLength,KRESET,KRED,headNode->cap,KRESET,KRED,headNode->res,KRESET,KRED,headNode->SNCap,KRESET);
+  // printf("%sCHECK%s <Insert TreeNode> label: %s%d%s wireLength: %s%le%s cap: %s%le%s res: %s%le%s SNCap: %s%le%s\n",KYEL,KRESET,KGRN,headNode->label,KRESET,KRED,headNode->wireLength,KRESET,KRED,headNode->cap,KRESET,KRED,headNode->res,KRESET,KRED,headNode->SNCap,KRESET);
 
   if (head == NULL){
     return ln;
@@ -125,9 +179,9 @@ TreeNode * popListNode(ListNode ** head){
     printf("ERROR: Can not pop anymore\n");
     return NULL;
   }
-  TreeNode * headNode = (*head) -> tn;
+  // TreeNode * headNode = (*head) -> tn;
 
-  printf("%sCHECK%s <Pop TreeNode> label: %s%d%s wireLength: %s%le%s cap: %s%le%s res: %s%le%s SNCap: %s%le%s\n",KYEL,KRESET,KGRN,headNode->label,KRESET,KRED,headNode->wireLength,KRESET,KRED,headNode->cap,KRESET,KRED,headNode->res,KRESET,KRED,headNode->SNCap,KRESET);
+  // printf("%sCHECK%s <Pop TreeNode> label: %s%d%s wireLength: %s%le%s cap: %s%le%s res: %s%le%s SNCap: %s%le%s\n",KYEL,KRESET,KGRN,headNode->label,KRESET,KRED,headNode->wireLength,KRESET,KRED,headNode->cap,KRESET,KRED,headNode->res,KRESET,KRED,headNode->SNCap,KRESET);
 
   TreeNode * returnNode = (*head) -> tn;
   ListNode * oldHead = *head;
@@ -137,13 +191,30 @@ TreeNode * popListNode(ListNode ** head){
   return returnNode;
 }
 
-void postOrderDEBUG(TreeNode * tn){
+void preOrder2File(TreeNode * tn, char * outputFileName){
+  FILE * outputFilePtr = fopen(outputFileName,"w");
+  if(outputFilePtr == NULL){
+    printf("output File Does Not Exist\n");
+    fclose(outputFilePtr);
+    return;
+  }
+  preOrder2FileUtil(tn, outputFilePtr);
+  fclose(outputFilePtr);
+
+}
+
+void preOrder2FileUtil(TreeNode * tn, FILE * outputFilePtr){
   if(tn == NULL){
     return;
   }
-  postOrderDEBUG(tn->left);
-  postOrderDEBUG(tn->right);
-  printf("<treeNode> label: %s%d%s wireLength: %s%le%s cap: %s%le%s res: %s%le%s SNCap: %s%le%s\n",KGRN,tn->label,KRESET,KRED,tn->wireLength,KRESET,KRED,tn->cap,KRESET,KRED,tn->res,KRESET,KRED,tn->SNCap,KRESET);
+  printf("<treeNode> nodalCap: %s%le%s label: %s%d%s totalNodalCap: %s%le%s cap: %s%le%s res: %s%le%s SNCap: %s%le%s\n",KRED,tn->nodalCap,KRESET,KGRN,tn->label,KRESET,KRED,tn->totalNodalCap,KRESET,KRED,tn->cap,KRESET,KRED,tn->res,KRESET,KRED,tn->SNCap,KRESET);
+  if(tn->left == NULL && tn->right == NULL){ //leaf node
+    fprintf(outputFilePtr, "%d(%le)\n",tn->label,tn->SNCap);
+  }else{
+    fprintf(outputFilePtr, "(%le %le)\n",tn->leftWireLength,tn->rightWireLength);
+  }
+  preOrder2FileUtil(tn->left,outputFilePtr);
+  preOrder2FileUtil(tn->right,outputFilePtr);
 }
 
 void Tree_destroy(TreeNode * tn)

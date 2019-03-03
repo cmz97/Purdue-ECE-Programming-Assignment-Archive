@@ -1,16 +1,29 @@
+#include <stdio.h>
+
 typedef struct _treenode{
   //fill by parent
   double wireLength; //the wireLength from parent to me
   double cap; //capacitance AT the Node
   double res; //resistance from parent to me
 
-  //self filled
+  //child wireLength for printing
+  double leftWireLength;
+  double rightWireLength;
 
+  //self filled
   double SNCap; //for leaf Node
   int label; //for leaf Node
 
+  double nodalCap; //this is the c'
+
   struct _treenode * left; //non-leaf node
   struct _treenode * right; //non-leaf node
+
+  //total nodal capacitance DownStream
+  double totalNodalCap;
+
+  //delay for leafNode
+  double tn_delay;
 } TreeNode;
 
 typedef struct _listNode{
@@ -22,7 +35,9 @@ TreeNode * constructTree(char * inputfileName, double * rd, double * r, double *
 TreeNode * initTree(TreeNode * tn);
 TreeNode * popListNode(ListNode ** head);
 ListNode * List_insert(ListNode * head, ListNode * ln);
-void postOrderDEBUG(TreeNode * tn);
+void preOrder2File(TreeNode * tn, char * outputFileName);
+void preOrder2FileUtil(TreeNode * tn, FILE * outputFilePtr);
+void assignDelay(TreeNode * tn, double delay, double pathres);
 
 #define KRED  "\x1B[31m"
 #define KRESET "\033[0m"
@@ -31,3 +46,4 @@ void postOrderDEBUG(TreeNode * tn);
 
 
 void Tree_destroy(TreeNode * tn);
+double fillInNodalCapacitance(TreeNode * curNode);
