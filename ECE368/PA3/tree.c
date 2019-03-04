@@ -61,7 +61,7 @@ TreeNode * constructTree(char * inputfileName, double * rd, double * r, double *
 
   //get the header line
   fscanf(inputFilePtr, "%le %le %le\n", rd, r, c);
-  printf("header: rd <%le> r <%le> c <%le>\n",*rd, *r, *c);
+  // printf("header: rd <%le> r <%le> c <%le>\n",*rd, *r, *c);
 
   //temp data for reading
   int label = 0; //label of the leaf node
@@ -117,7 +117,7 @@ TreeNode * constructTree(char * inputfileName, double * rd, double * r, double *
       headList = List_insert(headList,thisListNode);
       //from here, calculate the line cap and line res to the children node
     }else{
-      printf("some thing is wrong while parse\n");
+      // printf("some thing is wrong while parse\n");
     }
   }
   //add the rd to the headNode

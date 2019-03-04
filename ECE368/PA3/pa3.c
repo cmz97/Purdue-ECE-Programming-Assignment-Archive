@@ -28,12 +28,7 @@ int main(int argc, char ** argv)
   printDelay2FilePreorder(headNode,0,0,outputFilePtr);
   fclose(outputFilePtr);
 
-  printf("\n");
   preOrder2File1(headNode,argv[2]);
-
-  // printf("<treeNode> label: %s%d%s wireLength: %s%le%s cap: %s%le%s res: %s%le%s SNCap: %s%le%s\n",KGRN,headNode->label,KRESET,KRED,headNode->wireLength,KRESET,KRED,headNode->cap,KRESET,KRED,headNode->res,KRESET,KRED,headNode->SNCap,KRESET);
-  // headNode = headNode->right;
-  // printf("<treeNode> label: %s%d%s wireLength: %s%le%s cap: %s%le%s res: %s%le%s SNCap: %s%le%s\n",KGRN,headNode->label,KRESET,KRED,headNode->wireLength,KRESET,KRED,headNode->cap,KRESET,KRED,headNode->res,KRESET,KRED,headNode->SNCap,KRESET);
   Tree_destroy(headNode);
   return EXIT_SUCCESS;
 
