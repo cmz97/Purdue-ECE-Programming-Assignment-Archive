@@ -5,28 +5,29 @@
 
 //post order to get the nodal capacitance
 
-void assignDelay(TreeNode * tn, double delay, double pathres){
+void printDelay2FilePreorder(TreeNode * tn, double delay, double pathres,FILE * outputFilePtr){
   //the pathres include the current path
   double leftDelay = 0;
   double rightDelay = 0;
   double myDelay = 0;
   pathres += tn->res;
-
   // printf("<Path Resistance> %le\n",pathres);
   if(tn->left == NULL && tn->right == NULL){ //leafNode
     delay += pathres*pathres*tn->nodalCap;
     tn->tn_delay = delay/pathres;
-    printf("<TN_DELAY> label:%d delay:%le pathRes:%le\n",tn->label,tn->tn_delay,pathres);
+    // printf("<TN_DELAY> label:%d delay:%le pathRes:%le\n",tn->label,tn->tn_delay,pathres);
+    fwrite(&tn->label,sizeof(int), 1, outputFilePtr);
+    fwrite(&tn->tn_delay,sizeof(double),1, outputFilePtr);
     return;
   }
   myDelay = pathres*pathres * tn->nodalCap + delay;
 
-  printf("<TN_DELAY> pathRes:%le myDelay: %le delay:%le \n",pathres,myDelay,delay);
 
   leftDelay = myDelay + pathres*pathres*tn->right->totalNodalCap;
-  assignDelay(tn->left,leftDelay,pathres);
-  rightDelay =  myDelay + pathres*pathres*tn->left->totalNodalCap;
-  assignDelay(tn->right,rightDelay,pathres);
+  printDelay2FilePreorder(tn->left,leftDelay,pathres,outputFilePtr);
+  rightDelay = myDelay + pathres*pathres*tn->left->totalNodalCap;
+  // printf("tn->left->totalNodalCap:%le\n", tn->left->totalNodalCap);
+  printDelay2FilePreorder(tn->right,rightDelay,pathres,outputFilePtr);
 
 }
 
@@ -99,8 +100,8 @@ TreeNode * constructTree(char * inputfileName, double * rd, double * r, double *
       //pop treeNode, assume two node already in
       rightNode = popListNode(&headList);
       rightNode -> wireLength = leftWL;
-      rightNode -> cap = leftWL * (*c);
-      rightNode -> res = leftWL * (*r);
+      rightNode -> cap = rightWL * (*c);
+      rightNode -> res = rightWL * (*r);
 
       leftNode = popListNode(&headList);
       leftNode -> wireLength = leftWL;
@@ -191,30 +192,30 @@ TreeNode * popListNode(ListNode ** head){
   return returnNode;
 }
 
-void preOrder2File(TreeNode * tn, char * outputFileName){
+void preOrder2File1(TreeNode * tn, char * outputFileName){
   FILE * outputFilePtr = fopen(outputFileName,"w");
   if(outputFilePtr == NULL){
     printf("output File Does Not Exist\n");
     fclose(outputFilePtr);
     return;
   }
-  preOrder2FileUtil(tn, outputFilePtr);
+  preOrder2File1Util(tn, outputFilePtr);
   fclose(outputFilePtr);
 
 }
 
-void preOrder2FileUtil(TreeNode * tn, FILE * outputFilePtr){
+void preOrder2File1Util(TreeNode * tn, FILE * outputFilePtr){
   if(tn == NULL){
     return;
   }
-  printf("<treeNode> nodalCap: %s%le%s label: %s%d%s totalNodalCap: %s%le%s cap: %s%le%s res: %s%le%s SNCap: %s%le%s\n",KRED,tn->nodalCap,KRESET,KGRN,tn->label,KRESET,KRED,tn->totalNodalCap,KRESET,KRED,tn->cap,KRESET,KRED,tn->res,KRESET,KRED,tn->SNCap,KRESET);
+  // printf("<treeNode> nodalCap: %s%le%s label: %s%d%s totalNodalCap: %s%le%s cap: %s%le%s res: %s%le%s SNCap: %s%le%s\n",KRED,tn->nodalCap,KRESET,KGRN,tn->label,KRESET,KRED,tn->totalNodalCap,KRESET,KRED,tn->cap,KRESET,KRED,tn->res,KRESET,KRED,tn->SNCap,KRESET);
   if(tn->left == NULL && tn->right == NULL){ //leaf node
     fprintf(outputFilePtr, "%d(%le)\n",tn->label,tn->SNCap);
   }else{
     fprintf(outputFilePtr, "(%le %le)\n",tn->leftWireLength,tn->rightWireLength);
   }
-  preOrder2FileUtil(tn->left,outputFilePtr);
-  preOrder2FileUtil(tn->right,outputFilePtr);
+  preOrder2File1Util(tn->left,outputFilePtr);
+  preOrder2File1Util(tn->right,outputFilePtr);
 }
 
 void Tree_destroy(TreeNode * tn)

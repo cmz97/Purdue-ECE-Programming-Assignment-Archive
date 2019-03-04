@@ -35,9 +35,10 @@ TreeNode * constructTree(char * inputfileName, double * rd, double * r, double *
 TreeNode * initTree(TreeNode * tn);
 TreeNode * popListNode(ListNode ** head);
 ListNode * List_insert(ListNode * head, ListNode * ln);
-void preOrder2File(TreeNode * tn, char * outputFileName);
-void preOrder2FileUtil(TreeNode * tn, FILE * outputFilePtr);
-void assignDelay(TreeNode * tn, double delay, double pathres);
+void preOrder2File1(TreeNode * tn, char * outputFileName);
+void preOrder2File1Util(TreeNode * tn, FILE * outputFilePtr);
+
+void printDelay2FilePreorder(TreeNode * tn, double delay, double pathres, FILE * outputFilePtr);
 
 #define KRED  "\x1B[31m"
 #define KRESET "\033[0m"
