@@ -18,7 +18,7 @@ $(TARGET): $(OBJS)
 	$(GCC) $(TESTFLAGS) -c $*.c
 
 testmemory: $(TARGET)
-	$(VAL)	./pa4 ./examples/3.txt ./output/3pre_out.txt ./output/3t_out.txt
+	$(VAL)	./pa4 -b ./examples/ops0.b ./output/tree_out_1.b
 
 
 test1: pa4
