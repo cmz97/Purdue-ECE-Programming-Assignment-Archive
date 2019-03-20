@@ -1,0 +1,11 @@
+-------------- partition -----------
+Do no implement PA5 using ppt, use median of three partition, move the midean to the first, so dont have to write three version of agorithm
+
+use mean to partition, sum up all the element when iterate
+
+you can also use bubble sort concept, by swap the element in the corect order.
+
+partition using random process
+
+
+march,20,2019

@@ -12,10 +12,13 @@ bool constructTree(FILE * fptr,TreeNode ** headNode){
     numNode++;
     if (curOperation == 'i') {
       *headNode = insertNode(*headNode,curKey);
+    }else if (curOperation == 'd'){
+      *headNode = deleteNode(*headNode,curKey);
     }
   }
   return true;
 }
+
 
 void printTreePreOrderToFile(TreeNode * headNode, char * outputFileName){
 
@@ -54,29 +57,34 @@ TreeNode * autoBalance(TreeNode * curNode, int insertedKey){
   int balance = 0;
   if (curNode != NULL) balance =  getHeight(curNode->left) - getHeight(curNode->right);
 
-
+  printf("<My Balance: %d> <My left Height: %d> <My right Height: %d>\n", balance,getHeight(curNode->left),getHeight(curNode->right));
   //CURRENTLY WORKING ON THE CASES OF ROTATION
   if (balance > 1 && insertedKey < curNode->left->key) {  // Left Left
     printf("<AutoBalance>: 1\n");
+
     return treeRotation(curNode,1);
   }
 
   if (balance < -1 && insertedKey > curNode->right->key) {  //Right Right
     printf("<AutoBalance>: 2\n");
+
     return treeRotation(curNode,-1);
   }
 
   if (balance > 1 && insertedKey > curNode->left->key){  // Left Right
     printf("<AutoBalance>: 3\n");
     curNode->left = treeRotation(curNode->left,-1);
+
     return treeRotation(curNode,1);
   }
 
   if (balance < -1 && insertedKey < curNode->right->key){  // Right Left
     printf("<AutoBalance>: 4\n");
     curNode->right = treeRotation(curNode->right,1);
+
     return treeRotation(curNode,-1);
   }
+
 
 
   return curNode;
@@ -91,8 +99,8 @@ TreeNode * treeRotation(TreeNode * tNode, int rotationMode){
     newRoot -> left = tNode;
     tNode -> right = temp_ptr;
 
-    newRoot->height = getMax(getHeight(newRoot->left), getHeight(newRoot->right)) + 1;
     tNode->height = getMax(getHeight(tNode->left), getHeight(tNode->right)) + 1;
+    newRoot->height = getMax(getHeight(newRoot->left), getHeight(newRoot->right)) + 1;
 
     return newRoot;
   }else if(rotationMode == 1){
@@ -101,8 +109,8 @@ TreeNode * treeRotation(TreeNode * tNode, int rotationMode){
     newRoot -> right = tNode;
     tNode -> left = temp_ptr;
 
-    newRoot->height = getMax(getHeight(newRoot->left), getHeight(newRoot->right)) + 1;
     tNode->height = getMax(getHeight(tNode->left), getHeight(tNode->right)) + 1;
+    newRoot->height = getMax(getHeight(newRoot->left), getHeight(newRoot->right)) + 1;
 
     return newRoot;
   }else{
