@@ -20,7 +20,7 @@ int main(int argc, char ** argv)
     //to check whether the reading of the input file is successfull
     if(constructTree(intputFilePtr,&headNode) == false){
       printTreePreOrderToFile(headNode, argv[3]); // still print if input file read wrong
-      free(headNode);
+      Tree_destroy(headNode);
       printf("%d\n",0);
       fclose(intputFilePtr);
       return EXIT_FAILURE;
@@ -30,7 +30,7 @@ int main(int argc, char ** argv)
     DEBUG_pretty_tree(headNode); //DEBUG print
 
     printTreePreOrderToFile(headNode, argv[3]);
-    free(headNode);
+    Tree_destroy(headNode);
     printf("%d\n",1);
     fclose(intputFilePtr);
     return EXIT_SUCCESS;

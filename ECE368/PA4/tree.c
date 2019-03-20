@@ -106,11 +106,21 @@ TreeNode * treeRotation(TreeNode * tNode, int rotationMode){
 
     return newRoot;
   }else{
-    printf("incorrect rotationMode\n");
+    printf("incorrect rotation Mode\n");
   }
   return NULL;
 }
 
+void Tree_destroy(TreeNode * tn)
+{
+  if (tn == NULL)
+    {
+      return;
+    }
+  Tree_destroy(tn -> left);
+  Tree_destroy(tn -> right);
+  free (tn);
+}
 
 int getHeight(TreeNode * tnode){
   if (tnode == NULL) {

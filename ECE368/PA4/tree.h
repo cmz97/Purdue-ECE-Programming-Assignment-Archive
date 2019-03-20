@@ -20,3 +20,4 @@ TreeNode * treeRotation(TreeNode * tNode, int rotationMode);
 TreeNode * autoBalance(TreeNode * curNode, int insertedKey);
 TreeNode * insertNodeUlti(TreeNode * curNode, TreeNode * myNode);
 TreeNode * insertNode(TreeNode * headNode, int key);
+void Tree_destroy(TreeNode * tn);
