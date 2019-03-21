@@ -1,4 +1,3 @@
-// #include "tree.h"
 #include "util.h"
 
 bool constructTree(FILE * fptr,TreeNode ** headNode){
@@ -13,12 +12,59 @@ bool constructTree(FILE * fptr,TreeNode ** headNode){
     if (curOperation == 'i') {
       *headNode = insertNode(*headNode,curKey);
     }else if (curOperation == 'd'){
+      printf("Before Deletion\n");
+      DEBUG_pretty_tree(*headNode);
       *headNode = deleteNode(*headNode,curKey);
     }
   }
   return true;
 }
 
+TreeNode * deleteNode(TreeNode * curNode, int key){
+  if (curNode == NULL) {
+    return curNode;
+  }
+
+  if (key > curNode->key ) { //look to the right
+    curNode -> right = deleteNode(curNode -> right, key);
+  }else if (key < curNode -> key ){ //look to the left
+    curNode -> right = deleteNode(curNode -> right, key);
+  }else{ //found the target of deletion
+    if (curNode -> left == NULL || curNode -> right == NULL) { //one or no child
+      TreeNode * tempNode = NULL;
+      if (curNode -> left != NULL ) { // left child only
+        tempNode = curNode -> left;
+        * curNode = * tempNode;
+      }else if (curNode -> right != NULL ){ // right child only
+        tempNode = curNode -> right;
+        * curNode = * tempNode;
+      }else{ // no child
+        tempNode = curNode;
+        curNode = NULL;
+      }
+      free(tempNode); //free current deleted Node
+    }else{ //two children
+      TreeNode * tempNode = getImediateSuccessor(curNode -> right);
+      curNode -> key = tempNode -> key; //exchange the value
+      curNode -> right = deleteNode(curNode -> right, tempNode -> key); //delete the immediate successor
+    }
+  }
+
+  //curNode might get deleted
+  if (curNode == NULL) return NULL;
+
+  curNode -> height = getMax(getHeight(curNode->left),getHeight(curNode->right)) + 1; //update height
+  DEBUG_pretty_tree(curNode);
+  return autoBalance(curNode); //autoBalance
+
+}
+
+TreeNode * getImediateSuccessor(TreeNode * curNode){
+  while(curNode->left != NULL){
+    curNode = curNode -> left;
+  }
+  return curNode;
+}
 
 void printTreePreOrderToFile(TreeNode * headNode, char * outputFileName){
 
@@ -42,46 +88,40 @@ TreeNode * insertNodeUlti(TreeNode * curNode, TreeNode * myNode){
   printf("myNode -> key = %d curNode -> key = %d\n",myNode -> key, curNode -> key);
   if (myNode -> key <= curNode -> key) {
     curNode -> left = insertNodeUlti(curNode->left,myNode);
-    printf("<Insertion>: 1\n");
+    // printf("<Insertion>: 1\n");
   }else{
     curNode -> right = insertNodeUlti(curNode->right,myNode);
-    printf("<Insertion>: 2\n");
+    // printf("<Insertion>: 2\n");
   }
 
   //update height
   curNode -> height = getMax(getHeight(curNode->left),getHeight(curNode->right)) + 1;
-  return autoBalance(curNode,myNode->key);
+  return autoBalance(curNode);
 }
 
-TreeNode * autoBalance(TreeNode * curNode, int insertedKey){
-  int balance = 0;
-  if (curNode != NULL) balance =  getHeight(curNode->left) - getHeight(curNode->right);
+TreeNode * autoBalance(TreeNode * curNode){
+  int balance = getNodalBalance(curNode);
+  int leftBalance = getNodalBalance(curNode-> left);
+  int rightBalance = getNodalBalance(curNode -> right);
+
 
   printf("<My Balance: %d> <My left Height: %d> <My right Height: %d>\n", balance,getHeight(curNode->left),getHeight(curNode->right));
   //CURRENTLY WORKING ON THE CASES OF ROTATION
-  if (balance > 1 && insertedKey < curNode->left->key) {  // Left Left
-    printf("<AutoBalance>: 1\n");
-
+  if (balance > 1 && leftBalance >= 0) {  // Left Left
     return treeRotation(curNode,1);
   }
 
-  if (balance < -1 && insertedKey > curNode->right->key) {  //Right Right
-    printf("<AutoBalance>: 2\n");
-
+  if (balance < -1 && rightBalance <= 0) {  //Right Right
     return treeRotation(curNode,-1);
   }
 
-  if (balance > 1 && insertedKey > curNode->left->key){  // Left Right
-    printf("<AutoBalance>: 3\n");
+  if (balance > 1 && leftBalance < 0){  // Left Right
     curNode->left = treeRotation(curNode->left,-1);
-
     return treeRotation(curNode,1);
   }
 
-  if (balance < -1 && insertedKey < curNode->right->key){  // Right Left
-    printf("<AutoBalance>: 4\n");
+  if (balance < -1 && rightBalance > 0){  // Right Left
     curNode->right = treeRotation(curNode->right,1);
-
     return treeRotation(curNode,-1);
   }
 
@@ -89,6 +129,11 @@ TreeNode * autoBalance(TreeNode * curNode, int insertedKey){
 
   return curNode;
 
+}
+
+int getNodalBalance(TreeNode * curNode){
+  if (curNode != NULL) return getHeight(curNode->left) - getHeight(curNode->right);
+  return 0;
 }
 
 TreeNode * treeRotation(TreeNode * tNode, int rotationMode){

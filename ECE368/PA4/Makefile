@@ -22,10 +22,13 @@ testmemory: $(TARGET)
 
 
 test1: pa4
-	./pa4 -b ./examples/ops0.b ./output/tree_out_1.b
+	./pa4 -b ./examples/ops0.b ./output/tree_out_0.b
+
+test2: pa4
+	./pa4 -b ./examples/ops1.b ./output/tree_out_1.b
 
 
-testall: test1
+testall: test1 test2
 
 clean:
 	rm -f $(OBJS) $(TARGET) $(BIN)
