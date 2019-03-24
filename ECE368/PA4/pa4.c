@@ -43,9 +43,9 @@ int main(int argc, char ** argv)
 
     TreeNode * headNode = NULL;
 
-
     inputState = buildEvalTreePre(argv[2],&headNode);
     DEBUG_pretty_tree(headNode); //DEBUG print
+    DEBUG_PreorderPrint(headNode);
     bstState = checkBST(headNode);
     avlState = checkAVL(headNode);
 

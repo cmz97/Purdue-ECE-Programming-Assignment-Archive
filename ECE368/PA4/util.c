@@ -51,7 +51,7 @@ void DEBUG_PreorderPrint(TreeNode * curNode){
   if(curNode == NULL){
     return;
   }
-  printf("curKey: %d\n", curNode->key);
+  printf("curKey: %d curHeight: %d\n", curNode->key, curNode->height);
   DEBUG_PreorderPrint(curNode->left);
   DEBUG_PreorderPrint(curNode->right);
 }

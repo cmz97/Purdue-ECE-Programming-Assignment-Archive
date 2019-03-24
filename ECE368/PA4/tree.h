@@ -33,4 +33,4 @@ int buildEvalTreePre(char * evalFileName, TreeNode ** headNode);
 ListNode * push(ListNode * head, ListNode * ln);
 TreeNode * pop(ListNode ** head);
 int checkAVL(TreeNode * headNode);
-int checkBST(TreeNode * headNode);
+int checkBST(TreeNode * curNode);

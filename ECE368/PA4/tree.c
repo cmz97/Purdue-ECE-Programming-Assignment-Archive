@@ -1,5 +1,50 @@
 #include "util.h"
 
+int checkAVL(TreeNode * curNode){
+  if (curNode == NULL) {
+    return 1;
+  }
+
+  int balance = getNodalBalance(curNode);
+  int avl = 1;
+
+  if (balance < -1 || balance > 1) avl = 0;
+
+  return checkAVL(curNode -> left) && checkAVL(curNode -> right) && avl;
+}
+
+int checkBST(TreeNode * curNode){
+  if (curNode== NULL) {
+    return 1;
+  }
+
+  int bst;
+  if (curNode -> left == NULL && curNode ->right == NULL) { // leafNode, aways BST
+    bst = 1;
+  }else if (curNode -> left == NULL && curNode -> right != NULL) {
+    if (curNode -> right -> key > curNode -> key) {
+      bst = 1;
+    }else{
+      bst = 0;
+    }
+  }else if (curNode -> left != NULL && curNode -> right == NULL) {
+    if (curNode -> left -> key <= curNode -> key) {
+      bst = 1;
+    }else{
+      bst = 0;
+    }
+  }else{
+    if (curNode -> left -> key <= curNode -> key && curNode -> right -> key > curNode -> key) {
+      bst = 1;
+    }else{
+      bst = 0;
+    }
+  }
+
+  return checkBST(curNode -> left) && checkBST(curNode -> right) && bst;
+}
+
+
 bool constructTree(FILE * fptr,TreeNode ** headNode){
   int numNode = 0;
   int curKey = 0;
@@ -80,10 +125,12 @@ int buildEvalTreePre(char * evalFileName, TreeNode ** headNode){
     }else if(curBinPat == 1){ //left NULL right child
       rightNode = pop(&headList);
       curListNode -> treeNode -> right = rightNode;
+      curListNode -> treeNode-> height = getHeight(rightNode) + 1;
       headList = push(headList,curListNode);
     }else if(curBinPat == 2){ //left child right NULL
       leftNode = pop(&headList);
       curListNode -> treeNode -> left = leftNode;
+      curListNode -> treeNode-> height = getHeight(leftNode) + 1;
       headList = push(headList,curListNode);
     }else if(curBinPat == 3){ //left child right child
       //pop treeNode, assume two node already in
@@ -92,6 +139,7 @@ int buildEvalTreePre(char * evalFileName, TreeNode ** headNode){
       //assign left and right
       curListNode -> treeNode -> right = rightNode;
       curListNode -> treeNode -> left = leftNode;
+      curListNode -> treeNode-> height = getMax(getHeight(leftNode),getHeight(rightNode)) + 1;
       //push back this ListNode
       headList = push(headList,curListNode);
     }
@@ -99,19 +147,12 @@ int buildEvalTreePre(char * evalFileName, TreeNode ** headNode){
 
   *headNode = pop(&headList);
 
+
   free(arrChar);
   free(arrKey);
 
   fclose(evalFilePtr);
   return 1; // can open and correct format
-}
-
-int checkBST(TreeNode * headNode){
-  return 0;
-}
-
-int checkAVL(TreeNode * headNode){
-  return 0;
 }
 
 ListNode * push(ListNode * head, ListNode * ln){
