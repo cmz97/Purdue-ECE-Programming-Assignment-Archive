@@ -28,6 +28,7 @@ int main(int argc, char ** argv)
 
     printf("\nAfter Insert:\n");
     DEBUG_pretty_tree(headNode); //DEBUG print
+    DEBUG_PreorderPrint(headNode);
 
     printTreePreOrderToFile(headNode, argv[3]);
     Tree_destroy(headNode);
@@ -39,9 +40,14 @@ int main(int argc, char ** argv)
     int inputState = 0;
     int bstState = 0;
     int avlState = 0;
-    // inputState = buildTreeFromPreOrder();
-    // bstState = checkBST();
-    // avlState = checkAVL();
+
+    TreeNode * headNode = NULL;
+
+
+    inputState = buildEvalTreePre(argv[2],&headNode);
+    DEBUG_pretty_tree(headNode); //DEBUG print
+    bstState = checkBST(headNode);
+    avlState = checkAVL(headNode);
 
     printf("%d,%d,%d\n",inputState,bstState,avlState);
 

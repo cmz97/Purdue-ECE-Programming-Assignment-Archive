@@ -7,10 +7,14 @@ typedef struct _treenode{
   struct _treenode * right; //non-leaf node
 
   int key;
-  char binPat; //Binary Pattern, indicate right and left null or not
   int height;
 
 } TreeNode;
+
+typedef struct _listnode{
+  struct _listnode * nxtNode; //next node
+  TreeNode * treeNode;
+} ListNode;
 
 bool constructTree(FILE * fptr,TreeNode ** headNode);
 void printTreePreOrderToFile(TreeNode * headNode, char * outputFileName);
@@ -22,5 +26,11 @@ TreeNode * insertNodeUlti(TreeNode * curNode, TreeNode * myNode);
 TreeNode * insertNode(TreeNode * headNode, int key);
 void Tree_destroy(TreeNode * tn);
 TreeNode * deleteNode(TreeNode * curNode, int key);
-TreeNode * getImediateSuccessor(TreeNode * curNode);
+TreeNode * getImediatePredecessor(TreeNode * curNode);
 int getNodalBalance(TreeNode * curNode);
+void printTreePreOrderToFileUtil(TreeNode * curNode, FILE * fptr);
+int buildEvalTreePre(char * evalFileName, TreeNode ** headNode);
+ListNode * push(ListNode * head, ListNode * ln);
+TreeNode * pop(ListNode ** head);
+int checkAVL(TreeNode * headNode);
+int checkBST(TreeNode * headNode);
