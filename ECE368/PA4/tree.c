@@ -202,7 +202,7 @@ TreeNode * deleteNode(TreeNode * curNode, int key){
   if (key > curNode->key ) { //look to the right
     curNode -> right = deleteNode(curNode -> right, key);
   }else if (key < curNode -> key ){ //look to the left
-    curNode -> right = deleteNode(curNode -> right, key);
+    curNode -> left = deleteNode(curNode -> left, key);
   }else{ //found the target of deletion
     if (curNode -> left == NULL || curNode -> right == NULL) { //one or no child
       TreeNode * tempNode = NULL;
@@ -218,12 +218,18 @@ TreeNode * deleteNode(TreeNode * curNode, int key){
       }
       free(tempNode); //free current deleted Node
     }else{ //two children
-      TreeNode * tempNode = getImediatePredecessor(curNode -> left);
-      curNode -> key = tempNode -> key; //exchange the value
-      curNode -> left = deleteNode(curNode -> left, tempNode -> key); //delete the immediate successor
+      if (curNode -> left -> key  == curNode -> right -> key) {
+        TreeNode * tempNode = getImediatePredecessor(curNode -> right);
+        curNode -> key = tempNode -> key; //exchange the value
+        curNode -> right = deleteNode(curNode -> right, tempNode -> key); //delete the immediate successor
+      }else{
+        TreeNode * tempNode = getImediatePredecessor(curNode -> left);
+        curNode -> key = tempNode -> key; //exchange the value
+        curNode -> left = deleteNode(curNode -> left, tempNode -> key); //delete the immediate successor
+      }
+
     }
   }
-
   //curNode might get deleted
   if (curNode == NULL) return NULL;
 
@@ -265,7 +271,7 @@ void printTreePreOrderToFileUtil(TreeNode * curNode, FILE * fptr){
   } //else default is 0;
 
   fwrite(&(binPat), sizeof(char), 1, fptr); // write the bin-pat
-
+  printf("Key:%d BinPat:%d\n",curNode->key, binPat );
   printTreePreOrderToFileUtil(curNode -> left, fptr);
   printTreePreOrderToFileUtil(curNode -> right, fptr);
 
@@ -325,11 +331,7 @@ TreeNode * autoBalance(TreeNode * curNode){
     curNode->right = treeRotation(curNode->right,1);
     return treeRotation(curNode,-1);
   }
-
-
-
   return curNode;
-
 }
 
 int getNodalBalance(TreeNode * curNode){
