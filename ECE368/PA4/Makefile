@@ -5,7 +5,7 @@ GCC = gcc -std=c99 -g $(WARNING) $(ERROR)
 
 TESTFLAGS =
 
-SRCS =  pa4.c tree.c util.c
+SRCS =  pa4.c tree.c
 OBJS = $(SRCS:%.c=%.o)
 BIN = *.b
 
@@ -23,27 +23,24 @@ testmemory: $(TARGET)
 testmemory2: $(TARGET)
 	$(VAL)	./pa4 -e ./output/tree_out_1.b
 
-
 test1: pa4
 	./pa4 -b ./examples/ops0.b ./output/tree_out_0.b
-	diff ./examples/tree0.b ./output/tree_out_0.b
-
+	cmp ./examples/tree0.b ./output/tree_out_0.b
+	./pa4 -e ./output/tree_out_0.b
 
 test2: pa4
 	./pa4 -b ./examples/ops1.b ./output/tree_out_1.b
-	diff ./examples/tree1.b ./output/tree_out_1.b
+	cmp ./examples/tree1.b ./output/tree_out_1.b
 	./pa4 -e ./output/tree_out_1.b
 
 test3: pa4
 	./pa4 -b ./examples/ops2.b ./output/tree_out_2.b
-	diff ./examples/tree2.b ./output/tree_out_2.b
-
+	cmp ./examples/tree2.b ./output/tree_out_2.b
 	./pa4 -e ./output/tree_out_2.b
 
 test4: pa4
 	./pa4 -b ./examples/ops3.b ./output/tree_out_3.b
-	# diff ./examples/tree3.b ./output/tree_out_3.b
-
+	cmp ./examples/tree3.b ./output/tree_out_3.b
 	./pa4 -e ./output/tree_out_3.b
 
 mytest0:
@@ -78,7 +75,7 @@ myshit: pa4
 	./pa4 -b ./examples/myshit.b ./output/myshit.b
 	./pa4 -e ./output/myshit.b
 
-testall: test1 test2
+testall: test1 test2 test3 test4 test5 test7 test8 test9 test10 myshit
 
 clean:
 	rm -f $(OBJS) $(TARGET) $(BIN)

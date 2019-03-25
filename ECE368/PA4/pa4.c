@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-// #include "tree.h"
-#include "util.h"
+#include "tree.h"
+// #include "util.h"
 
 int main(int argc, char ** argv)
 {
@@ -26,9 +26,8 @@ int main(int argc, char ** argv)
       return EXIT_FAILURE;
     }
 
-    printf("\nAfter Insert:\n");
-    DEBUG_pretty_tree(headNode); //DEBUG print
-    DEBUG_PreorderPrint(headNode);
+    // DEBUG_pretty_tree(headNode); //DEBUG print
+    // DEBUG_PreorderPrint(headNode);
 
     printTreePreOrderToFile(headNode, argv[3]);
     Tree_destroy(headNode);
@@ -44,8 +43,8 @@ int main(int argc, char ** argv)
     TreeNode * headNode = NULL;
 
     inputState = buildEvalTreePre(argv[2],&headNode);
-    DEBUG_pretty_tree(headNode); //DEBUG print
-    DEBUG_PreorderPrint(headNode);
+    // DEBUG_pretty_tree(headNode); //DEBUG print
+    // DEBUG_PreorderPrint(headNode);
     bstState = checkBST(headNode);
     avlState = checkAVL(headNode);
     Tree_destroy(headNode);

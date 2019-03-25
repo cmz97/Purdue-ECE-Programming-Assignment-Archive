@@ -1,4 +1,5 @@
-#include "util.h"
+// #include "util.h"
+#include "tree.h"
 
 int checkAVL(TreeNode * curNode){
   if (curNode == NULL) {
@@ -55,10 +56,10 @@ bool constructTree(FILE * fptr,TreeNode ** headNode){
     numNode++;
     if (curOperation == 'i') {
       *headNode = insertNode(*headNode,curKey);
-      DEBUG_pretty_tree(*headNode);
+      // DEBUG_pretty_tree(*headNode);
     }else if (curOperation == 'd'){
       *headNode = deleteNode(*headNode,curKey);
-      DEBUG_pretty_tree(*headNode);
+      // DEBUG_pretty_tree(*headNode);
     }
   }
 
@@ -156,17 +157,13 @@ int buildEvalTreePre(char * evalFileName, TreeNode ** headNode){
 
 ListNode * push(ListNode * head, ListNode * ln){
   if (ln == NULL){
-    printf("Something wrong 1\n");
-
     return NULL;
   }
   if ((ln -> nxtNode) != NULL){
-      printf("Something wrong 2\n");
-      return NULL;
+    return NULL;
   }
   // TreeNode * headNode = ln -> tn;
   //CODE BLOCK BELLLOW IS FOR REAR APPENDs
-  // printf("%sCHECK%s <Insert TreeNode> label: %s%d%s wireLength: %s%le%s cap: %s%le%s res: %s%le%s SNCap: %s%le%s\n",KYEL,KRESET,KGRN,headNode->label,KRESET,KRED,headNode->wireLength,KRESET,KRED,headNode->cap,KRESET,KRED,headNode->res,KRESET,KRED,headNode->SNCap,KRESET);
 
   if (head == NULL){
     return ln;
@@ -177,7 +174,6 @@ ListNode * push(ListNode * head, ListNode * ln){
 
 TreeNode * pop(ListNode ** head){
   if (*head == NULL){
-    printf("ERROR: Can not pop anymore\n");
     return NULL;
   }
   // TreeNode * headNode = (*head) -> tn;
@@ -217,12 +213,17 @@ TreeNode * deleteNode(TreeNode * curNode, int key){
       }
       free(tempNode); //free current deleted Node
     }else{ //two children
-      if (/* condition */) {
-        /* code */
+      if (curNode -> key == curNode -> left -> key && curNode -> key == curNode -> right -> key) {
+
+        TreeNode * tempNode = getImediatePredecessor(curNode -> right, 1);
+        curNode -> key = tempNode -> key; //exchange the value
+        curNode -> right = deleteNode(curNode -> right, tempNode -> key); //delete the immediate successor
+      }else{
+        TreeNode * tempNode = getImediatePredecessor(curNode -> left, -1);
+        curNode -> key = tempNode -> key; //exchange the value
+        curNode -> left = deleteNode(curNode -> left, tempNode -> key); //delete the immediate successor
       }
-      TreeNode * tempNode = getImediatePredecessor(curNode -> left);
-      curNode -> key = tempNode -> key; //exchange the value
-      curNode -> left = deleteNode(curNode -> left, tempNode -> key); //delete the immediate successor
+
     }
   }
   //curNode might get deleted
@@ -234,11 +235,19 @@ TreeNode * deleteNode(TreeNode * curNode, int key){
 
 }
 
-TreeNode * getImediatePredecessor(TreeNode * curNode){
-  while(curNode->right != NULL){
-    curNode = curNode -> right;
+TreeNode * getImediatePredecessor(TreeNode * curNode, int mode){
+  if (mode == -1) {
+    while(curNode->right != NULL){
+      curNode = curNode -> right;
+    }
+    return curNode;
+  }else{
+    while(curNode->left != NULL){
+      curNode = curNode -> left;
+    }
+    return curNode;
   }
-  return curNode;
+
 }
 
 void printTreePreOrderToFile(TreeNode * headNode, char * outputFileName){
@@ -266,7 +275,6 @@ void printTreePreOrderToFileUtil(TreeNode * curNode, FILE * fptr){
   } //else default is 0;
 
   fwrite(&(binPat), sizeof(char), 1, fptr); // write the bin-pat
-  printf("Key:%d BinPat:%d\n",curNode->key, binPat );
   printTreePreOrderToFileUtil(curNode -> left, fptr);
   printTreePreOrderToFileUtil(curNode -> right, fptr);
 
@@ -287,7 +295,6 @@ TreeNode * insertNodeUlti(TreeNode * curNode, TreeNode * myNode){
     return myNode;
   }
   //insert Node
-  printf("myNode -> key = %d curNode -> key = %d\n",myNode -> key, curNode -> key);
   if (myNode -> key <= curNode -> key) {
     curNode -> left = insertNodeUlti(curNode->left,myNode);
     // printf("<Insertion>: 1\n");
@@ -307,7 +314,6 @@ TreeNode * autoBalance(TreeNode * curNode){
   int rightBalance = getNodalBalance(curNode -> right);
 
 
-  printf("<My Balance: %d> <My left Height: %d> <My right Height: %d>\n", balance,getHeight(curNode->left),getHeight(curNode->right));
   //CURRENTLY WORKING ON THE CASES OF ROTATION
   if (balance > 1 && leftBalance >= 0) {  // Left Left
     return treeRotation(curNode,1);
@@ -357,7 +363,6 @@ TreeNode * treeRotation(TreeNode * tNode, int rotationMode){
 
     return newRoot;
   }else{
-    printf("incorrect rotation Mode\n");
   }
   return NULL;
 }

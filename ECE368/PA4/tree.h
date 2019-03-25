@@ -26,7 +26,7 @@ TreeNode * insertNodeUlti(TreeNode * curNode, TreeNode * myNode);
 TreeNode * insertNode(TreeNode * headNode, int key);
 void Tree_destroy(TreeNode * tn);
 TreeNode * deleteNode(TreeNode * curNode, int key);
-TreeNode * getImediatePredecessor(TreeNode * curNode);
+TreeNode * getImediatePredecessor(TreeNode * curNode, int mode);
 int getNodalBalance(TreeNode * curNode);
 void printTreePreOrderToFileUtil(TreeNode * curNode, FILE * fptr);
 int buildEvalTreePre(char * evalFileName, TreeNode ** headNode);
