@@ -218,15 +218,11 @@ TreeNode * deleteNode(TreeNode * curNode, int key){
       }
       free(tempNode); //free current deleted Node
     }else{ //two children
-      if (curNode -> left -> key  == curNode -> right -> key) {
-        TreeNode * tempNode = getImediatePredecessor(curNode -> right);
-        curNode -> key = tempNode -> key; //exchange the value
-        curNode -> right = deleteNode(curNode -> right, tempNode -> key); //delete the immediate successor
-      }else{
+
         TreeNode * tempNode = getImediatePredecessor(curNode -> left);
         curNode -> key = tempNode -> key; //exchange the value
         curNode -> left = deleteNode(curNode -> left, tempNode -> key); //delete the immediate successor
-      }
+
 
     }
   }
