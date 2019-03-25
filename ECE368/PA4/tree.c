@@ -22,7 +22,7 @@ int checkBST(TreeNode * curNode){
   if (curNode -> left == NULL && curNode ->right == NULL) { // leafNode, aways BST
     bst = 1;
   }else if (curNode -> left == NULL && curNode -> right != NULL) {
-    if (curNode -> right -> key > curNode -> key) {
+    if (curNode -> right -> key >= curNode -> key) {
       bst = 1;
     }else{
       bst = 0;
@@ -34,7 +34,7 @@ int checkBST(TreeNode * curNode){
       bst = 0;
     }
   }else{
-    if (curNode -> left -> key <= curNode -> key && curNode -> right -> key > curNode -> key) {
+    if (curNode -> left -> key <= curNode -> key && curNode -> right -> key >= curNode -> key) {
       bst = 1;
     }else{
       bst = 0;
@@ -52,14 +52,13 @@ bool constructTree(FILE * fptr,TreeNode ** headNode){
 
 
   while(fread(&curKey, sizeof(int), 1, fptr) == 1 && fread(&curOperation, sizeof(char), 1, fptr) == 1){
-    printf("\n<Inserting Node>curKey: %d, curOperation: %c\n", curKey, curOperation);
     numNode++;
     if (curOperation == 'i') {
       *headNode = insertNode(*headNode,curKey);
-    }else if (curOperation == 'd'){
-      printf("Before Deletion\n");
       DEBUG_pretty_tree(*headNode);
+    }else if (curOperation == 'd'){
       *headNode = deleteNode(*headNode,curKey);
+      DEBUG_pretty_tree(*headNode);
     }
   }
 
@@ -218,16 +217,19 @@ TreeNode * deleteNode(TreeNode * curNode, int key){
       }
       free(tempNode); //free current deleted Node
     }else{ //two children
-        TreeNode * tempNode = getImediatePredecessor(curNode -> left);
-        curNode -> key = tempNode -> key; //exchange the value
-        curNode -> left = deleteNode(curNode -> left, tempNode -> key); //delete the immediate successor
+      if (/* condition */) {
+        /* code */
+      }
+      TreeNode * tempNode = getImediatePredecessor(curNode -> left);
+      curNode -> key = tempNode -> key; //exchange the value
+      curNode -> left = deleteNode(curNode -> left, tempNode -> key); //delete the immediate successor
     }
   }
   //curNode might get deleted
   if (curNode == NULL) return NULL;
 
   curNode -> height = getMax(getHeight(curNode->left),getHeight(curNode->right)) + 1; //update height
-  DEBUG_pretty_tree(curNode);
+  // DEBUG_pretty_tree(curNode);
   return autoBalance(curNode); //autoBalance
 
 }

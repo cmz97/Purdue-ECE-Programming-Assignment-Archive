@@ -58,6 +58,25 @@ test5: pa4
 	./pa4 -e ./examples/tree1.b
 	./pa4 -e ./examples/tree2.b
 
+test7: pa4
+	./pa4 -b ./examples/ops7.b ./output/tree_out_7.b
+	./pa4 -e ./output/tree_out_7.b
+
+test8: pa4
+	./pa4 -b ./examples/ops8.b ./output/tree_out_8.b
+	./pa4 -e ./output/tree_out_8.b
+
+test9: pa4
+	./pa4 -b ./examples/ops9.b ./output/tree_out_9.b
+	./pa4 -e ./output/tree_out_9.b
+
+test10: pa4
+	./pa4 -b ./examples/ops10.b ./output/tree_out_10.b
+	./pa4 -e ./output/tree_out_10.b
+
+myshit: pa4
+	./pa4 -b ./examples/myshit.b ./output/myshit.b
+	./pa4 -e ./output/myshit.b
 
 testall: test1 test2
 
