@@ -20,6 +20,10 @@ $(TARGET): $(OBJS)
 testmemory: $(TARGET)
 	$(VAL)	./pa4 -b ./examples/ops0.b ./output/tree_out_1.b
 
+testmemory1: $(TARGET)
+	$(VAL)	./pa4 -b ./examples/ops1.b ./output/tree_out_1.b
+	diff ./examples/tree1.b ./output/tree_out_1.b
+	./pa4 -e ./output/tree_out_1.b
 
 test1: pa4
 	./pa4 -b ./examples/ops0.b ./output/tree_out_0.b
@@ -29,7 +33,6 @@ test1: pa4
 test2: pa4
 	./pa4 -b ./examples/ops1.b ./output/tree_out_1.b
 	diff ./examples/tree1.b ./output/tree_out_1.b
-
 	./pa4 -e ./output/tree_out_1.b
 
 test3: pa4
