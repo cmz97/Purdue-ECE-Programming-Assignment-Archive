@@ -48,6 +48,7 @@ int main(int argc, char ** argv)
     DEBUG_PreorderPrint(headNode);
     bstState = checkBST(headNode);
     avlState = checkAVL(headNode);
+    Tree_destroy(headNode);
 
     printf("%d,%d,%d\n",inputState,bstState,avlState);
 
