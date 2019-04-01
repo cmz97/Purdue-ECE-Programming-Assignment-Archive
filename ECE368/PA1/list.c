@@ -111,11 +111,13 @@ ListNode * sortList(ListNode * head){
 int listHas(ListNode * head, unsigned char b){
   ListNode *  curPtr = head;
   while (curPtr != NULL) {
+
     if (curPtr->treeNodePtr->value == b) {
       return 1;
     }
     curPtr = curPtr->nxtNode;
   }
+
   return 0;
 }
 

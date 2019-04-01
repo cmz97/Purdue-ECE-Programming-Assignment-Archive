@@ -17,7 +17,7 @@ void recursiveHuffmanTreePrintFile(char * , int , TreeNode * );
 void pushChar(char * , char , int );
 void generateHuffmanTree(ListNode * , char * , int );
 void freeTree(TreeNode * tn);
-
+void debugNodes(ListNode * curNode);
 
 
 int main(int argc, char ** argv)
@@ -45,11 +45,12 @@ int main(int argc, char ** argv)
 
   headListNode = generateFrequencyMap(argv[1],argv[2],&huffmanLength);
 
-  headListNode = generateHuffmanCode(headListNode,argv[4],huffmanLength);
-  generateHuffmanTree(headListNode,argv[3],huffmanLength);
-
-  freeTree(headListNode->treeNodePtr);
-  free(headListNode);
+  // headListNode = generateHuffmanCode(headListNode,argv[4],huffmanLength);
+  // generateHuffmanTree(headListNode,argv[3],huffmanLength);
+  if(headListNode != NULL){
+    freeTree(headListNode->treeNodePtr);
+    free(headListNode);
+  }
   return EXIT_SUCCESS;
 }
 
@@ -125,32 +126,34 @@ ListNode * generateFrequencyMap(char * inputFileName,char * outputFileName, int 
   //now, counter the number of byte of this file
   while(fread(&curbyte, sizeof(unsigned char), 1, inputFilePtr) == 1)numByteFile++;
   fseek(inputFilePtr, 0, SEEK_SET); //now put back the file pointer
+  printf("numByteFile: %d\n",numByteFile);
 
   //initialize the headListNode
-  fread(&curbyte, sizeof(unsigned char), 1, inputFilePtr);
-  headListNode = newListNode(TreeNode_create(curbyte,1));
+  if (numByteFile > 0) {
+    printf("XXXXXX\n");
 
-  for(int i = 1 ; i<numByteFile ; i++){
-    //Read byte from file
-    if(fread(&curbyte, sizeof(unsigned char), 1, inputFilePtr)!=1){
-      printf("read byte inconsistant or failed");
-      return NULL;
-    }
+    fread(&curbyte, sizeof(unsigned char), 1, inputFilePtr);
+    headListNode = newListNode(TreeNode_create(curbyte,1));
+    for(int i = 1 ; i<numByteFile ; i++){
+      //Read byte from file
+      if(fread(&curbyte, sizeof(unsigned char), 1, inputFilePtr)!=1){
+        printf("read byte inconsistant or failed");
+        return NULL;
+      }
 
-    if(listHas(headListNode,curbyte) == 0){ //meaning this char has not been found
-      ListNode * newNode = newListNode(TreeNode_create(curbyte,1));
-      headListNode = List_insert(headListNode,newNode);//insert the newly added list node
-    }else{
-      getElement(headListNode,curbyte) -> treeNodePtr -> freq ++;
+      if(listHas(headListNode,curbyte) == 0){ //meaning this char has not been found
+        ListNode * newNode = newListNode(TreeNode_create(curbyte,1));
+        headListNode = List_insert(headListNode,newNode);//insert the newly added list node
+      }else{
+        getElement(headListNode,curbyte) -> treeNodePtr -> freq ++;
+      }
     }
+    * huffmanLength = getHuffmanLength(headListNode);
+    //sort the linked list
+    headListNode = sort1dListAccord2Ascii(headListNode);
+    //call the printFreqListToFile to print result
   }
   fclose(inputFilePtr);
-  * huffmanLength = getHuffmanLength(headListNode);
-
-  //sort the linked list
-  headListNode = sort1dListAccord2Ascii(headListNode);
-
-  //call the printFreqListToFile to print result
   printFreqListToFile(headListNode,outputFileName);
 
 
@@ -172,12 +175,20 @@ void printFreqListToFile(ListNode * headListNode, char * outputFileName){
     if (charNode != NULL) {
       castFreq = charNode->treeNodePtr->freq;
       fwrite(&castFreq , 1 , sizeof(long) , outputFilePtr);
-      // printf("char: %c freq:%d\n",charNode->treeNodePtr->value,charNode->treeNodePtr->freq );
+      printf("char: %c freq:%d\n",charNode->treeNodePtr->value,charNode->treeNodePtr->freq );
     }else{
       fwrite(&zero,1,sizeof(long),outputFilePtr);
     }
   }
+
   fclose(outputFilePtr);
+}
+void debugNodes(ListNode * curNode){
+  while(curNode!= NULL){
+    printf("Node: freq<%d> val:<%c>-> ", curNode->treeNodePtr->freq, curNode->treeNodePtr->value);
+    curNode = curNode->nxtNode;
+  }
+  printf("\n");
 }
 
 
