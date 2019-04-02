@@ -84,7 +84,42 @@ ListNode * List_insert(ListNode * head, ListNode * ln){
   ln -> nxtNode = head;
   return ln;
 }
+// 
+// ListNode * List_insert_by_freq(ListNode * head, ListNode * ln){
+//   if (ln == NULL){
+//     // printf("ERROR! ln is NULL\n");
+//     return NULL;
+//   }
+//   if ((ln -> nxtNode) != NULL){
+//     return NULL;
+//   }
+//   //CODE BLOCK BELLLOW IS FOR REAR APPENDs
+//   if (head == NULL)return ln;
+//   ListNode * temp = head;
+//   ListNode * exchange = NULL;
+//
+//   while ( temp->nxtNode != NULL ){
+//     if (temp->treeNodePtr->freq < ln->treeNodePtr->freq) {
+//       exchange = temp->nxtNode;
+//       temp -> nxtNode = ln;
+//       ln -> nxtNode = exchange;
+//       return head;
+//     }
+//     temp = temp->nxtNode;
+//   }
+//   temp -> nxtNode = ln;
+//   return head;
+// }
 
+void debugNodes(ListNode * curNode){
+  int count = 0;
+  while(curNode!= NULL){
+    printf("Node: freq <%ld> val <%d> -> ", curNode->treeNodePtr->freq, curNode->treeNodePtr->value);
+    curNode = curNode->nxtNode;
+    count ++;
+  }
+  printf("count: %d\n",count);
+}
 
 //Alert: This function pretend everything except for the first element is sorted
 ListNode * sortList(ListNode * head){
@@ -95,7 +130,7 @@ ListNode * sortList(ListNode * head){
   while(nxtListPtr != NULL){
     if (nxtListPtr->treeNodePtr->freq <= standardFreq) {
       curListPtr = curListPtr -> nxtNode;
-      nxtListPtr = curListPtr->nxtNode;
+      nxtListPtr = curListPtr-> nxtNode;
     }else{
       head->nxtNode = nxtListPtr;
       curListPtr -> nxtNode = head;
@@ -173,6 +208,8 @@ ListNode * sortedInsert(ListNode * headListNode, ListNode * newNode)
 
     return headListNode;
 }
+
+
 
 //This function get the number of char in a file, our linked list
 int getHuffmanLength(ListNode * ln){

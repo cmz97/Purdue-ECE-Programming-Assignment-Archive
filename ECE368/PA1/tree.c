@@ -1,7 +1,7 @@
 #include "tree.h"
 
 
-TreeNode * TreeNode_create(char val, int freq)
+TreeNode * TreeNode_create(unsigned char val, long freq)
 {
   TreeNode * tn = malloc(sizeof(TreeNode));
   tn -> left = NULL;

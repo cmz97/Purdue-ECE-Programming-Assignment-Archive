@@ -29,14 +29,14 @@ test1: PA1
 test2: PA1
 	./PA1 Example/original/binary1 binary1.count binary1.tree binary1.code binary1.hbt
 	cmp ./binary1.count  Example/count/binary1.count
-	# cmp ./binary1.tree  Example/tree/binary1.tree
-	# cmp ./binary1.code  Example/code/binary1.code
+	cmp ./binary1.tree  Example/tree/binary1.tree
+	cmp ./binary1.code  Example/code/binary1.code
 
 test3: PA1
 	./PA1 Example/original/empty empty.count empty.tree empty.code empty.hbt
 	cmp ./empty.count  Example/count/empty.count
-	# cmp ./empty.tree  Example/tree/empty.tree
-	# cmp ./empty.code  Example/code/empty.code
+	cmp ./empty.tree  Example/tree/empty.tree
+	cmp ./empty.code  Example/code/empty.code
 
 test4: PA1
 	./PA1 Example/original/lorum lorum.count lorum.tree lorum.code lorum.hbt
@@ -48,13 +48,13 @@ test5: PA1
 	./PA1 Example/original/woods woods.count woods.tree woods.code woods.hbt
 	cmp ./woods.count  Example/count/woods.count
 	cmp ./woods.tree  Example/tree/woods.tree
-	# cmp ./woods.code  Example/code/woods.code
+	cmp ./woods.code  Example/code/woods.code
 
 test6: PA1
 	./PA1 Example/original/stone stone.count stone.tree stone.code stone.hbt
 	cmp ./stone.count  Example/count/stone.count
 	cmp ./stone.tree  Example/tree/stone.tree
-	# cmp ./stone.code  Example/code/stone.code
+	cmp ./stone.code  Example/code/stone.code
 
 testall: test1 test2 test3 test4 test5
 

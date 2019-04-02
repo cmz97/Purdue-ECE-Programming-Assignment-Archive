@@ -3,10 +3,10 @@
 typedef struct treenode{
   struct treenode * left;
   struct treenode * right;
-  char value; //characters
-  int freq; //frequencies
+  unsigned char value; //characters
+  long freq; //frequencies
 }TreeNode;
 
-TreeNode * TreeNode_create(char val, int freq);
+TreeNode * TreeNode_create(unsigned char val, long freq);
 TreeNode * Tree_merge(TreeNode * becomesLeftChild, TreeNode * becomesRighChild);
 void Tree_destroy(TreeNode * tn);
