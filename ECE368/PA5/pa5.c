@@ -26,7 +26,7 @@ int main(int argc, char ** argv)
     free(inputArr);
     return EXIT_SUCCESS;
   }else if (strcmp(argv[1],"-m") == 0) {
-    Merge_sort(inputArr,sizeofInputArr){
+    Merge_sort(inputArr,sizeofInputArr);
     free(inputArr);
     return EXIT_SUCCESS;
   }
@@ -47,9 +47,9 @@ long * Load_Into_Array(char * Filename, int * Size){
     return NULL;
   }
 
-  while(fread(&curLong, sizeof(long), 1, inputFilePtr) == 1) (*size)++;
+  while(fread(&curLong, sizeof(long), 1, inputFilePtr) == 1) (*Size)++;
   fseek(inputFilePtr, 0, SEEK_SET); //now put back the file pointer
-  numArray = malloc(sizeof(long)*(*size));
+  numArray = malloc(sizeof(long)*(*Size));
 
   if (numArray == NULL) {
     printf("Faild to Malloc");
@@ -57,7 +57,7 @@ long * Load_Into_Array(char * Filename, int * Size){
     return NULL;
   }
 
-  for(int i = 0 ; i < *size ; i++){
+  for(int i = 0 ; i < *Size ; i++){
     fread(&curLong, sizeof(long), 1, inputFilePtr);
     numArray[i] = curLong;
     // printf("numArray[%d]:%ld\n",i,curLong);
