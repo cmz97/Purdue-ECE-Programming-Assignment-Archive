@@ -99,16 +99,16 @@ int pseudo_random_index(int lb, int ub){
 }
 
 void Merge_sort(long * Array, int Size){
-  long * temp = malloc(sizeof(long)*Size);
   DEBUG_Print_Array(Array,Size);
   printf("Now Sorted\n");
 
-  msort(Array, 0, Size - 1, temp);
+  msort(Array, 0, Size - 1, NULL);
   DEBUG_Print_Array(Array,Size);
 }
 
 static void msort(long * Array, int lb, int ub, long * temp){
   if (lb >= ub) return;
+  temp = malloc(sizeof(long)*(ub - lb + 1));
   int mid = (lb + ub)/2;
   msort(Array,lb,mid,temp);
   msort(Array,mid+1,ub,temp);
@@ -116,68 +116,38 @@ static void msort(long * Array, int lb, int ub, long * temp){
 }
 
 static void merge(long * Array, int lb, int mid, int ub, long * temp){
-  memcpy(&temp[lb], &Array[lb], mid-lb+1);
-  memcpy(&temp[mid+1], &Array[mid+1], ub-mid);
-  int i = lb;
+	int i = lb;
   int j = mid+1;
-  for (int k = lb; k < ub + 1; k++) {
-    if (i > mid) Array[k] = temp[j++];
-    else if (j > ub) Array[k] = temp[i++];
-    else if (temp[j] < temp[i])
-    Array[k] = temp[j++];
-    else Array[k] = temp[i++];
-  }
+  int k = 0;
 
+	while(i <= mid && j <= ub) {
+		if(Array[i] <= Array[j]) {
+			temp[k] = Array[i];
+			k ++;
+      i ++;
+		}else {
+			temp[k] = Array[j];
+			k ++;
+      j ++;
+		}
+	}
 
+	while(i <= mid) {
+		temp[k] = Array[i];
+		k ++;
+    i ++;
+	}
 
-  //
-  // int i = ub;
-  // int j = mid + 1;
-  // int k = 0;
-  //
-  // while (i <= mid && j <= ub) {
-  //   if (Array[i] <= Array[j]) {
-  //     temp[k] = Array[i];
-  //     k ++;
-  //     i ++;
-  //   }else{
-  //     temp[k] = Array[j];
-  //     k ++;
-  //     j ++;
-  //   }
-  // }
-  //
-  // while (i <= mid) {
-  //   temp[k] = Array[i];
-  //   k ++;
-  //   i ++;
-  // }
-  //
-  // while (i <= ub) {
-  //   temp[k] = Array[j];
-  //   k ++;
-  //   j ++;
-  // }
-  //
-  // for (i = lb; i <= ub; i++) {
-  //   Array[i] = temp[i - lb];
-  // }
-  //---
-  // memcpy(&tmp[lb],&Array[lb],mid - lb + 1);
-  // int j = ub;
-  // for (int k = mid + 1; k < ub + 1; k++) { //MIGHT BE WRONG
-  //   tmp[k] = Array[j];
-  //   j --;
-  // }
-  // int i = lb;
-  // j = ub;
-  // for (int k = lb; k < ub + 1; k++) {
-  //   if (tmp[j] < tmp[i]) {
-  //     Array[k] = tmp[j--];
-  //   }else{
-  //     Array[k] = tmp[i++];
-  //   }
-  // }
+	while(j <= ub) {
+		temp[k] = Array[j];
+		k ++;
+    j ++;
+	}
+
+	for(i = lb; i <= ub; i += 1) {
+		Array[i] = temp[i - lb];
+	}
+
 }
 
 static void DEBUG_Print_Array(long * Array, int Size){
