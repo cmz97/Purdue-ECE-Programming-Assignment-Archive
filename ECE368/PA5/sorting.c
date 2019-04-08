@@ -74,10 +74,10 @@ int pseudo_random_index(int lb, int ub){
 }
 
 void Merge_sort(long * Array, int Size){
-  DEBUG_Print_Array(Array,Size);
+  //DEBUG_Print_Array(Array,Size);
   printf("Now Sorted\n");
   msort(Array, 0, Size - 1, NULL);
-  DEBUG_Print_Array(Array,Size);
+  //DEBUG_Print_Array(Array,Size);
 }
 
 static void msort(long * Array, int lb, int ub, long * temp){
