@@ -12,7 +12,6 @@
 static void DEBUG_Print_Array(long * Array, int Size);
 static void qsort_tr(long * Array, int lb, int ub);
 static int partition(long * Array, int lb, int ub);
-// static void insertion_sort(long * Array, int lb, int ub);
 static void merge(long * Array, int lb, int mid, int ub, long * temp);
 static void msort(long * Array, int lb, int ub, long * temp);
 int pseudo_random_index(int lb, int ub);
@@ -22,33 +21,9 @@ static long rng = 5374;
 void Quick_Sort(long * Array, int Size){
   DEBUG_Print_Array(Array,Size);
   qsort_tr(Array,0,Size-1);
-  // insertion_sort(Array,0,Size-1);
   printf("Now Sorted\n");
   DEBUG_Print_Array(Array,Size);
 }
-
-// static void insertion_sort(long * Array, int lb, int ub){
-//   //Insertion Sort: Using Sentinel
-//   return;
-//   long temp = 0;
-//   int i = 0;
-//   for (int j = ub; j >= 1; j--) {
-//     if (Array[j] < Array[j - 1]){
-//       temp = Array[j];
-//       Array[j] = Array[j - 1];
-//       Array[j - 1] = temp;
-//     }
-//   }
-//   for (int j = 2; j < ub; j++) {
-//       temp = Array[j];
-//       i = j;
-//       while (Array[i - 1] > temp) {
-//         Array[i] = Array[i-1];
-//         i = i - 1;
-//       }
-//       Array[i] = temp;
-//   }
-// }
 
 static void qsort_tr(long * Array, int lb, int ub){
   int pivot_idx = 0;
@@ -101,7 +76,6 @@ int pseudo_random_index(int lb, int ub){
 void Merge_sort(long * Array, int Size){
   DEBUG_Print_Array(Array,Size);
   printf("Now Sorted\n");
-
   msort(Array, 0, Size - 1, NULL);
   DEBUG_Print_Array(Array,Size);
 }
@@ -117,37 +91,23 @@ static void msort(long * Array, int lb, int ub, long * temp){
 
 static void merge(long * Array, int lb, int mid, int ub, long * temp){
 	int i = lb;
-  int j = mid+1;
+  int j = mid + 1;
   int k = 0;
+  int size = ub + 1;
 
-	while(i <= mid && j <= ub) {
+	for (; i <= mid && j <= ub; k++) {
 		if(Array[i] > Array[j]) {
       temp[k] = Array[j];
-      k ++;
       j ++;
-		}else {
+		}else if (Array[i] <= Array[j]) {
       temp[k] = Array[i];
-      k ++;
       i ++;
-		}
+    }
 	}
-
-	while(i <=  mid) {
-		temp[k] = Array[i];
-		k ++;
-    i ++;
-	}
-
-	while(j <= ub) {
-		temp[k] = Array[j];
-		k ++;
-    j ++;
-	}
-
-
-  // memcpy(&Array[lb], &temp[lb], ub - lb + 1);
-	for(i = lb; i < ub + 1; i ++) Array[i] = temp[i - lb];
-
+  
+	for (; i <= mid; i++) {temp[k] = Array[i]; k ++;}
+	for (; j <= ub; j++) {temp[k] = Array[j]; k ++;}
+	for(i = lb; i < size; i ++) Array[i] = temp[i - lb];
 
 }
 
