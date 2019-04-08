@@ -65,7 +65,7 @@ static void qsort_tr(long * Array, int lb, int ub){
 }
 
 static int partition(long * Array, int lb, int ub){
-  int pivot_idx = lb; //pseudo_random_index(lb,ub);
+  int pivot_idx = lb; // pseudo_random_index(lb,ub);
   long pivot = Array[pivot_idx];
   int down = lb;
   int up = ub;
@@ -121,18 +121,18 @@ static void merge(long * Array, int lb, int mid, int ub, long * temp){
   int k = 0;
 
 	while(i <= mid && j <= ub) {
-		if(Array[i] <= Array[j]) {
-			temp[k] = Array[i];
-			k ++;
-      i ++;
-		}else {
-			temp[k] = Array[j];
-			k ++;
+		if(Array[i] > Array[j]) {
+      temp[k] = Array[j];
+      k ++;
       j ++;
+		}else {
+      temp[k] = Array[i];
+      k ++;
+      i ++;
 		}
 	}
 
-	while(i <= mid) {
+	while(i <=  mid) {
 		temp[k] = Array[i];
 		k ++;
     i ++;
@@ -144,9 +144,10 @@ static void merge(long * Array, int lb, int mid, int ub, long * temp){
     j ++;
 	}
 
-	for(i = lb; i <= ub; i += 1) {
-		Array[i] = temp[i - lb];
-	}
+
+  // memcpy(&Array[lb], &temp[lb], ub - lb + 1);
+	for(i = lb; i < ub + 1; i ++) Array[i] = temp[i - lb];
+
 
 }
 
