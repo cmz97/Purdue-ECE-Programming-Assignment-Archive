@@ -9,20 +9,17 @@
 #define KYEL  "\x1B[33m"
 #define SMALLSIZE 0
 
-static void DEBUG_Print_Array(long * Array, int Size);
+//static void DEBUG_Print_Array(long * Array, int Size);
 static void qsort_tr(long * Array, int lb, int ub);
 static int partition(long * Array, int lb, int ub);
 static void merge(long * Array, int lb, int mid, int ub, long * temp);
 static void msort(long * Array, int lb, int ub, long * temp);
-int pseudo_random_index(int lb, int ub);
+//int pseudo_random_index(int lb, int ub);
 
-static long rng = 5374;
+//static long rng = 5374;
 
 void Quick_Sort(long * Array, int Size){
-  DEBUG_Print_Array(Array,Size);
   qsort_tr(Array,0,Size-1);
-  printf("Now Sorted\n");
-  DEBUG_Print_Array(Array,Size);
 }
 
 static void qsort_tr(long * Array, int lb, int ub){
@@ -63,7 +60,7 @@ static int partition(long * Array, int lb, int ub){
   Array[up] = pivot;
   return up;
 }
-
+/*
 int pseudo_random_index(int lb, int ub){
   long m = 7777777;
   long a = 8473988;
@@ -72,12 +69,9 @@ int pseudo_random_index(int lb, int ub){
   rng = ( a * rng + c ) % m;
   return (int)((rng / (double) m)*(ub - lb + 1));
 }
-
+*/
 void Merge_sort(long * Array, int Size){
-  //DEBUG_Print_Array(Array,Size);
-  printf("Now Sorted\n");
   msort(Array, 0, Size - 1, NULL);
-  //DEBUG_Print_Array(Array,Size);
 }
 
 static void msort(long * Array, int lb, int ub, long * temp){
@@ -87,6 +81,7 @@ static void msort(long * Array, int lb, int ub, long * temp){
   msort(Array,lb,mid,temp);
   msort(Array,mid+1,ub,temp);
   merge(Array,lb,mid,ub,temp);
+  free(temp);
 }
 
 static void merge(long * Array, int lb, int mid, int ub, long * temp){
@@ -111,8 +106,8 @@ static void merge(long * Array, int lb, int mid, int ub, long * temp){
 
 }
 
-static void DEBUG_Print_Array(long * Array, int Size){
-  for (int i = 0; i < Size; i++) {
-    printf("Index: [%s%d%s] Value: <%s%ld%s>\n", KRED, i, KRESET, KRED , Array[i] , KRESET);
-  }
-}
+//static void DEBUG_Print_Array(long * Array, int Size){
+//  for (int i = 0; i < Size; i++) {
+//    printf("Index: [%s%d%s] Value: <%s%ld%s>\n", KRED, i, KRESET, KRED , Array[i] , KRESET);
+//  }
+//}

@@ -18,23 +18,27 @@ $(TARGET): $(OBJS)
 	$(GCC) $(TESTFLAGS) -c $*.c
 
 testmemory: $(TARGET)
-	$(VAL) 	./PA5 -l ./example/10000.b output_10000_l.b
+	$(VAL) 	./PA5 -m ./example/1M.b output_1M_m.b
 
 test1: PA5
 	# ./PA5 -q ./example/10.b output_10_q.b
-	./PA5 -m ./example/10.b output_10_m.b
+	  ./PA5 -m ./example/10.b output_10_m.b
 
 test2: PA5
-	./PA5 -q ./example/1M.b output_1M_q.b
-	# ./PA5 -m ./example/1M.b output_1M_m.b
+	# ./PA5 -q ./example/1M.b output_1M_q.b
+	 ./PA5 -m ./example/1M.b output_1M_m.b
 
 test3: PA5
-	./PA5 -q ./example/10M.b output_10M_q.b
-	# ./PA5 -m ./example/10M.b output_10M_m.b
+	# ./PA5 -q ./example/10M.b output_10M_q.b
+	 ./PA5 -m ./example/10M.b output_10M_m.b
+
+test4: PA5
+	# ./PA5 -q ./example/30M.b output_30M_q.b
+	 ./PA5 -m ./example/30M.b output_30M_m.b
 
 test0: PA5
-	./PA5 -q ./example/0.b output_0_q.b
-	# ./PA5 -m ./example/0.b output_0_m.b
+	#./PA5 -q ./example/0.b output_0_q.b
+	 ./PA5 -m ./example/0.b output_0_m.b
 
 testall: test1 test2 test3 test0
 

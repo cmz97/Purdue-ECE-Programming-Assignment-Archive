@@ -20,13 +20,15 @@ int main(int argc, char ** argv)
   }
 
   inputArr = Load_Into_Array(argv[2],&sizeofInputArr);
-
+  if (inputArr == NULL) return EXIT_FAILURE;
   if (strcmp(argv[1],"-q") == 0) {
     Quick_Sort(inputArr,sizeofInputArr);
+    Save_From_Array(argv[3],inputArr,sizeofInputArr);   
     free(inputArr);
     return EXIT_SUCCESS;
   }else if (strcmp(argv[1],"-m") == 0) {
     Merge_sort(inputArr,sizeofInputArr);
+    Save_From_Array(argv[3],inputArr,sizeofInputArr);   
     free(inputArr);
     return EXIT_SUCCESS;
   }
@@ -43,7 +45,7 @@ long * Load_Into_Array(char * Filename, int * Size){
 
   if(inputFilePtr == NULL){
     printf("Input File Does Not Exist\n");
-    fclose(inputFilePtr);
+    //fclose(inputFilePtr);
     return NULL;
   }
 
@@ -60,7 +62,6 @@ long * Load_Into_Array(char * Filename, int * Size){
   for(int i = 0 ; i < *Size ; i++){
     fread(&curLong, sizeof(long), 1, inputFilePtr);
     numArray[i] = curLong;
-    // printf("numArray[%d]:%ld\n",i,curLong);
   }
   fclose(inputFilePtr);
   return numArray;
