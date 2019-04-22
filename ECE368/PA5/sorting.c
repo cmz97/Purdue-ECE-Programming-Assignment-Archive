@@ -99,7 +99,7 @@ static void merge(long * Array, int lb, int mid, int ub, long * temp){
       i ++;
     }
 	}
-  
+
 	for (; i <= mid; i++) {temp[k] = Array[i]; k ++;}
 	for (; j <= ub; j++) {temp[k] = Array[j]; k ++;}
 	for(i = lb; i < size; i ++) Array[i] = temp[i - lb];

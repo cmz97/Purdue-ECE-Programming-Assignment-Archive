@@ -1,0 +1,125 @@
+#include "seqpair.h"
+
+RectNode ** Load_Into_Array(int * numberOfRect, char * inputfileName, int ** seqOne, int ** seqTwo);
+static void DEBUG_Print_Array(int * Array, int Size);
+static void DEBUG_AdjList(RectNode ** rectNodeArr, int size);
+void freeRectNode(RectNode ** rectNodeArr, int size);
+
+int main(int argc, char ** argv){
+  // argv[1]: inputName
+  // argv[2]: outputName
+  RectNode ** rectNodeArr = NULL; //input array reading from file
+
+  if (argc != 3) {
+    printf("Wrong Argument Count (usage: 2 Argument)\n");
+    return EXIT_FAILURE;
+  }
+  int numberOfRect = 0;
+  int * seqOne = NULL;
+  int * seqTwo = NULL;
+
+
+  rectNodeArr = Load_Into_Array(&numberOfRect, argv[1], &seqOne, &seqTwo);
+  if (rectNodeArr == NULL) return EXIT_FAILURE;
+
+
+  printf("SeqOne\n");
+  DEBUG_Print_Array(seqOne, numberOfRect);
+  printf("SeqTwo\n");
+  DEBUG_Print_Array(seqTwo, numberOfRect);
+
+  int * lut = generateLUT(seqOne,numberOfRect);
+
+  printf("LUT\n");
+  DEBUG_Print_Array(lut, numberOfRect + 1);
+  processAdjList(&rectNodeArr, seqTwo, numberOfRect, lut);
+  DEBUG_AdjList(rectNodeArr,numberOfRect);
+
+
+  free(seqOne);
+  free(seqTwo);
+
+  freeRectNode(rectNodeArr, numberOfRect);
+
+  return EXIT_SUCCESS;
+
+}
+
+void freeRectNode(RectNode ** rectNodeArr, int size){
+  for (int i = 1; i < size + 1; i++) {
+    free(rectNodeArr[i] -> verticalAdjList);
+    free(rectNodeArr[i] -> horzontalAdjList);
+    free(rectNodeArr[i]);
+  }
+}
+
+RectNode ** Load_Into_Array(int * numberOfRect, char * inputfileName, int ** seqOne, int ** seqTwo){
+  FILE * inputFilePtr = fopen(inputfileName,"r");
+  int curIndex = 0;
+  double width = 0;
+  double height = 0;
+  char * seqStr = NULL;
+
+  if(inputFilePtr == NULL){
+    printf("Input File Does Not Exist\n");
+    fclose(inputFilePtr);
+    return NULL;
+  }
+  fscanf(inputFilePtr, "%d\n", numberOfRect);
+
+  RectNode ** rectNodeArr = malloc(sizeof(RectNode *)*((*numberOfRect) + 1)); //puls one to offset the array by one
+  rectNodeArr[0] = NULL; //set the index zero to null so that i dont make mistake
+
+  *seqOne = malloc(sizeof(int)*(*numberOfRect));
+  *seqTwo = malloc(sizeof(int)*(*numberOfRect));
+
+
+  for (int i = 0; i < *numberOfRect; i++) {
+    fscanf(inputFilePtr, "%d(%le,%le)\n", &curIndex, &width, &height);
+    rectNodeArr[curIndex] = malloc(sizeof(RectNode));
+    rectNodeArr[curIndex] -> width = width;
+    rectNodeArr[curIndex] -> height = height;
+    rectNodeArr[curIndex] -> label = curIndex;
+
+    rectNodeArr[curIndex] -> verticalAdjList = NULL;
+    rectNodeArr[curIndex] -> horzontalAdjList = NULL;
+  }
+
+  int sizeofSeq = 2 * (*numberOfRect) - 1;
+  seqStr = malloc(sizeofSeq);
+
+  fscanf(inputFilePtr, "%[^\n]\n", seqStr);
+  printf("%s\n",seqStr);
+  sscanf(&seqStr[0],"%d", &((*seqOne)[0]));
+  for (int i = 2; i < sizeofSeq; i+=2) {
+    sscanf(&seqStr[i],"%d", &((*seqOne)[i/2]));
+  }
+
+  fscanf(inputFilePtr, "%[^\n]\n", seqStr);
+  printf("%s\n",seqStr);
+  sscanf(&seqStr[0],"%d", &((*seqTwo)[0]));
+  for (int i = 2; i < sizeofSeq; i+=2) {
+    sscanf(&seqStr[i],"%d", &((*seqTwo)[i/2]));
+  }
+
+  fclose(inputFilePtr);
+
+  return rectNodeArr;
+}
+
+static void DEBUG_Print_Array(int * Array, int Size){
+ for (int i = 0; i < Size; i++) {
+   printf("Index: [%s%d%s] Value: <%s%d%s>\n", KRED, i, KRESET, KRED , Array[i] , KRESET);
+ }
+}
+
+static void DEBUG_AdjList(RectNode ** rectNodeArr, int size){
+  for (int i = 1; i < size + 1; i++) {
+    printf("Current Index : %d\n", i);
+    printf("width: %le height: %le \n", rectNodeArr[i] -> width, rectNodeArr[i] -> height);
+    printf("headVerticalList\n");
+    DEBUG_Print_Array(rectNodeArr[i] -> verticalAdjList,size);
+    printf("headHorizontalList\n");
+    DEBUG_Print_Array(rectNodeArr[i] -> horzontalAdjList,size);
+  }
+}
