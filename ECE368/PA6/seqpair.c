@@ -24,18 +24,22 @@ void processAdjList(RectNode *** rectNodeArr, int * seqTwo, int sizeofSeq, int *
     int curLUTresult = lut[curSeqTwoNum]; // 7
 
     for (int j = i+1; j < sizeofSeq; j++) { //start after i
-      printf("lut[seqTwo[%d]] = %d and curLUTresult = %d \n", j, lut[seqTwo[j]], curLUTresult);
+      // printf("lut[seqTwo[%d]] = %d and curLUTresult = %d \n", j, lut[seqTwo[j]], curLUTresult);
       if (lut[seqTwo[j]] < curLUTresult){ //less than is vertical list
-        printf("                                      headVerticalList[%d] = %d\n",verticalIndex, seqTwo[j]);
+        // printf("                                      headVerticalList[%d] = %d\n",verticalIndex, seqTwo[j]);
         ((*rectNodeArr)[seqTwo[i]] -> verticalAdjList)[verticalIndex] = seqTwo[j];
         verticalIndex ++;
       }else{
-        printf("                                      headHorizontalList[%d] = %d\n",horizontalIndex, seqTwo[j]);
+        // printf("                                      headHorizontalList[%d] = %d\n",horizontalIndex, seqTwo[j]);
         ((*rectNodeArr)[seqTwo[i]] -> horzontalAdjList)[horizontalIndex] = seqTwo[j];
         horizontalIndex ++;
       }
     }
-    printf("seqTwo[%d] = %d\n", i, seqTwo[i]);
+    printf("verticalAdjList\n");
+    DEBUG_Print_Array((*rectNodeArr)[seqTwo[i]] -> verticalAdjList, sizeofSeq);
+    printf("horzontalAdjList\n");
+    DEBUG_Print_Array((*rectNodeArr)[seqTwo[i]] -> horzontalAdjList, sizeofSeq);
+    // printf("seqTwo[%d] = %d\n", i, seqTwo[i]);
   }
 }
 
@@ -44,4 +48,21 @@ int * initArr(int * arr, int size){ //intit all arrat index to -1
     arr[i] = -1;
   }
   return arr;
+}
+
+void DEBUG_AdjList(RectNode ** rectNodeArr, int size){
+  for (int i = 1; i < size + 1; i++) {
+    printf("Current Index : %d\n", i);
+    printf("width: %le height: %le \n", rectNodeArr[i] -> width, rectNodeArr[i] -> height);
+    printf("headVerticalList\n");
+    DEBUG_Print_Array(rectNodeArr[i] -> verticalAdjList,size);
+    printf("headHorizontalList\n");
+    DEBUG_Print_Array(rectNodeArr[i] -> horzontalAdjList,size);
+  }
+}
+
+void DEBUG_Print_Array(int * Array, int Size){
+ for (int i = 0; i < Size; i++) {
+   printf("Index: [%s%d%s] Value: <%s%d%s>\n", KRED, i, KRESET, KRED , Array[i] , KRESET);
+ }
 }

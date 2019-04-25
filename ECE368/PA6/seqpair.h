@@ -14,6 +14,9 @@ typedef struct _rectNode{
   double width;
   double height;
 
+  double x;
+  double y;
+
   int label;
 } RectNode;
 
@@ -21,6 +24,9 @@ typedef struct _rectNode{
 //   struct RectNode * this; //non-leaf node
 //   struct RectNode * next; //non-leaf node
 // } AdjNode;
+
+void DEBUG_Print_Array(int * Array, int Size);
+void DEBUG_AdjList(RectNode ** rectNodeArr, int size);
 
 int * generateLUT(int * seqOne, int sizeofSeq);
 void processAdjList(RectNode *** rectNodeArr, int * seqTwo, int sizeofSeq, int * lut);

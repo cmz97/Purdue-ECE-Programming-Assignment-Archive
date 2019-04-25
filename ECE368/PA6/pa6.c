@@ -1,8 +1,6 @@
 #include "seqpair.h"
 
 RectNode ** Load_Into_Array(int * numberOfRect, char * inputfileName, int ** seqOne, int ** seqTwo);
-static void DEBUG_Print_Array(int * Array, int Size);
-static void DEBUG_AdjList(RectNode ** rectNodeArr, int size);
 void freeRectNode(RectNode ** rectNodeArr, int size);
 
 int main(int argc, char ** argv){
@@ -18,10 +16,8 @@ int main(int argc, char ** argv){
   int * seqOne = NULL;
   int * seqTwo = NULL;
 
-
   rectNodeArr = Load_Into_Array(&numberOfRect, argv[1], &seqOne, &seqTwo);
   if (rectNodeArr == NULL) return EXIT_FAILURE;
-
 
   printf("SeqOne\n");
   DEBUG_Print_Array(seqOne, numberOfRect);
@@ -33,8 +29,7 @@ int main(int argc, char ** argv){
   printf("LUT\n");
   DEBUG_Print_Array(lut, numberOfRect + 1);
   processAdjList(&rectNodeArr, seqTwo, numberOfRect, lut);
-  DEBUG_AdjList(rectNodeArr,numberOfRect);
-
+  // DEBUG_AdjList(rectNodeArr,numberOfRect);
 
   free(seqOne);
   free(seqTwo);
@@ -86,17 +81,15 @@ RectNode ** Load_Into_Array(int * numberOfRect, char * inputfileName, int ** seq
   }
 
   int sizeofSeq = 2 * (*numberOfRect) - 1;
-  seqStr = malloc(sizeofSeq);
+  seqStr = malloc(sizeofSeq+1);
 
   fscanf(inputFilePtr, "%[^\n]\n", seqStr);
-  printf("%s\n",seqStr);
   sscanf(&seqStr[0],"%d", &((*seqOne)[0]));
   for (int i = 2; i < sizeofSeq; i+=2) {
     sscanf(&seqStr[i],"%d", &((*seqOne)[i/2]));
   }
 
   fscanf(inputFilePtr, "%[^\n]\n", seqStr);
-  printf("%s\n",seqStr);
   sscanf(&seqStr[0],"%d", &((*seqTwo)[0]));
   for (int i = 2; i < sizeofSeq; i+=2) {
     sscanf(&seqStr[i],"%d", &((*seqTwo)[i/2]));
@@ -105,21 +98,4 @@ RectNode ** Load_Into_Array(int * numberOfRect, char * inputfileName, int ** seq
   fclose(inputFilePtr);
 
   return rectNodeArr;
-}
-
-static void DEBUG_Print_Array(int * Array, int Size){
- for (int i = 0; i < Size; i++) {
-   printf("Index: [%s%d%s] Value: <%s%d%s>\n", KRED, i, KRESET, KRED , Array[i] , KRESET);
- }
-}
-
-static void DEBUG_AdjList(RectNode ** rectNodeArr, int size){
-  for (int i = 1; i < size + 1; i++) {
-    printf("Current Index : %d\n", i);
-    printf("width: %le height: %le \n", rectNodeArr[i] -> width, rectNodeArr[i] -> height);
-    printf("headVerticalList\n");
-    DEBUG_Print_Array(rectNodeArr[i] -> verticalAdjList,size);
-    printf("headHorizontalList\n");
-    DEBUG_Print_Array(rectNodeArr[i] -> horzontalAdjList,size);
-  }
 }
