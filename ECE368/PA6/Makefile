@@ -28,6 +28,14 @@ test2: pa6
 	  ./pa6 ./examples/r100.sp ./output_r100.pck
 		diff ./examples/r100.pck ./output_r100.pck
 
+test3: pa6
+	  ./pa6 ./examples/r100h.sp ./output_r100h.pck
+		diff ./examples/r100h.pck ./output_r100h.pck
+
+test4: pa6
+	  ./pa6 ./examples/r1k.sp ./output_r1k.pck
+		diff ./examples/r1k.pck ./output_r1k.pck
+
 testall: test1
 
 

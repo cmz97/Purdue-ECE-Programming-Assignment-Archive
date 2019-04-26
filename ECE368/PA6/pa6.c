@@ -9,7 +9,7 @@ int main(int argc, char ** argv){
   RectNode ** rectNodeArr = NULL; //input array reading from file
 
   if (argc != 3) {
-    printf("Wrong Argument Count (usage: 2 Argument)\n");
+    //printf("Wrong Argument Count (usage: 2 Argument)\n");
     return EXIT_FAILURE;
   }
   int numberOfRect = 0;
@@ -19,18 +19,18 @@ int main(int argc, char ** argv){
   int * toplogicalSortListHorizontal = NULL;
 
   rectNodeArr = Load_Into_Array(&numberOfRect, argv[1], &seqOne, &seqTwo);
-  DEBUG_Print_RectNodeArray(rectNodeArr, numberOfRect);
+  //DEBUG_Print_RectNodeArray(rectNodeArr, numberOfRect);
   if (rectNodeArr == NULL) return EXIT_FAILURE;
 
-  printf("SeqOne\n");
-  DEBUG_Print_Array(seqOne, numberOfRect);
-  printf("SeqTwo\n");
-  DEBUG_Print_Array(seqTwo, numberOfRect);
+  //printf("SeqOne\n");
+  //DEBUG_Print_Array(seqOne, numberOfRect);
+  //printf("SeqTwo\n");
+  //DEBUG_Print_Array(seqTwo, numberOfRect);
 
   int * lut = generateLUT(seqOne,numberOfRect);
 
-  printf("LUT\n");
-  DEBUG_Print_Array(lut, numberOfRect + 1);
+  //printf("LUT\n");
+  //DEBUG_Print_Array(lut, numberOfRect + 1);
   processAdjList(rectNodeArr, seqTwo, numberOfRect, lut);
 
   toplogicalSortListVertical = malloc(sizeof(int)*numberOfRect);
@@ -39,16 +39,16 @@ int main(int argc, char ** argv){
   toplogicalSortListHorizontal = toplogicalSort(rectNodeArr,toplogicalSortListHorizontal, numberOfRect, 0); //tryVertical First
   toplogicalSortListVertical = toplogicalSort(rectNodeArr,toplogicalSortListVertical, numberOfRect, 1); //tryVertical First
 
-  printf("Horizontal Toposort:\n");
-  DEBUG_Print_Array(toplogicalSortListHorizontal, numberOfRect);
-  printf("Vertical Toposort:\n");
-  DEBUG_Print_Array(toplogicalSortListVertical, numberOfRect);
+  //printf("Horizontal Toposort:\n");
+  //DEBUG_Print_Array(toplogicalSortListHorizontal, numberOfRect);
+  //printf("Vertical Toposort:\n");
+  //DEBUG_Print_Array(toplogicalSortListVertical, numberOfRect);
 
+  updateCoordinates(rectNodeArr,toplogicalSortListVertical,numberOfRect,1);
   updateCoordinates(rectNodeArr,toplogicalSortListHorizontal,numberOfRect,0);
-  updateCoordinates(rectNodeArr,toplogicalSortListHorizontal,numberOfRect,1);
 
-  DEBUG_Print_RectNodeArray(rectNodeArr,numberOfRect);
-  // DEBUG_AdjList(rectNodeArr,numberOfRect);
+  //DEBUG_Print_RectNodeArray(rectNodeArr,numberOfRect);
+  // //DEBUG_AdjList(rectNodeArr,numberOfRect);
 
   printRectArr2File(rectNodeArr, argv[2], numberOfRect);
 
@@ -75,7 +75,7 @@ void printRectArr2File(RectNode ** rectNodeArr, char * outputfileName, int sizeo
   FILE * outputFilePtr = fopen(outputfileName,"w");
 
   if(outputFilePtr == NULL){
-    printf("Output File Failed to create\n");
+    //printf("Output File Failed to create\n");
     fclose(outputFilePtr);
   }
 
@@ -94,7 +94,7 @@ RectNode ** Load_Into_Array(int * numberOfRect, char * inputfileName, int ** seq
   char * seqStr = NULL;
 
   if(inputFilePtr == NULL){
-    printf("Input File Does Not Exist\n");
+    //printf("Input File Does Not Exist\n");
     fclose(inputFilePtr);
     return NULL;
   }
@@ -117,14 +117,14 @@ RectNode ** Load_Into_Array(int * numberOfRect, char * inputfileName, int ** seq
     rectNodeArr[curIndex] -> verticalAdjList = NULL;
     rectNodeArr[curIndex] -> horzontalAdjList = NULL;
 
-    rectNodeArr[curIndex] -> x = 0;
-    rectNodeArr[curIndex] -> y = 0;
+    rectNodeArr[curIndex] -> x = 0.0;
+    rectNodeArr[curIndex] -> y = 0.0;
 
     rectNodeArr[curIndex] -> color = 0;
   }
 
   int sizeofSeq = 2 * (*numberOfRect) - 1;
-  printf("size of seq: %d\n", sizeofSeq);
+  //printf("size of seq: %d\n", sizeofSeq);
   // seqStr = malloc((sizeofSeq - 1)*sizeof(char));
 
   for (int i = 0; i < *numberOfRect; i++) {
