@@ -54,7 +54,7 @@ int main(int argc, char ** argv){
   free(seqTwo);
   free(toplogicalSortListHorizontal);
   free(toplogicalSortListVertical);
-
+  free(lut);
   freeRectNode(rectNodeArr, numberOfRect);
 
   return EXIT_SUCCESS;
@@ -121,6 +121,7 @@ RectNode ** Load_Into_Array(int * numberOfRect, char * inputfileName, int ** seq
     sscanf(&seqStr[i],"%d", &((*seqTwo)[i/2]));
   }
 
+  free(seqStr);
   fclose(inputFilePtr);
 
   return rectNodeArr;
