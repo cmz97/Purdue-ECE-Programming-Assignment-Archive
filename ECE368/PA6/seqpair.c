@@ -2,7 +2,8 @@
 
 
 int * generateLUT(int * seqOne, int sizeofSeq){
-  int * lut = malloc(sizeof(int)*(sizeofSeq + 1)); //account for the offsett to plus one
+  int * lut = NULL;
+  lut = malloc(sizeof(int)*(sizeofSeq + 1)); //account for the offsett to plus one
   for (int i = 0; i < sizeofSeq; i++) {
     lut[seqOne[i]] = i;
   }
