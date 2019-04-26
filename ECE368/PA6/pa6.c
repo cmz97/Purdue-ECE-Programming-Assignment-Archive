@@ -124,7 +124,7 @@ RectNode ** Load_Into_Array(int * numberOfRect, char * inputfileName, int ** seq
   }
 
   int sizeofSeq = 2 * (*numberOfRect) - 1;
-  seqStr = malloc(sizeofSeq+1);
+  seqStr = malloc((sizeofSeq)*sizeof(char));
 
   fscanf(inputFilePtr, "%[^\n]\n", seqStr);
   sscanf(&seqStr[0],"%d", &((*seqOne)[0]));
