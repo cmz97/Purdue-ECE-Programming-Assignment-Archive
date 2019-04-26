@@ -50,6 +50,8 @@ int main(int argc, char ** argv){
   DEBUG_Print_RectNodeArray(rectNodeArr,numberOfRect);
   // DEBUG_AdjList(rectNodeArr,numberOfRect);
 
+  printRectArr2File(rectNodeArr, argv[2], numberOfRect);
+
   free(seqOne);
   free(seqTwo);
   free(toplogicalSortListHorizontal);
@@ -67,6 +69,22 @@ void freeRectNode(RectNode ** rectNodeArr, int size){
     free(rectNodeArr[i] -> horzontalAdjList);
     free(rectNodeArr[i]);
   }
+}
+
+void printRectArr2File(RectNode * rectNodeArr, char * outputfileName, int sizeofSeq){
+  FILE * outputFilePtr = fopen(outputfileName,"w");
+
+  if(outputFilePtr == NULL){
+    printf("Output File Failed to create\n");
+    fclose(outputFilePtr);
+    return NULL;
+  }
+
+  for (int i = 1; i < sizeofSeq + 1; i++) {
+    fprintf(outputFilePtr, "%d(%le,%le)\n",i,rectNodeArr[i]->x,rectNodeArr[i]->y);
+  }
+
+  fclose(outputFilePtr);
 }
 
 RectNode ** Load_Into_Array(int * numberOfRect, char * inputfileName, int ** seqOne, int ** seqTwo){
