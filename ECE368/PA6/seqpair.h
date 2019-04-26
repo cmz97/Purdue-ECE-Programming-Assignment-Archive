@@ -18,8 +18,8 @@ typedef struct _rectNode{
   double y;
 
   int color;
-
   int label;
+  
 } RectNode;
 
 // typedef struct _adjNode{

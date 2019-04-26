@@ -15,14 +15,14 @@ RectNode ** updateCoordinates(RectNode ** rectNodeArr, int * toplogicalSortList,
      curLabel = toplogicalSortList[i];
      int j = 0;
      if (mode == 1) {
-       while(rectNodeArr[curLabel] -> verticalAdjList[j] != -1){
+       while(j < numberOfRect && rectNodeArr[curLabel] -> verticalAdjList[j] != -1){
          if (rectNodeArr[rectNodeArr[curLabel] -> verticalAdjList[j]] -> y < rectNodeArr[curLabel] -> y + rectNodeArr[curLabel] -> height ){
            rectNodeArr[rectNodeArr[curLabel] -> verticalAdjList[j]] -> y = rectNodeArr[curLabel] -> y + rectNodeArr[curLabel] -> height;
          }
          j++;
        }
      }else{
-       while(rectNodeArr[curLabel] -> horzontalAdjList[j] != -1){
+       while(j < numberOfRect && rectNodeArr[curLabel] -> horzontalAdjList[j] != -1){
          if (rectNodeArr[rectNodeArr[curLabel] -> horzontalAdjList[j]] -> x < rectNodeArr[curLabel] -> x + rectNodeArr[curLabel] -> width ){
            rectNodeArr[rectNodeArr[curLabel] -> horzontalAdjList[j]] -> x = rectNodeArr[curLabel] -> x + rectNodeArr[curLabel] -> width;
          }
