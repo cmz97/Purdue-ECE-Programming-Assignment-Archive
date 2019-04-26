@@ -1,5 +1,5 @@
 TARGET = pa6
-WARNING = -Wshadow --pedantic #-Wall
+WARNING = -Wshadow --pedantic -Wall
 ERROR = -Wvla -Werror
 GCC = gcc -std=c99 -g $(WARNING) $(ERROR)
 
@@ -7,7 +7,7 @@ TESTFLAGS =
 
 SRCS =  pa6.c seqpair.c
 OBJS = $(SRCS:%.c=%.o)
-BIN = *.b
+BIN = *.pck
 
 VAL =  valgrind --tool=memcheck --log-file=memcheck.txt --leak-check=full --verbose --track-origins=yes
 

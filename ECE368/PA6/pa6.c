@@ -123,7 +123,6 @@ RectNode ** Load_Into_Array(int * numberOfRect, char * inputfileName, int ** seq
     rectNodeArr[curIndex] -> color = 0;
   }
 
-  int sizeofSeq = 2 * (*numberOfRect) - 1;
   //printf("size of seq: %d\n", sizeofSeq);
   // seqStr = malloc((sizeofSeq - 1)*sizeof(char));
 
