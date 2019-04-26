@@ -15,8 +15,11 @@ int main(int argc, char ** argv){
   int numberOfRect = 0;
   int * seqOne = NULL;
   int * seqTwo = NULL;
+  int * toplogicalSortListVertical = NULL;
+  int * toplogicalSortListHorizontal = NULL;
 
   rectNodeArr = Load_Into_Array(&numberOfRect, argv[1], &seqOne, &seqTwo);
+  DEBUG_Print_RectNodeArray(rectNodeArr, numberOfRect);
   if (rectNodeArr == NULL) return EXIT_FAILURE;
 
   printf("SeqOne\n");
@@ -28,11 +31,29 @@ int main(int argc, char ** argv){
 
   printf("LUT\n");
   DEBUG_Print_Array(lut, numberOfRect + 1);
-  processAdjList(&rectNodeArr, seqTwo, numberOfRect, lut);
+  processAdjList(rectNodeArr, seqTwo, numberOfRect, lut);
+
+  toplogicalSortListVertical = malloc(sizeof(int)*numberOfRect);
+  toplogicalSortListHorizontal = malloc(sizeof(int)*numberOfRect);
+
+  toplogicalSortListHorizontal = toplogicalSort(rectNodeArr,toplogicalSortListHorizontal, numberOfRect, 0); //tryVertical First
+  toplogicalSortListVertical = toplogicalSort(rectNodeArr,toplogicalSortListVertical, numberOfRect, 1); //tryVertical First
+
+  printf("Horizontal Toposort:\n");
+  DEBUG_Print_Array(toplogicalSortListHorizontal, numberOfRect);
+  printf("Vertical Toposort:\n");
+  DEBUG_Print_Array(toplogicalSortListVertical, numberOfRect);
+
+  updateCoordinates(rectNodeArr,toplogicalSortListHorizontal,numberOfRect,0);
+  updateCoordinates(rectNodeArr,toplogicalSortListHorizontal,numberOfRect,1);
+
+  DEBUG_Print_RectNodeArray(rectNodeArr,numberOfRect);
   // DEBUG_AdjList(rectNodeArr,numberOfRect);
 
   free(seqOne);
   free(seqTwo);
+  free(toplogicalSortListHorizontal);
+  free(toplogicalSortListVertical);
 
   freeRectNode(rectNodeArr, numberOfRect);
 
@@ -69,7 +90,7 @@ RectNode ** Load_Into_Array(int * numberOfRect, char * inputfileName, int ** seq
   *seqTwo = malloc(sizeof(int)*(*numberOfRect));
 
 
-  for (int i = 0; i < *numberOfRect; i++) {
+  for (int i = 1; i < *numberOfRect + 1; i++) {
     fscanf(inputFilePtr, "%d(%le,%le)\n", &curIndex, &width, &height);
     rectNodeArr[curIndex] = malloc(sizeof(RectNode));
     rectNodeArr[curIndex] -> width = width;
@@ -78,6 +99,11 @@ RectNode ** Load_Into_Array(int * numberOfRect, char * inputfileName, int ** seq
 
     rectNodeArr[curIndex] -> verticalAdjList = NULL;
     rectNodeArr[curIndex] -> horzontalAdjList = NULL;
+
+    rectNodeArr[curIndex] -> x = 0;
+    rectNodeArr[curIndex] -> y = 0;
+
+    rectNodeArr[curIndex] -> color = 0;
   }
 
   int sizeofSeq = 2 * (*numberOfRect) - 1;
