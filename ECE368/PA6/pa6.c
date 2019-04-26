@@ -2,7 +2,7 @@
 
 RectNode ** Load_Into_Array(int * numberOfRect, char * inputfileName, int ** seqOne, int ** seqTwo);
 void freeRectNode(RectNode ** rectNodeArr, int size);
-
+void printRectArr2File(RectNode ** rectNodeArr, char * outputfileName, int sizeofSeq);
 int main(int argc, char ** argv){
   // argv[1]: inputName
   // argv[2]: outputName
@@ -71,13 +71,12 @@ void freeRectNode(RectNode ** rectNodeArr, int size){
   }
 }
 
-void printRectArr2File(RectNode * rectNodeArr, char * outputfileName, int sizeofSeq){
+void printRectArr2File(RectNode ** rectNodeArr, char * outputfileName, int sizeofSeq){
   FILE * outputFilePtr = fopen(outputfileName,"w");
 
   if(outputFilePtr == NULL){
     printf("Output File Failed to create\n");
     fclose(outputFilePtr);
-    return NULL;
   }
 
   for (int i = 1; i < sizeofSeq + 1; i++) {

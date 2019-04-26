@@ -21,8 +21,12 @@ testmemory: $(TARGET)
 	$(VAL) 	./pa6 ./examples/r8.sp ./output_r8.pck
 
 test1: pa6
-	# ./pa6 -q ./example/10.b output_10_q.b
 	  ./pa6 ./examples/r8.sp ./output_r8.pck
+		diff ./examples/r8.pck ./output_r8.pck
+
+test2: pa6
+	  ./pa6 ./examples/r100.sp ./output_r100.pck
+		diff ./examples/r100.pck ./output_r100.pck
 
 testall: test1
 
