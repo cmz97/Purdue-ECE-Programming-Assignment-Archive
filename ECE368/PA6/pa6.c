@@ -56,7 +56,7 @@ int main(int argc, char ** argv){
   free(toplogicalSortListVertical);
   free(lut);
   freeRectNode(rectNodeArr, numberOfRect);
-
+  free(rectNodeArr);
   return EXIT_SUCCESS;
 
 }
