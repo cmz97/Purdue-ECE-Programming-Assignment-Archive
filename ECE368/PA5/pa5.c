@@ -23,15 +23,18 @@ int main(int argc, char ** argv)
   if (inputArr == NULL) return EXIT_FAILURE;
   if (strcmp(argv[1],"-q") == 0) {
     Quick_Sort(inputArr,sizeofInputArr);
-    Save_From_Array(argv[3],inputArr,sizeofInputArr);   
+    Save_From_Array(argv[3],inputArr,sizeofInputArr);
+    // DEBUG_Print_Array(inputArr, sizeofInputArr);
     free(inputArr);
     return EXIT_SUCCESS;
   }else if (strcmp(argv[1],"-m") == 0) {
-    Merge_sort(inputArr,sizeofInputArr);
-    Save_From_Array(argv[3],inputArr,sizeofInputArr);   
+    Merge_Sort(inputArr,sizeofInputArr);
+    Save_From_Array(argv[3],inputArr,sizeofInputArr);
+    // DEBUG_Print_Array(inputArr, sizeofInputArr);
     free(inputArr);
     return EXIT_SUCCESS;
   }
+
   printf("Wrong Argument (usage: -l or -a)\n");
   return EXIT_FAILURE;
 
